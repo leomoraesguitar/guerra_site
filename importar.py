@@ -21,7 +21,8 @@ class Verificar_pasta:
             # return False  # USERPROFILE não está definido
             self.local = None
 
-        caminho = os.path.join(user_profile, self.pastalocal)
+        # caminho = os.path.join(user_profile, self.pastalocal)
+        caminho = self.pastalocal
         
         
         if os.path.exists(caminho):
