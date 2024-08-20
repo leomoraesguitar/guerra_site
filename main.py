@@ -202,7 +202,7 @@ class My_tabela(ft.DataTable):
         self.sort_column_index = 0
         self.sort_ascending = True
         # self.data_row_color={"hovered": "0x30FF0000"}
-        self.visible = True
+        self.visible = False
         self.textsize = 15
 
         self.Colunas_tabela()
@@ -714,7 +714,7 @@ class Guerra2:
             for j in range(len(mapa)):
                 l.append(mapa[j][i])
             dic[chaves[i]].extend(l)
-        print(dic)
+
         return dic
 
 
@@ -746,7 +746,6 @@ class Guerra2:
                 j.mapa = self.mapa
                 j.metodo = self.metodo
             print('mapa gerado!')
-            print(self.mapa)
         else:
             self.mapa = None
 
@@ -1194,16 +1193,17 @@ class LayoutGuerra(ft.Row):
         
         dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
 
-        self.tabela = My_tabela(dic)
+        self.tabela = My_tabelaC(dic)
+        self.tabela.larguras = ('Jogador',100)
         self.controls = [
             ft.Column([
             ft.Row(height=10),
                 ft.Row([estrelas, self.inverter,self.metodo]),
                 ft.Row([rodar, resultado2,gerar_mapa,]),
                 ft.Row([resultado_espelho,parar,copiar]),
-                ft.Column([self.tabela]),
-                ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01'),
+                ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
             ],alignment=ft.MainAxisAlignment.START, width=350),
+            ft.Column([self.tabela])
             
         ]
 
@@ -1233,7 +1233,7 @@ class LayoutGuerra(ft.Row):
             # print(df)
             self.tabela.visible = True
             self.tabela.dic = dic# = My_tabela(df)
-            self.tabela.update()
+            self.tabela.larguras= ('Jogador',100)
             # self.tabela.df = self.g2.df
             self.RedimensionarJanela(400)
             self.update()
@@ -1264,7 +1264,8 @@ class LayoutGuerra(ft.Row):
                 self.g2.Resultado2()
                 self.tabela.visible = True
                 self.tabela.dic = self.g2.dic
-                print(self.g2.dic)
+                self.tabela.larguras= ('Jogador',100)
+
                 self.RedimensionarJanela(410)
                 self.update()
             else:
@@ -1280,6 +1281,8 @@ class LayoutGuerra(ft.Row):
             self.g2.ResultadoEspelho()
             self.tabela.visible = True
             self.tabela.dic = self.g2.dic
+            self.tabela.larguras= ('Jogador',100)
+
             self.RedimensionarJanela(400)
             self.update()
 
@@ -1292,7 +1295,13 @@ class LayoutGuerra(ft.Row):
     def Gerar_mapa(self,e):
         def pp():
             self.tabela.visible = True
-            self.tabela.dic = self.g2.GerarMapaDeEstrelas()
+            dic = self.g2.GerarMapaDeEstrelas()
+            self.tabela.dic = dic
+            self.tabela.larguras= (list(dic.keys())[0],80)
+
+            for i in list(dic.keys())[1:]:
+                self.tabela.larguras= (i,20)
+
             self.RedimensionarJanela(700)
             self.update()
         # if self.g2 == None:
@@ -1395,13 +1404,83 @@ class Tabe(ft.Tabs):
         # pass
 
     
+class My_tabelaC(ft.Column):
+    def __init__(self, dic# dicionário
+                    ):
+        super().__init__()
+        self.spacing = 0
+        self.run_spacing = 0
+        self._dic = dic 
+        self.visible = False 
+        self.Iniciar()     
+        self.Linhas()
+
+
+    def Iniciar(self):
+        self.chaves = list(self._dic.keys())
+        self._larguras = {i:60 for i in self.chaves}
+        self.opcoes = self._dic[self.chaves[0]]
+
+
+    def Colunas(self):
+        self.controls = [ft.Container(ft.Row([ft.Text(i, width=self._larguras[i], text_align='center') for i in self.chaves], tight=True),bgcolor='white,0.3')]
+
+            
+        
+    def Linhas(self):
+        self.Colunas()
+        for i, k in enumerate(self._dic[self.chaves[0]]):     
+            cor  = 'black' if i%2 == 0 else  'white,0.1'  
+            self.controls.append(
+                ft.Container(ft.Row([
+                                Display(value = self._dic[self.chaves[0]][i],opitions=self.opcoes, width=self._larguras[self.chaves[0]],height=20,text_size = 12, 
+                                        borda_width = 0,border_radius = 0, 
+                                                text_align= ft.TextAlign.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, bgcolor = 'white,0')
+                ]+[ft.Text(self._dic[j][i],width=self._larguras[j], text_align='center') for j in self.chaves[1:]], tight=True),bgcolor=cor)
+                
+                )
+            
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
+
+
+    @property
+    def dic(self):
+        return self._dic
+    
+    @dic.setter
+    def dic(self, dic):
+        if isinstance(dic, dict):
+            self._dic = dic
+            self.Iniciar()
+            self.Linhas()
+        self.Atualizar()
+
+    @property
+    def larguras(self):
+        return self._larguras
+    
+    @larguras.setter
+    def larguras(self,  valor = ('chave','valor')):
+        if valor[0] in self.chaves and isinstance(valor[1], int):
+            # self.Iniciar()
+            self._larguras[valor[0]] = valor[1]
+            print('aceitou')
+        else:
+            print('chave ou valor inválido')
+        self.Linhas()
+        self.Atualizar()
+
 
 
 
 
 def main(page: ft.Page):
     # page.title = "Guerra de Clans"
-    page.window.width = 1500  # Define a largura da janela como 800 pixels
+    page.window.width = 500  # Define a largura da janela como 800 pixels
     page.window.height = 770  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
@@ -1450,9 +1529,17 @@ def main(page: ft.Page):
         
     )
 
-    # dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
+    def mudar(e):
+        e.control.data = not e.control.data
+        if e.control.data:
+            tabela.dic = dic
+        else:
+            tabela.dic = dic2
+    bt = ft.TextButton('mudar', on_click=mudar, data = True)
 
-    # tabela = My_tabela(dic)
+    tabela = My_tabelaC(dic)
     # tabela.visible = True
     page.add(layout2)
 
