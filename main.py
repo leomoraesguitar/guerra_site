@@ -1567,15 +1567,17 @@ def main(page: ft.Page):
         g2 = Guerra2(metodo=metodo1,  fase= 'Geral',
                     arq_configuracoes=config_equipes)
         if g2.rodou:
-            t1.join()
+            # t1.join()
             g2.rodou = False
-        t1 = threading.Thread(target=g2.Rodar, args=(50000000, pocucas_0_estrelas,
-                                                    poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1), daemon=True)
-        t1.start()
+        # t1 = threading.Thread(target=g2.Rodar, args=(50000000, pocucas_0_estrelas,
+        #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1), daemon=True)
+        # t1.start()
         
-        
+        g2.Rodar(50000000, pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1)
+        print('executando...')
+        time.sleep(2)
         if metodo1 == 4:
-            t1.join()
+            # t1.join()
             # time.sleep(10)
             dic = g2.dic
             # print(df)
@@ -1668,7 +1670,7 @@ def main(page: ft.Page):
     # tabela.visible = True
     page.add(
         # ft.Row([bt,rodar]),
-        ft.Text('versão - 012', weight='BOLD', size = 15),
+        ft.Text('versão - 013', weight='BOLD', size = 15),
         layout
     )
 
