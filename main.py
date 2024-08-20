@@ -1527,7 +1527,7 @@ def main(page: ft.Page):
         if e.control.data:
             tabela.dic = dic
         else:
-            tabela.dic = dic2
+            Rodar(1)
             # pass
         # print(layout.g2.dic)
         
@@ -1668,7 +1668,7 @@ def main(page: ft.Page):
     # tabela.visible = True
     page.add(
         # ft.Row([bt,rodar]),
-        ft.Text('versão - 011', weight='BOLD', size = 15),
+        ft.Text('versão - 012', weight='BOLD', size = 15),
         layout
     )
 
