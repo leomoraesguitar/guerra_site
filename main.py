@@ -1235,6 +1235,7 @@ class LayoutGuerra(ft.Row):
             self.tabela.visible = True
             self.tabela.dic = dic# = My_tabela(df)
             self.tabela.larguras= ('Jogador',100)
+            print(dic)
             # self.tabela.df = self.g2.df
             self.update()
             # self.RedimensionarJanela(400)
