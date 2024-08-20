@@ -1195,6 +1195,7 @@ class LayoutGuerra(ft.Row):
 
         self.tabela = My_tabelaC(dic)
         self.tabela.larguras = ('Jogador',100)
+        self.tabela.visible = True
         self.controls = [
             ft.Column([
             ft.Row(height=10),
