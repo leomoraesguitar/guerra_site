@@ -1537,16 +1537,18 @@ def main(page: ft.Page):
     dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
     dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
     def mudar(e):
-        e.control.data = not e.control.data
-        if e.control.data:
-            tabela.dic = dic
-        else:
-            tabela.dic = dic2
+        # e.control.data = not e.control.data
+        # if e.control.data:
+        #     tabela.dic = dic
+        # else:
+        #     tabela.dic = dic2
+        layout.tabela.dic = layout.g2.dic
+        
     bt = ft.TextButton('mudar', on_click=mudar, data = True)
 
     tabela = My_tabelaC(dic)
     # tabela.visible = True
-    page.add(layout2)
+    page.add(bt,layout2)
 
 
 if __name__ == '__main__':  
