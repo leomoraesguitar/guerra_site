@@ -457,6 +457,7 @@ class Guerra2:
         
         self.GerarMapaInicial()
         vilas = self.mapa
+        print(vilas)
 
         # print(lista_de_vilas_forca)
         for i in lista_de_vilas_forca:
@@ -494,6 +495,7 @@ class Guerra2:
         # df.to_clipboard(index=False)
         # print(df)
         # self.df = df
+        print(dic)
         self.dic = dic
 
     def Resultado_outras_contas(self):
@@ -1232,10 +1234,10 @@ class LayoutGuerra(ft.Row):
             # time.sleep(10)
             dic = self.g2.dic
             # print(df)
+            print(dic)
             self.tabela.visible = True
             self.tabela.dic = dic# = My_tabela(df)
             self.tabela.larguras= ('Jogador',100)
-            print(dic)
             # self.tabela.df = self.g2.df
             self.update()
             # self.RedimensionarJanela(400)
