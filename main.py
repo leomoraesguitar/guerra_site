@@ -1486,7 +1486,7 @@ class My_tabelaC(ft.Column):
 
 
 def main(page: ft.Page):
-    # page.title = "Guerra de Clans"
+    page.title = "Guerra de Clans - 008"
     page.window.width = 500  # Define a largura da janela como 800 pixels
     page.window.height = 770  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
@@ -1506,32 +1506,95 @@ def main(page: ft.Page):
     equipes = layout_equipes()
     importar = layout_Importar(printt=print)
 
-
-    # def Valor(e):
-    #     match e.data:
-    #         case 'poucas_0_estrelas':
-    #             num_estrelas =  True, False, False, False                
-    #         case  'poucas_1_estrelas':
-    #             num_estrelas =  False, True, False, False                  
-    #         case 'poucas_2_estrelas':
-    #             num_estrelas =  False, False, True, False                  
-    #         case  'poucas_3_estrelas':
-    #             num_estrelas =  False, False, False, True 
+    inverter =  ft.Checkbox(label="Inverter", value=False) 
+    num_estrelas = False, False, False, True
 
 
-    # estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas',
-    #                        'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
-                
-    # layout =  ft.Row([
-    #             ft.Column([
-    #             ft.Row([estrelas, self.inverter,self.metodo]),
-    #             ft.Row([rodar, resultado2,gerar_mapa,]),
-    #             ft.Row([resultado_espelho,parar,copiar]),
-    #             ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
-    #             ],alignment=ft.MainAxisAlignment.START, width=350),
+    metodo = My_Dropdown('Método',None, 1,2,3,4)
+    metodo.value = 4
+    metodo.width = 100
 
-    #              ft.Column([self.tabela]])
+    def Valor(e):
+        global num_estrelas
+        match e.data:
+            case 'poucas_0_estrelas':
+                num_estrelas =  True, False, False, False                
+            case  'poucas_1_estrelas':
+                num_estrelas =  False, True, False, False                  
+            case 'poucas_2_estrelas':
+                num_estrelas =  False, False, True, False                  
+            case  'poucas_3_estrelas':
+                num_estrelas =  False, False, False, True 
 
+    estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas',
+                           'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
+    estrelas.value = 'poucas_3_estrelas'
+    
+    config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')
+
+    def Rodar(e):
+        
+        pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = num_estrelas
+        # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
+        inverter1 = inverter.value
+        metodo1 = int(metodo.value)
+        # print(metodo)
+
+        print('iniciando ...')
+        g2 = Guerra2(metodo=metodo1,  fase= 'Geral',
+                    arq_configuracoes=config_equipes)
+        if g2.rodou:
+            t1.join()
+            g2.rodou = False
+        t1 = threading.Thread(target=g2.Rodar, args=(50000000, pocucas_0_estrelas,
+                                                    poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1), daemon=True)
+        t1.start()
+        
+        
+        if metodo1 == 4:
+            t1.join()
+            # time.sleep(10)
+            dic = g2.dic
+            # print(df)
+            print(dic)
+            tabela.visible = True
+            tabela.dic = dic# = My_tabela(df)
+            tabela.larguras= ('Jogador',100)
+            # self.tabela.df = self.g2.df
+            page.update()
+            # RedimensionarJanela(400)
+        # print(self.g2.df)
+
+
+
+
+
+
+
+    rodar =ft.ElevatedButton('Rodar', on_click = Rodar)
+    parar =ft.ElevatedButton('parar', on_click = None)
+    gerar_mapa =ft.ElevatedButton('gerar_mapa',on_click = None)
+    resultado2 =ft.ElevatedButton('resultado2',on_click = None)
+    resultado_espelho = ft.ElevatedButton('resultado espelho',on_click = None)
+    saida = ft.Text('')
+    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+
+    tabela = My_tabelaC(dic)
+                        
+    layout =  ft.Row([
+                ft.Column([
+                ft.Row([estrelas, inverter,metodo]),
+                ft.Row([rodar, resultado2,gerar_mapa,]),
+                ft.Row([resultado_espelho,parar]),
+                ft.Container(content = ft.Column([saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
+                ],alignment=ft.MainAxisAlignment.START, width=350),
+
+                 ft.Column([tabela])])
+
+    # def RedimensionarJanela( valor):       
+    #     tamanho = 30*(len(g2.lista_jogadores)-4)+valor
+    #     page.window.width = tamanho
+    #     page.update()
 
 
 
@@ -1558,7 +1621,7 @@ def main(page: ft.Page):
 
     def up():
         pass
-    layout = LayoutGuerra(page = page)
+    # layout = LayoutGuerra(page = page)
     # layout.update = up
 
 
@@ -1583,17 +1646,18 @@ def main(page: ft.Page):
         # print(layout.g2.dic)
         
     bt = ft.TextButton('mudar', on_click=mudar, data = True)
-    rodar = ft.ElevatedButton('Rodar', on_click = layout.Rodar)
+    # rodar = ft.ElevatedButton('Rodar', on_click = layout.Rodar)
 
     dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
     dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
 
 
-    tabela = My_tabelaC(dic)
-    tabela.visible = True
+    # tabela = My_tabelaC(dic)
+    # tabela.visible = True
     page.add(
-        ft.Row([bt,rodar]),
-        tabela
+        # ft.Row([bt,rodar]),
+        ft.Text('versão - 009', weight='BOLD', size = 15),
+        layout
     )
 
 
