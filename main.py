@@ -1558,7 +1558,7 @@ def main(page: ft.Page):
 
     def up():
         pass
-    layout = LayoutGuerra(page = None)
+    layout = LayoutGuerra(page = page)
     # layout.update = up
 
 
