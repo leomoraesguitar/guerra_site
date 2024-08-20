@@ -1500,6 +1500,12 @@ def main(page: ft.Page):
     Resize(page)    
 
 
+    saida = ft.Text('')
+
+    def print(texto):
+            saida.value += f'{texto}\n'
+            saida.update()  
+
 
     vilas = LayoutVilas(printt=print)
     jogadores = layout_jogadores(printt=print)
@@ -1509,6 +1515,23 @@ def main(page: ft.Page):
     inverter =  ft.Checkbox(label="Inverter", value=False) 
     num_estrelas = False, False, False, True
 
+
+
+
+    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
+    def mudar(e):
+        tabela.visible = True
+        Rodar(1)
+        e.control.data = not e.control.data
+        if e.control.data:
+            tabela.dic = dic
+        else:
+            # tabela.dic = layout.g2.dic
+            pass
+        # print(layout.g2.dic)
+        
+    bt = ft.TextButton('mudar', on_click=mudar, data = True)
 
     metodo = My_Dropdown('Método',None, 1,2,3,4)
     metodo.value = 4
@@ -1571,12 +1594,11 @@ def main(page: ft.Page):
 
 
 
-    rodar =ft.ElevatedButton('Rodar', on_click = Rodar)
+    rodar =ft.ElevatedButton('Rodar', on_click=mudar, data = True)
     parar =ft.ElevatedButton('parar', on_click = None)
     gerar_mapa =ft.ElevatedButton('gerar_mapa',on_click = None)
     resultado2 =ft.ElevatedButton('resultado2',on_click = None)
     resultado_espelho = ft.ElevatedButton('resultado espelho',on_click = None)
-    saida = ft.Text('')
     dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
 
     tabela = My_tabelaC(dic)
@@ -1596,7 +1618,7 @@ def main(page: ft.Page):
     #     page.window.width = tamanho
     #     page.update()
 
-
+    
 
 
     def Func(e):
@@ -1635,17 +1657,7 @@ def main(page: ft.Page):
         
     )
 
-    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
-    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
-    def mudar(e):
-        e.control.data = not e.control.data
-        if e.control.data:
-            tabela.dic = dic
-        else:
-            tabela.dic = layout.g2.dic
-        # print(layout.g2.dic)
-        
-    bt = ft.TextButton('mudar', on_click=mudar, data = True)
+
     # rodar = ft.ElevatedButton('Rodar', on_click = layout.Rodar)
 
     dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
@@ -1656,7 +1668,7 @@ def main(page: ft.Page):
     # tabela.visible = True
     page.add(
         # ft.Row([bt,rodar]),
-        ft.Text('versão - 009', weight='BOLD', size = 15),
+        ft.Text('versão - 010', weight='BOLD', size = 15),
         layout
     )
 
