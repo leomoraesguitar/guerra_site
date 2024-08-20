@@ -1398,7 +1398,7 @@ class Tabe(ft.Tabs):
 
 def main(page: ft.Page):
     # page.title = "Guerra de Clans"
-    page.window.width = 500  # Define a largura da janela como 800 pixels
+    page.window.width = 1500  # Define a largura da janela como 800 pixels
     page.window.height = 770  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
