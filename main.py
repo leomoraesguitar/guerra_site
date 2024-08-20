@@ -1232,6 +1232,7 @@ class LayoutGuerra(ft.Row):
             # print(df)
             self.tabela.visible = True
             self.tabela.dic = dic# = My_tabela(df)
+            self.tabela.update()
             # self.tabela.df = self.g2.df
             self.RedimensionarJanela(400)
             self.update()
@@ -1262,6 +1263,7 @@ class LayoutGuerra(ft.Row):
                 self.g2.Resultado2()
                 self.tabela.visible = True
                 self.tabela.dic = self.g2.dic
+                print(self.g2.dic)
                 self.RedimensionarJanela(410)
                 self.update()
             else:
