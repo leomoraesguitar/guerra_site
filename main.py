@@ -714,7 +714,7 @@ class Guerra2:
             for j in range(len(mapa)):
                 l.append(mapa[j][i])
             dic[chaves[i]].extend(l)
-
+        print(dic)
         return dic
 
 
@@ -746,6 +746,7 @@ class Guerra2:
                 j.mapa = self.mapa
                 j.metodo = self.metodo
             print('mapa gerado!')
+            print(self.mapa)
         else:
             self.mapa = None
 
