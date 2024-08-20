@@ -1156,7 +1156,7 @@ class LayoutGuerra(ft.Column):
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'
         self.fase = 'Geral'
-        self.n_ciclos = 50000000
+        self.n_ciclos = ft.TextField(value = 50000, dense = True, width=100, label = 'Num cilcos', content_padding=10)
         self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
         self.scroll  = ft.ScrollMode.ADAPTIVE
         self.height = 500
@@ -1205,7 +1205,8 @@ class LayoutGuerra(ft.Column):
         self.controls = [
             ft.Row([
                         ft.Column([
-                                    ft.Row([estrelas, self.inverter,self.metodo,gerar_mapa]),
+
+                                    ft.Row([estrelas, self.inverter,self.metodo,gerar_mapa, self.n_ciclos]),
                                     ft.Row([rodar,parar, resultado2,resultado_espelho]),
                                     ft.Column([self.tabela])
                                 ],alignment=ft.MainAxisAlignment.START, width=600),
@@ -1235,7 +1236,7 @@ class LayoutGuerra(ft.Column):
         #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
         # t1.start()
         
-        self.g2.Rodar(self.n_ciclos, pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+        self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
         time.sleep(1)
         if metodo == 4:
@@ -1251,6 +1252,8 @@ class LayoutGuerra(ft.Column):
             self.update()
             # self.RedimensionarJanela(400)
         # print(self.g2.df)
+        elif metodo == 2:
+            self.Resultado2(1)
 
  
     def Parar(self,e):
@@ -1546,7 +1549,7 @@ def main(page: ft.Page):
     )
 
 
-    page.overlay.append(ft.Text('versão - 014',top=10, right=10, ))
+    page.overlay.append(ft.Text('versão - 015',top=10, right=10, ))
 
     page.add(layout2)
     # page.update()
