@@ -457,6 +457,7 @@ class Guerra2:
         
         self.GerarMapaInicial()
         vilas = self.mapa
+        print('MEU OVO')
         print(vilas)
 
         # print(lista_de_vilas_forca)
@@ -743,11 +744,11 @@ class Guerra2:
             plan = self.GerarMapaDeEstrelas()
             # plan.index = plan['Jogador']
             self.mapa = plan
-            # print( self.mapa)
             for j in self.lista_vilas:
                 j.mapa = self.mapa
                 j.metodo = self.metodo
             print('mapa gerado!')
+            print( self.mapa)
         else:
             self.mapa = None
 
