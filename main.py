@@ -1145,7 +1145,7 @@ class Guerra2:
                 pass
             return default or {}
        
-class LayoutGuerra(ft.Row):
+class LayoutGuerra(ft.Column):
     def __init__(self, page):
         super().__init__()
         self.page = page
@@ -1158,7 +1158,8 @@ class LayoutGuerra(ft.Row):
         self.fase = 'Geral'
         self.n_ciclos = 50000000
         self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
-
+        self.scroll  = ft.ScrollMode.ADAPTIVE
+        self.height = 500
 
         def Valor(e):
             match e.data:
@@ -1200,18 +1201,21 @@ class LayoutGuerra(ft.Row):
 
         self.tabela = My_tabelaC(dic)
         self.tabela.larguras = ('Jogador',100)
-        self.tabela.visible = True
+        # self.tabela.visible = True
         self.controls = [
-            ft.Column([
-            ft.Row(height=10),
-                ft.Row([estrelas, self.inverter,self.metodo]),
-                ft.Row([rodar, resultado2,gerar_mapa,]),
-                ft.Row([resultado_espelho,parar,copiar]),
-                ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
-            ],alignment=ft.MainAxisAlignment.START, width=350),
-            ft.Column([self.tabela])
+            ft.Row([
+                        ft.Column([
+                                    ft.Row([estrelas, self.inverter,self.metodo,gerar_mapa]),
+                                    ft.Row([rodar,parar, resultado2,resultado_espelho]),
+                                    ft.Column([self.tabela])
+                                ],alignment=ft.MainAxisAlignment.START, width=600),
+                    
+
+                        ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
+                            ],vertical_alignment='start')
+                        ]
             
-        ]
+        
 
 
     def Rodar(self,e):
@@ -1225,15 +1229,17 @@ class LayoutGuerra(ft.Row):
         self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
                     arq_configuracoes=self.config_equipes)
         if self.g2.rodou:
-            t1.join()
+            # t1.join()
             self.g2.rodou = False
-        t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
-                                                    poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
-        t1.start()
+        # t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
+        #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+        # t1.start()
         
-        
+        self.g2.Rodar(self.n_ciclos, pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+
+        time.sleep(1)
         if metodo == 4:
-            t1.join()
+            # t1.join()
             # time.sleep(10)
             dic = self.g2.dic
             # print(df)
@@ -1263,7 +1269,8 @@ class LayoutGuerra(ft.Row):
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value)
-        threading.Thread(target=pp, daemon=True).start()
+        # threading.Thread(target=pp, daemon=True).start()
+        pp()
 
     def Resultado2(self,e):
         def pp():
@@ -1273,7 +1280,7 @@ class LayoutGuerra(ft.Row):
                 self.tabela.dic = self.g2.dic
                 self.tabela.larguras= ('Jogador',100)
 
-                self.RedimensionarJanela(410)
+                # self.RedimensionarJanela(410)
                 self.update()
             else:
                 print('Você ainda não rodou o programa, usando metódo 2')
@@ -1281,7 +1288,8 @@ class LayoutGuerra(ft.Row):
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value)
-        threading.Thread(target=pp, daemon=True).start()
+        # threading.Thread(target=pp, daemon=True).start()
+        pp()
 
     def Resultado_espelho(self,e):
         def pp():
@@ -1290,13 +1298,14 @@ class LayoutGuerra(ft.Row):
             self.tabela.dic = self.g2.dic
             self.tabela.larguras= ('Jogador',100)
 
-            self.RedimensionarJanela(400)
+            # self.RedimensionarJanela(400)
             self.update()
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value)
 
-        threading.Thread(target=pp, daemon=True).start()
+        # threading.Thread(target=pp, daemon=True).start()
+        pp()
 
 
     def Gerar_mapa(self,e):
@@ -1309,11 +1318,12 @@ class LayoutGuerra(ft.Row):
             for i in list(dic.keys())[1:]:
                 self.tabela.larguras= (i,20)
 
-            self.RedimensionarJanela(700)
+            # self.RedimensionarJanela(700)
             self.update()
         # if self.g2 == None:
         self.g2 = Guerra2(metodo=self.metodo.value)
-        threading.Thread(target=pp, daemon=True).start()
+        # threading.Thread(target=pp, daemon=True).start()
+        pp()
         
         
 
@@ -1415,8 +1425,8 @@ class My_tabelaC(ft.Column):
     def __init__(self, dic# dicionário
                     ):
         super().__init__()
-        self.spacing = 0
-        self.run_spacing = 0
+        self.spacing = 3
+        self.run_spacing = 3
         self._dic = dic 
         self.visible = False 
         self.Iniciar()     
@@ -1486,8 +1496,8 @@ class My_tabelaC(ft.Column):
 
 
 def main(page: ft.Page):
-    page.title = "Guerra de Clans - 008"
-    page.window.width = 500  # Define a largura da janela como 800 pixels
+    page.title = "Guerra de Clans - 015"
+    page.window.width = 810  # Define a largura da janela como 800 pixels
     page.window.height = 770  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
@@ -1495,132 +1505,13 @@ def main(page: ft.Page):
 
     page.theme = ft.Theme(visual_density = "comfortable")
 
-    # saida = Saida() 
+
     ConfirmarSaida(page)
-    Resize(page)    
-
-
-    saida = ft.Text('')
-
-    def print(texto):
-            saida.value += f'{texto}\n'
-            saida.update()  
-
-
+    # Resize(page)    
     vilas = LayoutVilas(printt=print)
     jogadores = layout_jogadores(printt=print)
     equipes = layout_equipes()
     importar = layout_Importar(printt=print)
-
-    inverter =  ft.Checkbox(label="Inverter", value=False) 
-    num_estrelas = False, False, False, True
-
-
-
-
-    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
-    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
-    def mudar(e):
-        tabela.visible = True
-        # Rodar(1)
-        e.control.data = not e.control.data
-        if e.control.data:
-            tabela.dic = dic
-        else:
-            Rodar(1)
-            # pass
-        # print(layout.g2.dic)
-        
-    bt = ft.TextButton('mudar', on_click=mudar, data = True)
-
-    metodo = My_Dropdown('Método',None, 1,2,3,4)
-    metodo.value = 4
-    metodo.width = 100
-
-    def Valor(e):
-        global num_estrelas
-        match e.data:
-            case 'poucas_0_estrelas':
-                num_estrelas =  True, False, False, False                
-            case  'poucas_1_estrelas':
-                num_estrelas =  False, True, False, False                  
-            case 'poucas_2_estrelas':
-                num_estrelas =  False, False, True, False                  
-            case  'poucas_3_estrelas':
-                num_estrelas =  False, False, False, True 
-
-    estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas',
-                           'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
-    estrelas.value = 'poucas_3_estrelas'
-    
-    config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')
-
-    def Rodar(e):
-        
-        pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = num_estrelas
-        # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
-        inverter1 = inverter.value
-        metodo1 = int(metodo.value)
-        # print(metodo)
-
-        print('iniciando ...')
-        g2 = Guerra2(metodo=metodo1,  fase= 'Geral',
-                    arq_configuracoes=config_equipes)
-        if g2.rodou:
-            # t1.join()
-            g2.rodou = False
-        # t1 = threading.Thread(target=g2.Rodar, args=(50000000, pocucas_0_estrelas,
-        #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1), daemon=True)
-        # t1.start()
-        
-        g2.Rodar(50000000, pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter1)
-        print('executando...')
-        time.sleep(2)
-        if metodo1 == 4:
-            # t1.join()
-            # time.sleep(10)
-            dic = g2.dic
-            # print(df)
-            print(dic)
-            tabela.visible = True
-            tabela.dic = dic# = My_tabela(df)
-            tabela.larguras= ('Jogador',100)
-            # self.tabela.df = self.g2.df
-            page.update()
-            # RedimensionarJanela(400)
-        # print(self.g2.df)
-
-
-
-
-
-
-
-    rodar =ft.ElevatedButton('Rodar', on_click=mudar, data = True)
-    parar =ft.ElevatedButton('parar', on_click = None)
-    gerar_mapa =ft.ElevatedButton('gerar_mapa',on_click = None)
-    resultado2 =ft.ElevatedButton('resultado2',on_click = None)
-    resultado_espelho = ft.ElevatedButton('resultado espelho',on_click = None)
-    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
-
-    tabela = My_tabelaC(dic)
-                        
-    layout =  ft.Row([
-                ft.Column([
-                ft.Row([estrelas, inverter,metodo]),
-                ft.Row([rodar, resultado2,gerar_mapa,]),
-                ft.Row([resultado_espelho,parar]),
-                ft.Container(content = ft.Column([saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
-                ],alignment=ft.MainAxisAlignment.START, width=350),
-
-                 ft.Column([tabela])])
-
-    # def RedimensionarJanela( valor):       
-    #     tamanho = 30*(len(g2.lista_jogadores)-4)+valor
-    #     page.window.width = tamanho
-    #     page.update()
-
-    
 
 
     def Func(e):
@@ -1639,16 +1530,11 @@ def main(page: ft.Page):
                page.window.width = 510
                page.update()  
             case '0':
-               page.window.width = 750
+               page.window.width = 810
                page.update()                                            
 
 
-    def up():
-        pass
-    # layout = LayoutGuerra(page = page)
-    # layout.update = up
-
-
+ 
     layout2 = Tabe(
         Func,
         ('Lista de Guerra', layout,1),
@@ -1660,26 +1546,16 @@ def main(page: ft.Page):
     )
 
 
-    # rodar = ft.ElevatedButton('Rodar', on_click = layout.Rodar)
+    page.overlay.append(ft.Text('versão - 014',top=10, right=10, ))
 
-    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
-    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
-
-
-    # tabela = My_tabelaC(dic)
-    # tabela.visible = True
-    page.add(
-        # ft.Row([bt,rodar]),
-        ft.Text('versão - 013', weight='BOLD', size = 15),
-        layout
-    )
-
+    page.add(layout2)
+    # page.update()
 
 if __name__ == '__main__':  
-
-    # def print(texto):
-    #     layout.saida.value += f'{texto}\n'
-    #     layout.saida.update()      
+    layout = LayoutGuerra(page = None)
+    def print(texto):
+        layout.saida.value += f'{texto}\n'
+        layout.saida.update()      
     ft.app(main,
     #    view = ft.AppView.WEB_BROWSER
     # port = 8050

@@ -187,22 +187,27 @@ class Players(ft.Row):
             self.func(e)
             self.update()        
 
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
+
     def Chenge_atenuador(self, e):
         valor = self._atenuador.value
         forca = self._forca.value
         try:
             forca_final = int(forca) - int(valor)
             self._forca_final.value = forca_final
-            if self.func(e) != None:
-                self.func(e)
         except:
             try:
                 self._forca_final.value = int(forca)
-                if self.func(e) != None:
-                    self.func(e)
             except:
-                pass            
-        # self._forca_final.update()
+                pass   
+        # self._forca_final.update()           
+        self.Atualizar()
+        if self.func(e) != None:
+            self.func(e)
 
 class layout_Importar(ft.Column):
     def __init__(self, printt = None, page = None):
@@ -258,7 +263,7 @@ class layout_Importar(ft.Column):
         self.run_spacing = 0
         self.spacing = 0
         self.saida = Saida()
-        self.print = self.saida.pprint
+        self.printt = self.saida.pprint
         self.controls.append(self.saida)        
 
 
@@ -271,7 +276,7 @@ class layout_Importar(ft.Column):
         self.controls[-2].controls = self.OrdenarListadeClasses(self.controls[-2].controls, atr)
 
         self.update()     
-        self.print(f'ordenando por {atr}')
+        self.printt(f'ordenando por {atr}')
         self.page.update()
 
     def OrdenarDicionario(self, dic, col):
@@ -409,12 +414,12 @@ class layout_Importar(ft.Column):
 
             return dic_jogadores_esp1
         else:
-            self.print(f'Tokken inválido!')
+            self.printt(f'Tokken inválido!')
 
     def Importar_dados(self,e):
         api_key = re.sub(r'\s+', '', self.Tokken.value)
         if isinstance(api_key, str) and api_key not in ['', None]:
-            self.print('Importando dados...')
+            self.printt('Importando dados...')
             return self._Import(api_key)
         else:
             self.printt('Você não inseriu uma api_key válida, ou o IP está incorreto. \nVerifique o IP e adicione uma nova api_key no site: \nhttps://developer.clashofclans.com/#/')
