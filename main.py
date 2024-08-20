@@ -1200,9 +1200,9 @@ class LayoutGuerra(ft.Row):
                 ft.Row([estrelas, self.inverter,self.metodo]),
                 ft.Row([rodar, resultado2,gerar_mapa,]),
                 ft.Row([resultado_espelho,parar,copiar]),
-                ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
+                ft.Column([self.tabela]),
+                ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01'),
             ],alignment=ft.MainAxisAlignment.START, width=350),
-            ft.Column([self.tabela])
             
         ]
 
