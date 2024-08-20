@@ -457,8 +457,8 @@ class Guerra2:
         
         self.GerarMapaInicial()
         vilas = self.mapa
-        print('MEU OVO')
-        print(vilas)
+        # print('MEU OVO')
+        # print(vilas)
 
         # print(lista_de_vilas_forca)
         for i in lista_de_vilas_forca:
@@ -496,7 +496,7 @@ class Guerra2:
         # df.to_clipboard(index=False)
         # print(df)
         # self.df = df
-        print(dic)
+        # print(dic)
         self.dic = dic
 
     def Resultado_outras_contas(self):
@@ -748,7 +748,7 @@ class Guerra2:
                 j.mapa = self.mapa
                 j.metodo = self.metodo
             print('mapa gerado!')
-            print( self.mapa)
+            # print( self.mapa)
         else:
             self.mapa = None
 
@@ -1186,12 +1186,14 @@ class LayoutGuerra(ft.Row):
         self.metodo = My_Dropdown('Método',None, 1,2,3,4)
         self.metodo.value = 4
         self.metodo.width = 100
+
         rodar =ft.ElevatedButton('Rodar', on_click = self.Rodar)
         parar =ft.ElevatedButton('parar', on_click = self.Parar)
         gerar_mapa =ft.ElevatedButton('gerar_mapa',on_click = self.Gerar_mapa)
         resultado2 =ft.ElevatedButton('resultado2',on_click = self.Resultado2)
         resultado_espelho = ft.ElevatedButton('resultado espelho',on_click = self.Resultado_espelho)
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
+        
         self.saida = ft.Text('')
         
         dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
@@ -1235,7 +1237,7 @@ class LayoutGuerra(ft.Row):
             # time.sleep(10)
             dic = self.g2.dic
             # print(df)
-            print(dic)
+            # print(dic)
             self.tabela.visible = True
             self.tabela.dic = dic# = My_tabela(df)
             self.tabela.larguras= ('Jogador',100)
@@ -1473,7 +1475,7 @@ class My_tabelaC(ft.Column):
         if valor[0] in self.chaves and isinstance(valor[1], int):
             # self.Iniciar()
             self._larguras[valor[0]] = valor[1]
-            print('aceitou')
+            # print('aceitou')
         else:
             print('chave ou valor inválido')
         self.Linhas()
@@ -1503,6 +1505,36 @@ def main(page: ft.Page):
     jogadores = layout_jogadores(printt=print)
     equipes = layout_equipes()
     importar = layout_Importar(printt=print)
+
+
+    # def Valor(e):
+    #     match e.data:
+    #         case 'poucas_0_estrelas':
+    #             num_estrelas =  True, False, False, False                
+    #         case  'poucas_1_estrelas':
+    #             num_estrelas =  False, True, False, False                  
+    #         case 'poucas_2_estrelas':
+    #             num_estrelas =  False, False, True, False                  
+    #         case  'poucas_3_estrelas':
+    #             num_estrelas =  False, False, False, True 
+
+
+    # estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas',
+    #                        'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
+                
+    # layout =  ft.Row([
+    #             ft.Column([
+    #             ft.Row([estrelas, self.inverter,self.metodo]),
+    #             ft.Row([rodar, resultado2,gerar_mapa,]),
+    #             ft.Row([resultado_espelho,parar,copiar]),
+    #             ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=350), bgcolor='white,0.01')
+    #             ],alignment=ft.MainAxisAlignment.START, width=350),
+
+    #              ft.Column([self.tabela]])
+
+
+
+
 
     def Func(e):
         match e.data:
@@ -1537,25 +1569,36 @@ def main(page: ft.Page):
     dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
     dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
     def mudar(e):
-        # e.control.data = not e.control.data
-        # if e.control.data:
-        #     tabela.dic = dic
-        # else:
-        #     tabela.dic = dic2
-        layout.tabela.dic = layout.g2.dic
+        e.control.data = not e.control.data
+        if e.control.data:
+            tabela.dic = dic
+        else:
+            tabela.dic = layout.g2.dic
+        # print(layout.g2.dic)
         
     bt = ft.TextButton('mudar', on_click=mudar, data = True)
+    rodar = ft.ElevatedButton('Rodar', on_click = layout.Rodar)
+
+    dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+    dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
+
 
     tabela = My_tabelaC(dic)
-    # tabela.visible = True
-    page.add(bt,layout2)
+    tabela.visible = True
+    page.add(
+        ft.Row([bt,rodar]),
+        tabela
+    )
 
 
 if __name__ == '__main__':  
+    def up():
+        pass
     layout = LayoutGuerra(page = None)
-    def print(texto):
-        layout.saida.value += f'{texto}\n'
-        layout.saida.update()      
+    layout.update = up
+    # def print(texto):
+    #     layout.saida.value += f'{texto}\n'
+    #     layout.saida.update()      
     ft.app(main,
     #    view = ft.AppView.WEB_BROWSER
     # port = 8050
