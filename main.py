@@ -202,7 +202,7 @@ class My_tabela(ft.DataTable):
         self.sort_column_index = 0
         self.sort_ascending = True
         # self.data_row_color={"hovered": "0x30FF0000"}
-        self.visible = False
+        self.visible = True
         self.textsize = 15
 
         self.Colunas_tabela()
