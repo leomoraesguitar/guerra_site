@@ -1556,6 +1556,12 @@ def main(page: ft.Page):
                page.update()                                            
 
 
+    def up():
+        pass
+    layout = LayoutGuerra(page = None)
+    # layout.update = up
+
+
     layout2 = Tabe(
         Func,
         ('Lista de Guerra', layout,1),
@@ -1592,10 +1598,7 @@ def main(page: ft.Page):
 
 
 if __name__ == '__main__':  
-    def up():
-        pass
-    layout = LayoutGuerra(page = None)
-    layout.update = up
+
     # def print(texto):
     #     layout.saida.value += f'{texto}\n'
     #     layout.saida.update()      
