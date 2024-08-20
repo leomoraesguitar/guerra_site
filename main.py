@@ -1522,13 +1522,13 @@ def main(page: ft.Page):
     dic2 = {'Jogador':list(range(10)), 'Vila':list(range(10)), 'Estrelas': list(range(10))}
     def mudar(e):
         tabela.visible = True
-        Rodar(1)
+        # Rodar(1)
         e.control.data = not e.control.data
         if e.control.data:
             tabela.dic = dic
         else:
-            # tabela.dic = layout.g2.dic
-            pass
+            tabela.dic = dic2
+            # pass
         # print(layout.g2.dic)
         
     bt = ft.TextButton('mudar', on_click=mudar, data = True)
@@ -1668,7 +1668,7 @@ def main(page: ft.Page):
     # tabela.visible = True
     page.add(
         # ft.Row([bt,rodar]),
-        ft.Text('versão - 010', weight='BOLD', size = 15),
+        ft.Text('versão - 011', weight='BOLD', size = 15),
         layout
     )
 
