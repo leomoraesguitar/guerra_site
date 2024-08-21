@@ -378,8 +378,8 @@ class layout_jogadores(ft.Column):
             return default or {}
 
 def main(page: ft.Page):
-    page.window.width = 380  # Define a largura da janela como 800 pixels
-    page.window.height = 690  #    
+    page.window.width = 330  # Define a largura da janela como 800 pixels
+    page.window.height = 600  #    
     page.title = "Guerra de Clans"
     page.vertical_alignment = ft.MainAxisAlignment.START  
     ConfirmarSaida(page)

@@ -95,17 +95,22 @@ class LayoutEquipes(ft.Column):
         super().__init__()
         self.printt = printt
         self.page = page
+        cp = 5
+        wd = 50
         self.equipe_fields = {
-            "GRUPO MASTER": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO ELITE": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO A": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO B": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO C": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO D": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
-            "GRUPO E": ft.TextField(width=70, dense=True, content_padding=10, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO MASTER": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO ELITE": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO A": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO B": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO C": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO D": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
+            "GRUPO E": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
         }
         self.controls = [
-            ft.Row([ft.Text(name), field, ft.Text(details, size=13, color='white,0.6')]) 
+            ft.Container(ft.Column([ft.Row([ft.Text(name, weight='BOLD', size=12), field ],
+                alignment=ft.MainAxisAlignment.CENTER),ft.Text(details, size=13, color='white,0.6', text_align='center')], horizontal_alignment='center', spacing=0),
+                bgcolor='blue,0.05'
+                )
             for name, field, details in [
                 ("GRUPO MASTER", self.equipe_fields["GRUPO MASTER"], '3 em cv15-, 2 em cv14+'),
                 ("GRUPO ELITE", self.equipe_fields["GRUPO ELITE"], '3 em cv14-, 2 em cv15+'),
@@ -165,8 +170,8 @@ class LayoutEquipes(ft.Column):
             return default or {}
 
 def main(page: ft.Page):
-    page.window.width = 700
-    page.window.height = 420
+    page.window.width = 320
+    page.window.height = 600
     page.title = "Guerra de Clans"
     page.vertical_alignment = ft.MainAxisAlignment.START
     ConfirmarSaida(page)

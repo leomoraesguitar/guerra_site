@@ -174,16 +174,19 @@ class Display(ft.Container):
         self.Atualizar()
 
 class BotaoCT(ft.Container):
-    def __init__(self,nome,on_click = None, bgcolor = None, scale = None ):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None ):
         super().__init__()
         self.on_click=on_click
-        self.border_radius = 10
+        self.border_radius = 0
         self.bgcolor = bgcolor
         self.scale = scale
-        self.padding = 0
-        self.border=ft.Border(right=ft.BorderSide(5,'black,0.5'), bottom =ft.BorderSide(8,'black,0.5'))
+        self.col = col
+        self.text_size = text_size
+        self.padding = ft.Padding(4,0,4,0)
+        # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
-        self.content = ft.Text(nome, weight='BOLD') 
+        # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
+        self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size )
                                                       
 
 class My_Dropdown(ft.Dropdown):
@@ -1192,12 +1195,14 @@ class LayoutGuerra(ft.Column):
 
         self.metodo.value = 4
         self.metodo.width = 70
+        def Colu(x = 4):
+            return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        rodar = BotaoCT('Rodar', self.Rodar,bgcolor=ft.colors.GREEN_900,)
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900)
-        gerar_mapa =BotaoCT('gerar_mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_900)
-        resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900)
-        resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_900)
+        rodar = BotaoCT('Rodar', self.Rodar,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1.8))
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.8))
+        gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1.7))
+        resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(2.9))
+        resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(2.8))
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
         self.saida = ft.Text('')
@@ -1213,9 +1218,9 @@ class LayoutGuerra(ft.Column):
 
                                     # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
                                     # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
-                                    ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=320, spacing=0, run_spacing=0),
+                                    ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=320, spacing=0, run_spacing=0, alignment='start'),
                                     ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-50,)],scroll=ft.ScrollMode.ADAPTIVE,width = self.width-30, alignment='center')
-                                ],alignment=ft.MainAxisAlignment.START,  spacing=0, run_spacing=0, horizontal_alignment='center'),
+                                ],alignment=ft.MainAxisAlignment.START,  spacing=5, run_spacing=0, horizontal_alignment='center'),
                     
 
                         # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
@@ -1615,24 +1620,46 @@ def main(page: ft.Page):
 
 
         page.update()
+    def Colu(x = 4):
+        return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
     menu = ft.Container(
-                            content = ft.Column([
-                                                    ft.Row([
-                                                        BotaoCT('Lista de Guerra',Escolher_janela),
-                                                        BotaoCT('Vilas',Escolher_janela),
-                                                        BotaoCT('Jogadores',Escolher_janela),
-                                                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_AROUND),
-                                                    ft.Row([
-                                                        BotaoCT('Equipes',Escolher_janela),
-                                                        BotaoCT('Importar',Escolher_janela),
-                                                        BotaoCT('config',Escolher_janela),
-                                                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_AROUND), 
-                                                ],spacing=0, run_spacing=0,),
+        content = ft.ResponsiveRow([
+            ft.Container(
+                content = ft.Column([
+                    BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11),
+                    BotaoCT('Vilas',Escolher_janela),
+                ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+                border=ft.border.all(2,'white,0.4'),
+                height = 50,
+                col = Colu()
+            ),
 
-                            bgcolor=ft.colors.BROWN_500,
-                            border_radius=10,
-                            width=page.window.width-4
-                        )
+            ft.Container(
+                content = ft.Column([
+                    BotaoCT('Jogadores',Escolher_janela),
+                    BotaoCT('Equipes',Escolher_janela),
+                ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+                border=ft.border.all(2,'white,0.4'),
+                height = 50,
+                col = Colu()
+            ),
+
+            ft.Container(
+                content = ft.Column([
+                    BotaoCT('Importar',Escolher_janela),
+                    BotaoCT('config',Escolher_janela),
+                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'), 
+                border=ft.border.all(2,'white,0.4'),
+                height = 50,
+                col = Colu()
+                )
+                ],spacing=0, run_spacing=5),
+                    
+        # padding=2,
+        bgcolor=ft.colors.BROWN_500,
+        border_radius=0,
+        width=page.window.width+20
+    )
 
 
 
