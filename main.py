@@ -181,7 +181,7 @@ class BotaoCT(ft.Container):
         self.bgcolor = bgcolor
         self.scale = scale
         self.padding = 0
-        self.border=ft.Border(right=ft.BorderSide(5,'black,0.5'), bottom =ft.BorderSide(5,'black,0.5'))
+        self.border=ft.Border(right=ft.BorderSide(5,'black,0.5'), bottom =ft.BorderSide(8,'black,0.5'))
         self.nome = nome
         self.content = ft.Text(nome, weight='BOLD') 
                                                       
@@ -1601,15 +1601,15 @@ def main(page: ft.Page):
             case 'Lista de Guerra':
                 janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
             case 'Vilas':
-                janela.content = vilas
+                janela.content =  ft.Column([vilas], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Jogadores':
-                janela.content = jogadores
+                janela.content =  ft.Column([jogadores], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Lista de Guerra':
-                janela.content = layout
+                janela.content =  ft.Column([layout], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Equipes':
-                janela.content = equipes
+                janela.content =  ft.Column([equipes], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Importar':
-                janela.content = importar   
+                janela.content =    ft.Column([importar], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10) 
             case 'config':
                 janela.content = config                                                                                               
 
