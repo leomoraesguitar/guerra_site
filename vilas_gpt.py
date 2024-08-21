@@ -660,29 +660,40 @@ class Vila(ft.Row):
             self.cv.text_color = None            
 
 
-class LayoutVilas(ft.Column):
+class LayoutVilas(ft.Row):
     def __init__(self, num_vilas=15, printt=None, page=None):
         super().__init__()
         self.page = page
-        self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, options=[ft.dropdown.Option(i) for i in range(51)], dense=True, content_padding=5, width=180, on_change=self.Chenge_num_vilas)
-        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=150)
-        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=150)
-        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=150)
+        self.spacing = 1
+        self.vertical_alignment = 'start'
+        self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, options=[ft.dropdown.Option(i) for i in range(51)], 
+                                     dense=True, content_padding=5, width=100, on_change=self.Chenge_num_vilas)
+        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=120, scale=0.8)
+        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=120, scale=0.8)
+        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=120, scale=0.8)
+        self.saida = Saida(100,300)
 
-        self.controls.extend([
+        self.col_A = ft.Column([
+
             self.num_vilas,
-            ft.Row([self.botao_salvar,self.botao_zerar,self.botao_ordenar]),
-            ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180)
+            self.botao_salvar,self.botao_zerar,self.botao_ordenar,
+            
         ])
+        self.col_A.controls.append(self.saida)
+
+        self.col_B = ft.Column()
+
+        self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
         cumprimento_coluna = min(450, 165 + (36 * int(num_vilas)))
-        self.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
+        self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         self.lista_vilas = self.inicializar_vilas()
-        self.controls[3].content.controls = self.lista_vilas
-        self.saida = Saida(360,50)
+        self.col_B.controls[1].content.controls = self.lista_vilas
         self.printt = self.saida.pprint
-        self.controls.append(self.saida)
-
+        self.controls.append(self.col_A )
+        self.controls.append(self.col_B )
+        
+        
     def inicializar_vilas(self):
         lista_vilas = []
         try:
@@ -702,8 +713,8 @@ class LayoutVilas(ft.Column):
         
     def Chenge_num_vilas(self, e):
             # self.page.window.height = 165+(36*int(self.num_vilas.value)) 
-            self.controls[3].content.controls = []  
-            self.controls[3].content.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '),ft.Text(' CV  '),ft.Text('Exposição')]),border=ft.border.all(1,'white,0.5'),width=180))
+            self.controls[1].controls[1].content.controls = []  
+            # self.controls[1].controls[1].content.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '),ft.Text(' CV  '),ft.Text('Exposição')]),border=ft.border.all(1,'white,0.5'),width=180))
             self.lista_vilas = []
             try:
                 self.arquiv = self.Ler_json(self.config_vilas)
@@ -719,7 +730,7 @@ class LayoutVilas(ft.Column):
                 for i in range(1,int(self.num_vilas.value)+1):
                     self.lista_vilas.append(Vila(nome = i,nivel_cv = 15,cv_exposto = 0, func=self.Salvar))        
             
-            self.controls[3].content.controls = self.lista_vilas   
+            self.controls[1].controls[1].content.controls = self.lista_vilas   
             self.page.update()    
         
 
@@ -728,7 +739,7 @@ class LayoutVilas(ft.Column):
     def Zerar_exposicoes(self,e):
         for i in self.lista_vilas:
             i.cv_exp = 0
-        self.controls[3].content.controls = self.lista_vilas
+        self.controls[1].controls[1].content.controls = self.lista_vilas
         self.update()
 
     def Salvar(self, e):
@@ -761,7 +772,7 @@ class LayoutVilas(ft.Column):
         return sorted(lista, key=attrgetter(atributo), reverse=decrecente)    
 
     def Ordenar_vilas(self, e):
-        self.controls[3].content.controls = self.OrdenarListadeClasses(self.controls[3].content.controls,'nivel_cv')
+        self.controls[1].controls[1].content.controls = self.OrdenarListadeClasses(self.controls[1].controls[1].content.controls,'nivel_cv')
         self.update()     
 
 

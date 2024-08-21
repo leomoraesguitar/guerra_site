@@ -173,6 +173,18 @@ class Display(ft.Container):
          
         self.Atualizar()
 
+class BotaoCT(ft.Container):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = None ):
+        super().__init__()
+        self.on_click=on_click
+        self.border_radius = 10
+        self.bgcolor = bgcolor
+        self.scale = scale
+        self.padding = 0
+        self.border=ft.Border(right=ft.BorderSide(5,'black,0.5'), bottom =ft.BorderSide(5,'black,0.5'))
+        self.nome = nome
+        self.content = ft.Text(nome, weight='BOLD') 
+                                                      
 
 class My_Dropdown(ft.Dropdown):
     def __init__(self, nome,on_change, *itens):
@@ -182,6 +194,9 @@ class My_Dropdown(ft.Dropdown):
         self.on_change = on_change
         self.width = 150
         self.value = None
+        self.dense = True
+        self.content_padding = 7
+        self.scale = 0.8
     
 class My_tabela(ft.DataTable):
     def __init__(self, dic#DataFrame ou dicionário
@@ -1151,16 +1166,64 @@ class LayoutGuerra(ft.Column):
         self.page = page
         self.num_estrelas = False, False, False, True
         self.alignment=ft.MainAxisAlignment.START
+        self.horizontal_alignment = 'center'
         self.g2 = None
         self.api_key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw 6Z2FtZWFwaSIsImp0aSI6ImYxMjM0OWViLTdjZTMtNGJlZi05N2YwLWVjNjJiZjcwODBiMSIsImlhdCI6MTcwMjY0NTA0Niwic3ViIjoiZGV2ZWxvcGVyLzJiNjI4OWNiLTVkOGYtNzM2Yy03YzIxL TE1NmY4NzVjMTVmOSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE3Ny4z OS41OS4zNyJdLCJ0eXBlIjoiY2xpZW50In1dfQ.21xPvBHTivFI4Artdjns0l780mxVs5KPffY09j_LSEQ46eW1IEZDie1FdhQzHozMFOJLidqL6AsQsgjg_Zc3PA'
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'
         self.fase = 'Geral'
-        self.n_ciclos = ft.TextField(value = 50000, dense = True, width=100, label = 'Num cilcos', content_padding=10)
+        self.n_ciclos = ft.TextField(value = 50000, dense = True, width=80, label = 'Num cilcos', content_padding=7, border_width=0.5)
         self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
-        self.scroll  = ft.ScrollMode.ADAPTIVE
-        self.height = 500
+        # self.scroll  = ft.ScrollMode.ADAPTIVE
+        self.height = self.page.window.height-100
+        self.width = self.page.window.width-10
 
+                    
+        def copiar_areaT(e):
+            self.g2.df.to_clipboard()
+            print('tabela copiada com sucesso!')
+
+
+
+
+
+        self.inverter =  ft.Checkbox(label="Inverter", value=False, scale=0.8) 
+        self.metodo = My_Dropdown('Método',None, 1,2,3,4)
+
+        self.metodo.value = 4
+        self.metodo.width = 70
+
+        rodar = BotaoCT('Rodar', self.Rodar,bgcolor=ft.colors.GREEN_900,)
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900)
+        gerar_mapa =BotaoCT('gerar_mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_900)
+        resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900)
+        resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_900)
+        copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
+        
+        self.saida = ft.Text('')
+        
+        dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
+
+        self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
+        self.tabela.larguras = ('Jogador',100)
+        # self.tabela.visible = True
+        self.controls = [
+            ft.Row([
+                        ft.Column([
+
+                                    # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
+                                    # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
+                                    ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=320, spacing=0, run_spacing=0),
+                                    ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-50,)],scroll=ft.ScrollMode.ADAPTIVE,width = self.width-30, alignment='center')
+                                ],alignment=ft.MainAxisAlignment.START,  spacing=0, run_spacing=0, horizontal_alignment='center'),
+                    
+
+                        # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
+                            ],vertical_alignment='start', alignment='center')
+                        ]
+            
+        
+    def Config(self):
         def Valor(e):
             match e.data:
                 case 'poucas_0_estrelas':
@@ -1171,52 +1234,13 @@ class LayoutGuerra(ft.Column):
                     self.num_estrelas =  False, False, True, False                  
                 case  'poucas_3_estrelas':
                     self.num_estrelas =  False, False, False, True   
-                               
-        def copiar_areaT(e):
-            self.g2.df.to_clipboard()
-            print('tabela copiada com sucesso!')
-
-        estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas', 'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas' 
-            
-        )
-
-
-
-        estrelas.value = 'poucas_3_estrelas'
-        self.inverter =  ft.Checkbox(label="Inverter", value=False) 
-        self.metodo = My_Dropdown('Método',None, 1,2,3,4)
-        self.metodo.value = 4
-        self.metodo.width = 100
-
-        rodar =ft.ElevatedButton('Rodar', on_click = self.Rodar)
-        parar =ft.ElevatedButton('parar', on_click = self.Parar)
-        gerar_mapa =ft.ElevatedButton('gerar_mapa',on_click = self.Gerar_mapa)
-        resultado2 =ft.ElevatedButton('resultado2',on_click = self.Resultado2)
-        resultado_espelho = ft.ElevatedButton('resultado espelho',on_click = self.Resultado_espelho)
-        copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
-        
-        self.saida = ft.Text('')
-        
-        dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
-
-        self.tabela = My_tabelaC(dic)
-        self.tabela.larguras = ('Jogador',100)
-        # self.tabela.visible = True
-        self.controls = [
-            ft.Row([
-                        ft.Column([
-
-                                    ft.Row([estrelas, self.inverter,self.metodo,gerar_mapa, self.n_ciclos]),
-                                    ft.Row([rodar,parar, resultado2,resultado_espelho]),
-                                    ft.Column([self.tabela])
-                                ],alignment=ft.MainAxisAlignment.START, width=600),
-                    
-
-                        ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
-                            ],vertical_alignment='start')
-                        ]
-            
-        
+                   
+        estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas', 'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
+        estrelas.value = 'poucas_3_estrelas'    
+        return ft.Column([
+                ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
+                ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
+        ])        
 
 
     def Rodar(self,e):
@@ -1425,40 +1449,56 @@ class Tabe(ft.Tabs):
 
     
 class My_tabelaC(ft.Column):
-    def __init__(self, dic# dicionário
+    def __init__(self, dic,# dicionário
+                 larguras = None, #dict
+                 largura_default = 60
                     ):
         super().__init__()
-        self.spacing = 3
-        self.run_spacing = 3
+        self.spacing = 5
+        self.run_spacing = 5
         self._dic = dic 
         self.visible = False 
+        self.largura_default = largura_default
+        self._larguras = larguras
+        if self._larguras is None:
+            self._larguras = {}
+
         self.Iniciar()     
         self.Linhas()
 
 
+    def Larg(self,coluna):
+        if not self._larguras is None:
+            return  self._larguras.get(coluna,self.largura_default)
+        else:
+            return self.largura_default
+
     def Iniciar(self):
         self.chaves = list(self._dic.keys())
-        self._larguras = {i:60 for i in self.chaves}
+        # if self._larguras is None:
+        #     self._larguras = {i:60 for i in self.chaves}
         self.opcoes = self._dic[self.chaves[0]]
 
 
     def Colunas(self):
-        self.controls = [ft.Container(ft.Row([ft.Text(i, width=self._larguras[i], text_align='center') for i in self.chaves], tight=True),bgcolor='white,0.3')]
+        self.controls = [ft.Container(ft.Row([ft.Text(self.chaves[0], width=self.Larg(self.chaves[0]), text_align='end', weight='BOLD')]+
+                        [ft.Text(i, width=self.Larg(i), text_align='center', weight='BOLD') for i in self.chaves[1:]], tight=True),bgcolor='white,0.3')]
 
             
         
     def Linhas(self):
         self.Colunas()
         for i, k in enumerate(self._dic[self.chaves[0]]):     
-            cor  = 'black' if i%2 == 0 else  'white,0.1'  
+            cor  = 'black' if i%2 == 0 else  'white,0.03'  
             self.controls.append(
                 ft.Container(ft.Row([
-                                Display(value = self._dic[self.chaves[0]][i],opitions=self.opcoes, width=self._larguras[self.chaves[0]],height=20,text_size = 12, 
+                                Display(value = self._dic[self.chaves[0]][i],opitions=self.opcoes, width=self.Larg(self.chaves[0]),height=20,text_size = 12, 
                                         borda_width = 0,border_radius = 0, 
-                                                text_align= ft.TextAlign.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, bgcolor = 'white,0')
-                ]+[ft.Text(self._dic[j][i],width=self._larguras[j], text_align='center') for j in self.chaves[1:]], tight=True),bgcolor=cor)
+                                                text_align= ft.TextAlign.CENTER, horizontal_alignment=ft.CrossAxisAlignment.END, bgcolor = 'white,0')
+                ]+[ft.Text(self._dic[j][i],width=self.Larg(j), text_align='center') for j in self.chaves[1:]], tight=True),bgcolor=cor)
                 
                 )
+        
             
     def Atualizar(self):
         try:
@@ -1475,6 +1515,7 @@ class My_tabelaC(ft.Column):
     def dic(self, dic):
         if isinstance(dic, dict):
             self._dic = dic
+            # self._larguras = None
             self.Iniciar()
             self.Linhas()
         self.Atualizar()
@@ -1484,7 +1525,7 @@ class My_tabelaC(ft.Column):
         return self._larguras
     
     @larguras.setter
-    def larguras(self,  valor = ('chave','valor')):
+    def larguras(self,  valor = ('chave','valor')):        
         if valor[0] in self.chaves and isinstance(valor[1], int):
             # self.Iniciar()
             self._larguras[valor[0]] = valor[1]
@@ -1500,22 +1541,26 @@ class My_tabelaC(ft.Column):
 
 def main(page: ft.Page):
     page.title = "Guerra de Clans - 015"
-    page.window.width = 810  # Define a largura da janela como 800 pixels
-    page.window.height = 770  #    
+    page.window.width = 330  # Define a largura da janela como 800 pixels
+    page.window.height = 600  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
     page.theme_mode = ft.ThemeMode.DARK
+    page.spacing = 3
+    page.vertical_alignment = 'start'
+
 
     page.theme = ft.Theme(visual_density = "comfortable")
 
 
     ConfirmarSaida(page)
-    # Resize(page)    
+    # Resize(page)   
+    layout = LayoutGuerra(page = page) 
     vilas = LayoutVilas(printt=print)
     jogadores = layout_jogadores(printt=print)
     equipes = layout_equipes()
     importar = layout_Importar(printt=print)
-
+    config = layout.Config()
 
     def Func(e):
         match e.data:
@@ -1547,18 +1592,64 @@ def main(page: ft.Page):
         ('Importar',importar,1)
         
     )
+    # layout2 = ft.NavigationDrawer()
+    janela = ft.Container()
+    janela.content = layout
+
+    def Escolher_janela(e):
+        match e.control.content.value:
+            case 'Lista de Guerra':
+                janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
+            case 'Vilas':
+                janela.content = vilas
+            case 'Jogadores':
+                janela.content = jogadores
+            case 'Lista de Guerra':
+                janela.content = layout
+            case 'Equipes':
+                janela.content = equipes
+            case 'Importar':
+                janela.content = importar   
+            case 'config':
+                janela.content = config                                                                                               
 
 
-    page.overlay.append(ft.Text('versão - 015',top=10, right=10, ))
+        page.update()
+    menu = ft.Container(
+                            content = ft.Column([
+                                                    ft.Row([
+                                                        BotaoCT('Lista de Guerra',Escolher_janela),
+                                                        BotaoCT('Vilas',Escolher_janela),
+                                                        BotaoCT('Jogadores',Escolher_janela),
+                                                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_AROUND),
+                                                    ft.Row([
+                                                        BotaoCT('Equipes',Escolher_janela),
+                                                        BotaoCT('Importar',Escolher_janela),
+                                                        BotaoCT('config',Escolher_janela),
+                                                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_AROUND), 
+                                                ],spacing=0, run_spacing=0,),
 
-    page.add(layout2)
+                            bgcolor=ft.colors.BROWN_500,
+                            border_radius=10
+                        )
+
+
+
+
+
+
+    
+
+    page.overlay.append(ft.Text('versão - 015',bottom=10, left=10, ))
+
+    page.add(menu,janela)
     # page.update()
 
 if __name__ == '__main__':  
-    layout = LayoutGuerra(page = None)
-    def print(texto):
-        layout.saida.value += f'{texto}\n'
-        layout.saida.update()      
+    # layout = LayoutGuerra(page = None)
+    # def print(texto):
+    #     layout.saida.value += f'{texto}\n'
+    #     layout.saida.update()      
     ft.app(main,
     #    view = ft.AppView.WEB_BROWSER
     # port = 8050
