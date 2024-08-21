@@ -1630,7 +1630,8 @@ def main(page: ft.Page):
                                                 ],spacing=0, run_spacing=0,),
 
                             bgcolor=ft.colors.BROWN_500,
-                            border_radius=10
+                            border_radius=10,
+                            width=page.window.width-4
                         )
 
 
