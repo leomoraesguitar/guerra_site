@@ -182,6 +182,7 @@ class BotaoCT(ft.Container):
         self.scale = scale
         self.col = col
         self.text_size = text_size
+        self.expand = True
         self.padding = ft.Padding(4,0,4,0)
         # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
@@ -1175,11 +1176,11 @@ class LayoutGuerra(ft.Column):
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'
         self.fase = 'Geral'
-        self.n_ciclos = ft.TextField(value = 50000, dense = True, width=80, label = 'Num cilcos', content_padding=7, border_width=0.5)
+        self.n_ciclos = ft.TextField(value = 50000, dense = True, expand=True, label = 'Num cilcos', content_padding=7, border_width=0.5, col = 6)
         self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
         # self.scroll  = ft.ScrollMode.ADAPTIVE
         self.height = self.page.window.height-100
-        self.width = self.page.window.width-10
+        self.width = self.page.window.width
 
                     
         def copiar_areaT(e):
@@ -1190,11 +1191,12 @@ class LayoutGuerra(ft.Column):
 
 
 
-        self.inverter =  ft.Checkbox(label="Inverter", value=False, scale=0.8) 
+        self.inverter =  ft.Checkbox(label="Inverter", value=False, scale=0.8, col = 6, expand=True) 
         self.metodo = My_Dropdown('Método',None, 1,2,3,4)
 
         self.metodo.value = 4
         self.metodo.width = 70
+        self.metodo.col = 6
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
@@ -1213,18 +1215,18 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
         # self.tabela.visible = True
         self.controls = [
-            ft.Row([
+            ft.ResponsiveRow([
                         ft.Column([
 
                                     # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
                                     # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
-                                    ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=320, spacing=0, run_spacing=0, alignment='start'),
-                                    ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-50,)],scroll=ft.ScrollMode.ADAPTIVE,width = self.width-30, alignment='center')
+                                    ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=self.width, expand=True, spacing=0, run_spacing=0, alignment='start'),
+                                    ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-50,horizontal_alignment='center')],scroll=ft.ScrollMode.ADAPTIVE,width = self.width, alignment='center')
                                 ],alignment=ft.MainAxisAlignment.START,  spacing=5, run_spacing=0, horizontal_alignment='center'),
                     
 
                         # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
-                            ],vertical_alignment='start', alignment='center')
+                            ],vertical_alignment='start', alignment='center', expand = True, col = Colu(12))
                         ]
             
         
@@ -1242,9 +1244,10 @@ class LayoutGuerra(ft.Column):
                    
         estrelas = My_Dropdown('estrelas',Valor,'poucas_0_estrelas', 'poucas_1_estrelas', 'poucas_2_estrelas', 'poucas_3_estrelas')
         estrelas.value = 'poucas_3_estrelas'    
+        estrelas.col = 6  
         return ft.Column([
-                ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
-                ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
+                ft.ResponsiveRow([estrelas, self.metodo,], width=self.width, spacing=0, run_spacing=0),
+                ft.ResponsiveRow([self.inverter, self.n_ciclos, ], width=self.width, spacing=0, run_spacing=0),
         ])        
 
 
@@ -1552,6 +1555,7 @@ def main(page: ft.Page):
     # page.theme = ft.ThemeMode.DARK
     page.theme_mode = ft.ThemeMode.DARK
     page.spacing = 3
+    page.expand = True
     page.vertical_alignment = 'start'
 
 
@@ -1559,13 +1563,14 @@ def main(page: ft.Page):
 
 
     ConfirmarSaida(page)
-    # Resize(page)   
+    # Resize(page) 
+    #   
     layout = LayoutGuerra(page = page) 
-    vilas = LayoutVilas(printt=print)
-    jogadores = layout_jogadores(printt=print)
+    vilas = LayoutVilas(printt=print,page = page)
+    jogadores = layout_jogadores(printt=print, page=page)
     equipes = layout_equipes()
     importar = layout_Importar(printt=print)
-    config = layout.Config()
+    config = ft.Column([ layout.Config(),importar.Configs() ]) #,
 
     def Func(e):
         match e.data:
@@ -1585,8 +1590,6 @@ def main(page: ft.Page):
             case '0':
                page.window.width = 810
                page.update()                                            
-
-
  
     layout2 = Tabe(
         Func,
@@ -1618,8 +1621,8 @@ def main(page: ft.Page):
             case 'config':
                 janela.content = config                                                                                               
 
-
         page.update()
+
     def Colu(x = 4):
         return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
     menu = ft.Container(
@@ -1664,11 +1667,58 @@ def main(page: ft.Page):
 
 
 
+    def resizer(e):
+        page.clean()
+        layout = LayoutGuerra(page = page) 
+        janela = ft.Container()
+        janela.content = layout
+        menu = ft.Container(
+            content = ft.ResponsiveRow([
+                ft.Container(
+                    content = ft.Column([
+                        BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11),
+                        BotaoCT('Vilas',Escolher_janela),
+                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+                    border=ft.border.all(2,'white,0.4'),
+                    height = 50,
+                    col = Colu()
+                ),
+
+                ft.Container(
+                    content = ft.Column([
+                        BotaoCT('Jogadores',Escolher_janela),
+                        BotaoCT('Equipes',Escolher_janela),
+                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+                    border=ft.border.all(2,'white,0.4'),
+                    height = 50,
+                    col = Colu()
+                ),
+
+                ft.Container(
+                    content = ft.Column([
+                        BotaoCT('Importar',Escolher_janela),
+                        BotaoCT('config',Escolher_janela),
+                        ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'), 
+                    border=ft.border.all(2,'white,0.4'),
+                    height = 50,
+                    col = Colu()
+                    )
+                    ],spacing=0, run_spacing=5),
+                        
+            # padding=2,
+            bgcolor=ft.colors.BROWN_500,
+            border_radius=0,
+            width=page.window.width+20
+        )
 
 
+        page.add(menu,janela)
+        menu.update()
+        page.update()
     
 
-    page.overlay.append(ft.Text('versão - 015',bottom=10, left=10, ))
+    page.overlay.append(ft.Text('versão - 017',bottom=10, right=10, size=8 ))
+    # page.on_resized = resizer
 
     page.add(menu,janela)
     # page.update()

@@ -101,7 +101,7 @@ class Saida(ft.Column):
             self.saidad.value += f'{i}\n'  
         self.page.update()
 
-class Players(ft.Row):
+class Players(ft.ResponsiveRow):
     def __init__(self, 
                  guerra = None,
                  jogador = None, 
@@ -117,15 +117,15 @@ class Players(ft.Row):
         super().__init__() 
         # self.page = page         
         self.func = func
-        self._guerra = ft.Checkbox(value = guerra, data = 'guerra', on_change=self.Chenge_guerra)
-        self._jogador = ft.Text(jogador,text_align='center',selectable = True, width=150)
-        self._tag = ft.Text(tag,text_align='center',selectable = True, width=100)
-        self._nivel_cv = ft.Text(nivel_cv,text_align='center',selectable = True, width=50)
-        self._forca = ft.Text(forca,text_align='center',selectable = True, width=80)
+        self._guerra = ft.Checkbox(value = guerra, data = 'guerra', on_change=self.Chenge_guerra, col = self.Colu(1))
+        self._jogador = ft.Text(jogador,text_align='center',selectable = True,)
+        self._tag = ft.Text(tag,text_align='center',selectable = True,  visible=False, col = self.Colu(1))
+        self._nivel_cv = ft.Text(nivel_cv,text_align='center',selectable = True,  col = self.Colu(1))
+        self._forca = ft.Text(forca,text_align='center',selectable = True,  visible=False, col = self.Colu(1))
         self._atenuador = ft.TextField(value = atenuador,   bgcolor= 'white,0.08',dense=True, 
-                            data = 'atenuador',content_padding=5, width=80, on_change=self.Chenge_atenuador)
+                            data = 'atenuador',content_padding=5,  on_change=self.Chenge_atenuador, col = self.Colu(3))
         
-        self._forca_final = ft.Text(forca,text_align='center',selectable = True, width=80)
+        self._forca_final = ft.Text(forca,text_align='center',selectable = True, width=80, col = self.Colu(3))
         self._forca_final.value = forca
         try:
             self._forca_final.value -= int(atenuador)
@@ -133,7 +133,7 @@ class Players(ft.Row):
             pass
 
         self.controls = [self._guerra,
-                         self._jogador, 
+                         ft.Container(self._jogador, bgcolor='white,0.1',  col = self.Colu(4), ),
                          self._tag,
                          self._nivel_cv,
                          self._forca,
@@ -143,9 +143,13 @@ class Players(ft.Row):
         ]
 
 
-        self.tight = True
+        # self.tight = True
         self.spacing = 0
         self.run_spacing = 0
+
+
+    def Colu(self, x = 4):
+        return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
 
     @property
     def forca_final(self):
@@ -209,6 +213,28 @@ class Players(ft.Row):
         if self.func(e) != None:
             self.func(e)
 
+
+
+
+class BotaoCT(ft.Container):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = 0.8, text_size = None, col = None, data =None ):
+        super().__init__()
+        self.on_click=on_click
+        self.border_radius = 0
+        self.bgcolor = bgcolor
+        self.scale = scale
+        self.data = data
+        self.col = col
+        self.text_size = text_size
+        self.expand = True
+        self.padding = ft.Padding(0,0,0,0)
+        # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
+        self.nome = nome
+        # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
+        self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size )
+                                                      
+
+
 class layout_Importar(ft.Column):
     def __init__(self, printt = None, page = None):
         super().__init__()
@@ -228,28 +254,29 @@ class layout_Importar(ft.Column):
         self.gerar_token = ft.IconButton(tooltip='gerar Token',icon = ft.icons.GENERATING_TOKENS, on_click=self.GerarToken, icon_size=20)
         self.botao_importar = ft.ElevatedButton('Importar dados',on_click=self.Importar_players)
         
-        self.botao_ordenar_guerra = ft.TextButton('Guerra',data = 'guerra',on_click=self.Ordenar_por, width=70)
-        self.botao_ordenar_jogador = ft.TextButton('Jogador',data = 'jogador',on_click=self.Ordenar_por, width=80)
-        self.botao_ordenar_tag = ft.TextButton('Tag',data = 'tag',on_click=self.Ordenar_por, width=100)
-        self.botao_ordenar_cv = ft.TextButton('CV',data = 'nivel_cv',on_click=self.Ordenar_por, width=50)
-        self.botao_ordenar_forca = ft.TextButton('Força',data = 'forca',on_click=self.Ordenar_por, width=60)
-        self.botao_ordenar_atenuador = ft.TextButton('Atenuador',data = 'atenuador',on_click=self.Ordenar_por, width=95)
-        self.botao_ordenar_forca_final = ft.TextButton('Força Final',data = 'forca_final',on_click=self.Ordenar_por, width=60)
+        self.botao_ordenar_forca = ft.TextButton('Força',data = 'forca',on_click=self.Ordenar_por, col = self.Colu(2))
+        self.botao_ordenar_tag = ft.TextButton('Tag',data = 'tag',on_click=self.Ordenar_por,  col = self.Colu(2))
 
-        self.controls = [self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token]),
+        self.botao_ordenar_guerra = ft.IconButton(icon = ft.icons.ACCESSIBILITY_NEW_ROUNDED,data = 'guerra',on_click=self.Ordenar_por, col = self.Colu(0.7), scale=0.8)
+        self.botao_ordenar_jogador = BotaoCT('Jogador',data = 'jogador',on_click=self.Ordenar_por,  col = self.Colu(4.3))
+        self.botao_ordenar_cv = BotaoCT('CV',data = 'nivel_cv',on_click=self.Ordenar_por, col = self.Colu(0.8))
+        self.botao_ordenar_atenuador = BotaoCT('Atenuador',data = 'atenuador',on_click=self.Ordenar_por, col = self.Colu(3), scale=0.8)
+        self.botao_ordenar_forca_final = BotaoCT('Força Final',data = 'forca_final',on_click=self.Ordenar_por, col = self.Colu(3), scale=0.8)
+
+        self.controls = [
                          
-                         ft.Row([
+                         ft.ResponsiveRow([
                              self.botao_ordenar_guerra,
                              self.botao_ordenar_jogador,
-                             self.botao_ordenar_tag,
+                            #  self.botao_ordenar_tag,
                              self.botao_ordenar_cv,
-                             self.botao_ordenar_forca,
+                            #  self.botao_ordenar_forca,
                              self.botao_ordenar_atenuador,
                              self.botao_ordenar_forca_final,
 
                                  
                                  
-                        ]),
+                        ], spacing=0, run_spacing=0, ),
                          
                 ]
     
@@ -265,6 +292,14 @@ class layout_Importar(ft.Column):
         self.saida = Saida()
         self.printt = self.saida.pprint
         self.controls.append(self.saida)        
+
+
+    def Configs(self):
+        return  ft.Column([self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token])])
+
+
+    def Colu(self, x = 4):
+        return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
 
 
 # i.Tokken.value = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03 ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw 6Z2FtZWFwaSIsImp0aSI6IjI2ODk2ZTg4LTZmYmMtNDU3NS1iYjhkLTI1NWVmM2QzNTMxOSIsI mlhdCI6MTcxNzMzNTIxMiwic3ViIjoiZGV2ZWxvcGVyLzJiNjI4OWNiLTVkOGYtNzM2Yy03YzI xLTE1NmY4NzVjMTVmOSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE 3Ny4zOS41OS4xNiJdLCJ0eXBlIjoiY2xpZW50In1dfQ.0uaDqGBq6ayrNLsuaHUTY98uq5AllD5vitRCLlssnl5Ol9rmT_qPleO87kDaGwNF8FEEXNWJ6t7rCElh6A-0EA'
@@ -631,8 +666,8 @@ class layout_Importar(ft.Column):
 
 
 def main(page: ft.Page):
-    page.window.width = 630  # Define a largura da janela como 800 pixels
-    page.window.height = 970  #    
+    page.window.width = 330  # Define a largura da janela como 800 pixels
+    page.window.height = 600  #    
     page.title = "Guerra de Clans"
     page.vertical_alignment = ft.MainAxisAlignment.START  
     ConfirmarSaida(page)
