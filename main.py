@@ -1615,7 +1615,7 @@ def main(page: ft.Page):
             case 'Lista de Guerra':
                 janela.content =  ft.Column([layout], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Equipes':
-                janela.content =  ft.Column([equipes], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
+                janela.content =  ft.Column([equipes], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-100)
             case 'Importar':
                 janela.content =    ft.Column([importar], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10) 
             case 'config':
@@ -1717,7 +1717,7 @@ def main(page: ft.Page):
         page.update()
     
 
-    page.overlay.append(ft.Text('versão - 018',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 019',bottom=10, right=10, size=8 ))
     # page.on_resized = resizer
 
     page.add(menu,janela)
