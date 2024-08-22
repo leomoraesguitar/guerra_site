@@ -682,9 +682,12 @@ class LayoutVilas(ft.Row):
         self.col_A.controls.append(self.saida)
 
         self.col_B = ft.Column()
-
+        if self.page is None:
+            pw = 450
+        else:
+            pw = self.page.window.height
         self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
-        cumprimento_coluna = min(self.page.window.height-180, 165 + (36 * int(num_vilas)))
+        cumprimento_coluna = min(pw-180, 165 + (36 * int(num_vilas)))
         self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         self.lista_vilas = self.inicializar_vilas()

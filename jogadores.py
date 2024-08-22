@@ -155,6 +155,8 @@ class layout_jogadores(ft.Column):
     def __init__(self, num_jogadores = 15, printt = None, page = None):
         super().__init__()
         self.page = page
+
+
         self.num_jogadores = ft.Dropdown(label = 'Número de Jogadores',value = num_jogadores, 
                 options=[ft.dropdown.Option(i) for i in range(5,51)],dense=True, 
                 content_padding=5, width=180, on_change=self.Chenge_num_jogadores)
@@ -164,8 +166,12 @@ class layout_jogadores(ft.Column):
         self.controls.append(self.botao_atualizar)
         self.controls.append(ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300))
         cp = 165+(36*int(num_jogadores))
-        if cp > self.page.window.height:
-            cumprimento_coluna = self.page.window.height - 240
+        if self.page is None:
+            pw = 450
+        else:
+            pw = self.page.window.height
+        if cp > pw:
+            cumprimento_coluna = pw - 240
         else:
             cumprimento_coluna = cp
         self.controls.append(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE))
