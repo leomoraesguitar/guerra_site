@@ -1545,8 +1545,6 @@ class My_tabelaC(ft.Column):
 
 
 
-
-
 def main(page: ft.Page):
     page.title = "Guerra de Clans - 015"
     page.window.width = 330  # Define a largura da janela como 800 pixels
@@ -1591,15 +1589,15 @@ def main(page: ft.Page):
                page.window.width = 810
                page.update()                                            
  
-    layout2 = Tabe(
-        Func,
-        ('Lista de Guerra', layout,1),
-        ('Vilas',vilas,1),
-        ('Jogadores',jogadores,1),
-        ('Equipes',equipes,1),
-        ('Importar',importar,1)
+    # layout2 = Tabe(
+    #     Func,
+    #     ('Lista de Guerra', layout,1),
+    #     ('Vilas',vilas,1),
+    #     ('Jogadores',jogadores,1),
+    #     ('Equipes',equipes,1),
+    #     ('Importar',importar,1)
         
-    )
+    # )
     # layout2 = ft.NavigationDrawer()
     janela = ft.Container()
     janela.content = layout
@@ -1664,9 +1662,6 @@ def main(page: ft.Page):
         width=page.window.width+20
     )
 
-
-
-
     def resizer(e):
         page.clean()
         layout = LayoutGuerra(page = page) 
@@ -1716,7 +1711,6 @@ def main(page: ft.Page):
         menu.update()
         page.update()
     
-
     page.overlay.append(ft.Text('versão - 019',bottom=10, right=10, size=8 ))
     # page.on_resized = resizer
 

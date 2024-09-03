@@ -96,11 +96,17 @@ class Saida(ft.Column):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
         self.controls.append(ft.Container(ft.ListView([self.saidad],auto_scroll = True, height=height,  ),bgcolor='white,0.03' ))
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
+
+
     def pprint(self, *texto):
         for i in list(texto):
             self.saidad.value += f'{i}\n'  
-        self.page.update()
-
+        self.Atualizar()
 class Players(ft.ResponsiveRow):
     def __init__(self, 
                  guerra = None,
@@ -244,7 +250,7 @@ class layout_Importar(ft.Column):
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'        
         self.Tokken = ft.TextField(label='Tokken', width=400,dense=True, content_padding=10, bgcolor='white,0.08',)
-        self.Tokken.value ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjZkMWVmYTA0LThiM2UtNDVmOS04MjBhLTBmNDU4MzRiYjNhMiIsImlhdCI6MTcyMDAwOTIxMCwic3ViIjoiZGV2ZWxvcGVyLzJiNjI4OWNiLTVkOGYt NzM2Yy03YzIxLTE1NmY4NzVjMTVmOSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE3Ny4zOS41OS4xMDQiXSwidHlwZSI6ImNsaWVudCJ9XX0.YxNIPY1aacWBNIHM7ALWfmh4yYcBztwPeq3gtJx6Fzo2FN5RGk3gZjCo5RlnbYqxhNtNpiT7TCO2FikZK8AdEA'
+        self.Tokken.value ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjgwZTdmZTkzLTM5ZDAtNGFmYi1hZjA0LTc1YzgzMmJiNmY0MiIsImlhdCI6MTcyNTM1NTE4OSwic3ViIjoiZGV2ZWxvcGVyLzJiNjI4OWNiLTVkOGYt NzM2Yy03YzIxLTE1NmY4NzVjMTVmOSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE3OS40Mi44NS4xMjgiXSwidHlwZSI6ImNsaWVudCJ9XX0.h27D7KDVBmpHMEwMcF-pC_fSwXNueXtaOy7dozOF_3J6Y43NZaxlqABJgIGKa0_1xc0vw-qWgm09pXibtZUdBQ'
         # self.tag = ft.TextField(label='tag do clan', width=400,dense=True, content_padding=10, bgcolor='white,0.08',)
         self.tag = ft.Dropdown(label = 'escolha a tag do clan:', 
         options=[ft.dropdown.Option("Aracaju"),ft.dropdown.Option("SkyWarrios"),ft.dropdown.Option("Outro") ], 
@@ -290,7 +296,7 @@ class layout_Importar(ft.Column):
         self.run_spacing = 0
         self.spacing = 0
         self.saida = Saida()
-        self.printt = self.saida.pprint
+        self.printt = printt
         self.controls.append(self.saida)        
 
 
@@ -344,7 +350,7 @@ class layout_Importar(ft.Column):
         self.SalvarPickle(lista, self.config_tabela)
         self.Escrever_json(dic2, self.config_jogadores)
         self.printt('Dados dos players salvo com sucesso') 
-        self.update()       
+        self.Atualizar()       
 
 
 
@@ -663,7 +669,11 @@ class layout_Importar(ft.Column):
         else:
             return None   
 
-
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
 
 def main(page: ft.Page):
     page.window.width = 330  # Define a largura da janela como 800 pixels
@@ -675,7 +685,7 @@ def main(page: ft.Page):
 
     Resize(page) 
     i =  layout_Importar( printt = saida.pprint, page = page)    
-    page.add(i)
+    page.add(i, saida)
 
 
 
