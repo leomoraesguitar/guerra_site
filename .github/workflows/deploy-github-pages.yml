@@ -50,10 +50,14 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
 
     - name: Run Flutter Doctor
-      run: flutter doctor -v
+      run: |
+        cd ${{ github.workspace }}
+        flutter doctor -v
 
     - name: Build Flutter Web (Debug Info)
-      run: flutter build web --verbose
+      run: |
+        cd ${{ github.workspace }}
+        flutter build web --verbose
 
     - name: Flet Build Web
       run: |
