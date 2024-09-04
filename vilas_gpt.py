@@ -384,7 +384,7 @@ class Vila(ft.Row):
         self._nome = Display(value=nome, opitions=[i for i in range(51)],borda_width=0, text_size = 12, width=60, height=20,border_radius= 2,on_click=self.Chenge_nome)
         # self.cv = ft.Dropdown(focused_bgcolor=None, bgcolor=None, filled=True, value=nivel_cv, options=[ft.dropdown.Option(i) for i in range(20)], dense=True, content_padding=5, width=60, on_change=self.cor, text_style=ft.TextStyle(weight=ft.FontWeight.BOLD))
         self.cor2(str(nivel_cv))
-        self.cv = Display(value=nivel_cv, opitions=[i for i in range(20)], text_color = self.corTextoCV, bgcolor = self.corCV, borda_width=0, border_radius= 2,text_size = 15, width=50, height=20,func=self.cor)
+        self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, bgcolor = self.corCV, borda_width=0, border_radius= 2,text_size = 15, width=50, height=20,func=self.cor)
         # self.cv.bgcolor = 'red'
         # self.exposicao = ft.Dropdown(value=cv_exposto, options=[ft.dropdown.Option(i) for i in range(2)], dense=True, content_padding=5, width=50, on_change=self.change_exposicao)
         self.exposicao = Display(value=cv_exposto, opitions=[0,1], borda_width=0, border_radius= 2,text_size = 12, width=60, height=20, on_click=self.change_exposicao)
@@ -664,14 +664,15 @@ class LayoutVilas(ft.Row):
     def __init__(self, num_vilas=15, printt=None, page=None):
         super().__init__()
         self.page = page
-        self.spacing = 1
+        self.spacing = 0
+        self.run_spacing = 0
         self.vertical_alignment = 'start'
         self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, options=[ft.dropdown.Option(i) for i in range(51)], 
-                                     dense=True, content_padding=5, width=100, on_change=self.Chenge_num_vilas)
-        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=120, scale=0.8)
-        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=120, scale=0.8)
-        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=120, scale=0.8)
-        self.saida = Saida(100,300)
+                                     dense=True, content_padding=7, width=100, on_change=self.Chenge_num_vilas)
+        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=115, scale=0.8)
+        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
+        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
+        self.saida = Saida(100,280)
 
         self.col_A = ft.Column([
 
@@ -681,13 +682,13 @@ class LayoutVilas(ft.Row):
         ])
         self.col_A.controls.append(self.saida)
 
-        self.col_B = ft.Column()
+        self.col_B = ft.Column(spacing=0, run_spacing=0)
         if self.page is None:
             pw = 450
         else:
             pw = self.page.window.height
         self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
-        cumprimento_coluna = min(pw-180, 165 + (36 * int(num_vilas)))
+        cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
         self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         self.lista_vilas = self.inicializar_vilas()

@@ -1176,11 +1176,12 @@ class LayoutGuerra(ft.Column):
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'
         self.fase = 'Geral'
-        self.n_ciclos = ft.TextField(value = 50000, dense = True, expand=True, label = 'Num cilcos', content_padding=7, border_width=0.5, col = 6)
+        self.n_ciclos = ft.TextField(value = 500000, dense = True, expand=True, label = 'Num cilcos', content_padding=7, border_width=0.5, col = 6)
         self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
         # self.scroll  = ft.ScrollMode.ADAPTIVE
         self.height = self.page.window.height-100
         self.width = self.page.window.width
+
 
                     
         def copiar_areaT(e):
