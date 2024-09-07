@@ -1317,7 +1317,7 @@ class LayoutGuerra(ft.Column):
                 self.tabela.larguras= ('Jogador',100)
 
                 # self.RedimensionarJanela(410)
-                self.update()
+                self.Atualizar()
             else:
                 print('Você ainda não rodou o programa, usando metódo 2')
 
@@ -1327,6 +1327,13 @@ class LayoutGuerra(ft.Column):
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
+
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
+
     def Resultado_espelho(self,e):
         def pp():
             self.g2.ResultadoEspelho()
@@ -1335,7 +1342,7 @@ class LayoutGuerra(ft.Column):
             self.tabela.larguras= ('Jogador',100)
 
             # self.RedimensionarJanela(400)
-            self.update()
+            self.Atualizar()
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value)
@@ -1355,7 +1362,7 @@ class LayoutGuerra(ft.Column):
                 self.tabela.larguras= (i,20)
 
             # self.RedimensionarJanela(700)
-            self.update()
+            self.Atualizar()
         # if self.g2 == None:
         self.g2 = Guerra2(metodo=self.metodo.value)
         # threading.Thread(target=pp, daemon=True).start()
