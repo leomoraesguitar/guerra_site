@@ -346,49 +346,50 @@ class My_tabelaE(ft.DataTable):
         self.tabela =  pd.DataFrame(linhas2,columns=colunas)
         return self.tabela
 
-class Verificar_pasta:
-    def __init__(self,pastalocal = 'tabelamandadostjse'):
-        self.pastalocal = pastalocal
-        self.verificar_pasta()
+# class Verificar_pasta:
+#     def __init__(self,pastalocal = 'tabelamandadostjse'):
+#         self.pastalocal = pastalocal
+#         self.verificar_pasta()
 
-    def verificar_pasta(self):
-        user_profile = os.environ.get('USERPROFILE')
-        # print(user_profile)
-        if not user_profile:
-            # return False  # USERPROFILE não está definido
-            self.local = None
+#     def verificar_pasta(self):
+#         user_profile = os.environ.get('USERPROFILE')
+#         # print(user_profile)
+#         if not user_profile:
+#             # return False  # USERPROFILE não está definido
+#             self.local = None
 
-        # caminho = os.path.join(user_profile, self.pastalocal)
-        caminho = self.pastalocal
+#         # caminho = os.path.join(user_profile, self.pastalocal)
+#         caminho = self.pastalocal
         
-        if os.path.exists(caminho):
-            self.local = caminho
-            # return self.caminho
-        else:
-            os.mkdir(caminho)
-            # print(caminho)
-            if os.path.exists(caminho):
-                self.local = caminho
-                # return self.caminho
-            # else:
-                # return None
+#         if os.path.exists(caminho):
+#             self.local = caminho
+#             # return self.caminho
+#         else:
+#             os.mkdir(caminho)
+#             # print(caminho)
+#             if os.path.exists(caminho):
+#                 self.local = caminho
+#                 # return self.caminho
+#             # else:
+#                 # return None
     
 
-    def caminho(self, nome):
-        # self.verificar_pasta()
-        return os.path.join(self.local, nome)
+#     def caminho(self, nome):
+#         # self.verificar_pasta()
+#         return os.path.join(self.local, nome)
 
 class Guerra2:
-    def __init__(self, metodo, fase=None, arq_configuracoes=None):
+    def __init__(self, metodo, fase=None, arq_configuracoes=None, page = None):
         # super().__init__()
         self.arq_configuracoes = arq_configuracoes
         self.metodo = metodo
         self.fase = fase
-        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
+        self.page = page
+        # self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
 
 
         # self.lista_jogadores = self.jogadores()[:]  # chama a função jogadores
-        self.lista_jogadores = layout_jogadores(printt = print).Gera_Lista_de_jogadores()
+        self.lista_jogadores = layout_jogadores(printt = print,page = self.page).Gera_Lista_de_jogadores()
         # self.lista_jogadores
         # self.ord_jogs = self.DefinirPesos()
         # chama a função lista_de_vilas
@@ -397,7 +398,7 @@ class Guerra2:
         if self.equipe != None:
             # self.lista_vilas = self.lista_de_vilas_func()[:]
             # v = layout_vilas(printt = print)
-            self.lista_vilas = LayoutVilas(printt = print).Gera_Lista_de_Vilas(self.equipe)
+            self.lista_vilas = LayoutVilas(printt = print, page = self.page).Gera_Lista_de_Vilas(self.equipe)
         else:
             None
         self.GerarMapaInicial()
@@ -416,7 +417,21 @@ class Guerra2:
 
 
     def Buscar_equipe(self):
-      equipe = self.Ler_json(self.config_equipes,
+    #   equipe = self.Ler_json(self.config_equipes,
+    #             default={
+    #         "equipe A": {
+    #                 "Nome da Equipe": "equipe A",
+    #                 "GRUPO MASTER": "1930",
+    #                 "GRUPO ELITE": "1825",
+    #                 "GRUPO A": "1794",
+    #                 "GRUPO B": "1585",
+    #                 "GRUPO C": "1444",
+    #                 "GRUPO D": "1440",
+    #                 "GRUPO E": "1430"
+    #             }
+    #     })  
+
+      equipe = self.LerDadosLocais('equipes',
                 default={
             "equipe A": {
                     "Nome da Equipe": "equipe A",
@@ -428,7 +443,7 @@ class Guerra2:
                     "GRUPO D": "1440",
                     "GRUPO E": "1430"
                 }
-        })                            
+        })                                
       self.equipe = equipe['equipe A']
     #   print(self.equipe)
       return self.equipe
@@ -1145,6 +1160,18 @@ class Guerra2:
         else:
             print('Você ainda não rodou o programa')
 
+
+    def SalvarDadosLocais(self, nome, valor):
+        self.page.client_storage.set(nome, valor)
+        
+
+    def LerDadosLocais(self, nome,  default=None):
+        if self.page.client_storage.contains_key(nome):
+            return self.page.client_storage.get(nome)
+        else:
+            return default
+
+
     def Escrever_json(self, data, filename):
         if not filename.endswith('.json'):
             filename += '.json'
@@ -1177,7 +1204,7 @@ class LayoutGuerra(ft.Column):
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'
         self.fase = 'Geral'
         self.n_ciclos = ft.TextField(value = 500000, dense = True, expand=True, label = 'Num cilcos', content_padding=7, border_width=0.5, col = 6)
-        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
+        # self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
         # self.scroll  = ft.ScrollMode.ADAPTIVE
         self.height = self.page.window.height-100
         self.width = self.page.window.width
@@ -1215,22 +1242,27 @@ class LayoutGuerra(ft.Column):
         self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
         self.tabela.larguras = ('Jogador',100)
         # self.tabela.visible = True
-        self.controls = [
-            ft.ResponsiveRow([
-                        ft.Column([
+        # self.controls = [
+        #     ft.ResponsiveRow([
+        #                 ft.Column([
 
-                                    # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
-                                    # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
-                                    ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=self.width, expand=True, spacing=0, run_spacing=0, alignment='start'),
-                                    ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-50,horizontal_alignment='center')],scroll=ft.ScrollMode.ADAPTIVE,width = self.width, alignment='center')
-                                ],alignment=ft.MainAxisAlignment.START,  spacing=5, run_spacing=0, horizontal_alignment='center'),
+        #                             # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
+        #                             # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
+        #                             ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=self.width, expand=True, spacing=0, run_spacing=0, alignment='start'),
+        #                             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-30,horizontal_alignment='center')],scroll=ft.ScrollMode.ADAPTIVE,width = self.width, alignment='center', vertical_alignment='start')
+        #                         ],alignment=ft.MainAxisAlignment.START,  spacing=5, run_spacing=0, horizontal_alignment='center'),
                     
 
-                        # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
-                            ],vertical_alignment='start', alignment='center', expand = True, col = Colu(12))
-                        ]
-            
-        
+        #                 # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
+        #                     ],vertical_alignment='start', alignment='center', expand = True, col = Colu(12))
+        #                 ]
+        self.controls = [
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=self.width, expand=False, spacing=0, run_spacing=0, alignment='start'),
+            ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
+                    scroll=ft.ScrollMode.ADAPTIVE,width=self.width)
+        ]
+        self.alignment = 'start'
+  
     def Config(self):
         def Valor(e):
             match e.data:
@@ -1261,7 +1293,7 @@ class LayoutGuerra(ft.Column):
 
         print('iniciando ...')
         self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
-                    arq_configuracoes=self.config_equipes)
+                    arq_configuracoes='equipes', page = self.page)
         if self.g2.rodou:
             # t1.join()
             self.g2.rodou = False
@@ -1304,7 +1336,7 @@ class LayoutGuerra(ft.Column):
             self.update()
 
         if self.g2 == None:
-            self.g2 = Guerra2(metodo=self.metodo.value)
+            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
@@ -1323,7 +1355,7 @@ class LayoutGuerra(ft.Column):
 
 
         if self.g2 == None:
-            self.g2 = Guerra2(metodo=self.metodo.value)
+            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
@@ -1345,7 +1377,7 @@ class LayoutGuerra(ft.Column):
             self.Atualizar()
 
         if self.g2 == None:
-            self.g2 = Guerra2(metodo=self.metodo.value)
+            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
 
         # threading.Thread(target=pp, daemon=True).start()
         pp()
@@ -1364,7 +1396,7 @@ class LayoutGuerra(ft.Column):
             # self.RedimensionarJanela(700)
             self.Atualizar()
         # if self.g2 == None:
-        self.g2 = Guerra2(metodo=self.metodo.value)
+        self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
         # threading.Thread(target=pp, daemon=True).start()
         pp()
         
@@ -1392,7 +1424,7 @@ class ConfirmarSaida:
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-        self.page.on_window_event = self.window_event
+        self.page.window.on_event = self.window_event
         self.page.window.prevent_close = True 
    
 
@@ -1563,8 +1595,6 @@ def main(page: ft.Page):
     page.spacing = 3
     page.expand = True
     page.vertical_alignment = 'start'
-
-
     page.theme = ft.Theme(visual_density = "comfortable")
 
 
@@ -1574,8 +1604,8 @@ def main(page: ft.Page):
     layout = LayoutGuerra(page = page) 
     vilas = LayoutVilas(printt=print,page = page)
     jogadores = layout_jogadores(printt=print, page=page)
-    equipes = layout_equipes()
-    importar = layout_Importar(printt=print)
+    equipes = layout_equipes(page = page)
+    importar = layout_Importar(printt=print, page = page)
     config = ft.Column([ layout.Config(),importar.Configs() ]) #,
 
     def Func(e):
@@ -1596,24 +1626,15 @@ def main(page: ft.Page):
             case '0':
                page.window.width = 810
                page.update()                                            
- 
-    # layout2 = Tabe(
-    #     Func,
-    #     ('Lista de Guerra', layout,1),
-    #     ('Vilas',vilas,1),
-    #     ('Jogadores',jogadores,1),
-    #     ('Equipes',equipes,1),
-    #     ('Importar',importar,1)
-        
-    # )
-    # layout2 = ft.NavigationDrawer()
+
     janela = ft.Container()
     janela.content = layout
 
     def Escolher_janela(e):
         match e.control.content.value:
             case 'Lista de Guerra':
-                janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
+                # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
+                janela.content = layout
             case 'Vilas':
                 janela.content =  ft.Column([vilas], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
             case 'Jogadores':

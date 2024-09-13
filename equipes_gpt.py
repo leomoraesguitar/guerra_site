@@ -4,37 +4,37 @@ import os
 
 
 
-class Verificar_pasta:
-    def __init__(self,pastalocal = 'Guerra_clash'):
-        self.pastalocal = pastalocal
-        self.verificar_pasta()
+# class Verificar_pasta:
+#     def __init__(self,pastalocal = 'Guerra_clash'):
+#         self.pastalocal = pastalocal
+#         self.verificar_pasta()
 
-    def verificar_pasta(self):
-        user_profile = os.environ.get('USERPROFILE')
-        # print(user_profile)
-        if not user_profile:
-            # return False  # USERPROFILE não está definido
-            self.local = None
+#     def verificar_pasta(self):
+#         user_profile = os.environ.get('USERPROFILE')
+#         # print(user_profile)
+#         if not user_profile:
+#             # return False  # USERPROFILE não está definido
+#             self.local = None
 
-        # caminho = os.path.join(user_profile, self.pastalocal)
-        caminho = self.pastalocal
+#         # caminho = os.path.join(user_profile, self.pastalocal)
+#         caminho = self.pastalocal
 
-        if os.path.exists(caminho):
-            self.local = caminho
-            # return self.caminho
-        else:
-            os.mkdir(caminho)
-            # print(caminho)
-            if os.path.exists(caminho):
-                self.local = caminho
-                # return self.caminho
-            # else:
-                # return None
+#         if os.path.exists(caminho):
+#             self.local = caminho
+#             # return self.caminho
+#         else:
+#             os.mkdir(caminho)
+#             # print(caminho)
+#             if os.path.exists(caminho):
+#                 self.local = caminho
+#                 # return self.caminho
+#             # else:
+#                 # return None
     
 
-    def caminho(self, nome):
-        # self.verificar_pasta()
-        return os.path.join(self.local, nome)
+#     def caminho(self, nome):
+#         # self.verificar_pasta()
+#         return os.path.join(self.local, nome)
 
 class ConfirmarSaida:
     def __init__(self, page, funcao=None):
@@ -50,7 +50,7 @@ class ConfirmarSaida:
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-        self.page.on_window_event = self.window_event
+        self.page.window.on_event = self.window_event
         self.page.window.prevent_close = True 
 
     def window_event(self, e):
@@ -125,10 +125,26 @@ class LayoutEquipes(ft.Column):
         self.printt = self.saida.pprint
         self.controls.append(self.saida)
         self.iniciar()
+    
+    # def did_mount(self):
 
     def iniciar(self):
-        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
-        self.arquiv = self.ler_json(self.config_equipes, default={
+        # self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
+        # self.arquiv = self.ler_json(self.config_equipes, default={
+        #     "equipe A": {
+        #             "Nome da Equipe": "equipe A",
+        #             "GRUPO MASTER": "1930",
+        #             "GRUPO ELITE": "1825",
+        #             "GRUPO A": "1794",
+        #             "GRUPO B": "1585",
+        #             "GRUPO C": "1444",
+        #             "GRUPO D": "1440",
+        #             "GRUPO E": "1430"
+        #         }
+        # })   
+        
+        # self.SalvarDadosLocais('equipes', self.arquiv)     
+        self.arquiv = self.LerDadosLocais('equipes', default={
             "equipe A": {
                     "Nome da Equipe": "equipe A",
                     "GRUPO MASTER": "1930",
@@ -144,11 +160,27 @@ class LayoutEquipes(ft.Column):
             self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
 
     def salvar(self, e):
-        self.arquiv = self.ler_json(self.config_equipes)
+        # self.arquiv = self.ler_json(self.config_equipes)
+        self.arquiv = self.LerDadosLocais('equipes')
         for key, field in self.equipe_fields.items():
             self.arquiv["equipe A"][key] = field.value
-        self.escrever_json(self.arquiv, self.config_equipes)
+        # self.escrever_json(self.arquiv, self.config_equipes)
+        self.SalvarDadosLocais('equipes',self.arquiv)
         self.printt('Configurações salvas com sucesso')
+
+    def SalvarDadosLocais(self, nome, valor):
+        self.page.client_storage.set(nome, valor)
+      
+
+    def LerDadosLocais(self, nome,  default=None):
+        if self.page.client_storage.contains_key(nome):
+            return self.page.client_storage.get(nome)
+        else:
+            return default
+
+        
+
+
 
     def escrever_json(self, data, filename):
         if not filename.endswith('.json'):

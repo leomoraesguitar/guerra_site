@@ -6,38 +6,38 @@ import flet as ft
 
 
 
-class Verificar_pasta:
-    def __init__(self,pastalocal = 'tabelamandadostjse'):
-        self.pastalocal = pastalocal
-        self.verificar_pasta()
+# class Verificar_pasta:
+#     def __init__(self,pastalocal = 'tabelamandadostjse'):
+#         self.pastalocal = pastalocal
+#         self.verificar_pasta()
 
-    def verificar_pasta(self):
-        user_profile = os.environ.get('USERPROFILE')
-        # print(user_profile)
-        if not user_profile:
-            # return False  # USERPROFILE não está definido
-            self.local = None
+#     def verificar_pasta(self):
+#         user_profile = os.environ.get('USERPROFILE')
+#         # print(user_profile)
+#         if not user_profile:
+#             # return False  # USERPROFILE não está definido
+#             self.local = None
 
-        # caminho = os.path.join(user_profile, self.pastalocal)
-        caminho = self.pastalocal
+#         # caminho = os.path.join(user_profile, self.pastalocal)
+#         caminho = self.pastalocal
 
         
-        if os.path.exists(caminho):
-            self.local = caminho
-            # return self.caminho
-        else:
-            os.mkdir(caminho)
-            # print(caminho)
-            if os.path.exists(caminho):
-                self.local = caminho
-                # return self.caminho
-            # else:
-                # return None
+#         if os.path.exists(caminho):
+#             self.local = caminho
+#             # return self.caminho
+#         else:
+#             os.mkdir(caminho)
+#             # print(caminho)
+#             if os.path.exists(caminho):
+#                 self.local = caminho
+#                 # return self.caminho
+#             # else:
+#                 # return None
     
 
-    def caminho(self, nome):
-        # self.verificar_pasta()
-        return os.path.join(self.local, nome)
+#     def caminho(self, nome):
+#         # self.verificar_pasta()
+#         return os.path.join(self.local, nome)
 
 
 class ConfirmarSaida:
@@ -55,14 +55,14 @@ class ConfirmarSaida:
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-        self.page.on_window_event = self.window_event
+        self.page.window.on_event = self.window_event
         self.page.window.prevent_close = True 
    
 
 
     def window_event(self, e):
             if e.data == "close":
-                self.page.dialog = self.confirm_dialog
+                self.page.overlay.append(self.confirm_dialog)
                 
                 self.confirm_dialog.open = True
                 self.page.update()
@@ -183,9 +183,65 @@ class layout_jogadores(ft.Column):
 
         
         self.lista_jogadores = []
-        self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
+        # self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
         try:
-            self.arquiv = self.Ler_json(self.config_jogadores,
+            # self.arquiv = self.Ler_json(self.config_jogadores,
+            #     default={
+            #             "nome": [
+            #                 "Diogo SvS",
+            #                 "Cristiano",
+            #                 "lulmor",
+            #                 "Let\u00edcia",
+            #                 "lllll",
+            #                 "leoclash10",
+            #                 "lolop",
+            #                 "cacauesntos",
+            #                 "rochaleo",
+            #                 "Maxwell",
+            #                 "GOKU BL4CK-SE",
+            #                 "SR. ALEXANDRE",
+            #                 "xXBPCBXx",
+            #                 "GERIEL CAOS",
+            #                 "br"
+            #             ],
+            #             "nivel_cv": [
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 15,
+            #                 15,
+            #                 15,
+            #                 13,
+            #                 13
+            #             ],
+            #             "forca": [
+            #                 1950,
+            #                 1945,
+            #                 1940,
+            #                 1930,
+            #                 1925,
+            #                 1920,
+            #                 1905,
+            #                 1895,
+            #                 1890,
+            #                 1875,
+            #                 1840,
+            #                 1830,
+            #                 1825,
+            #                 1585,
+            #                 1560
+            #             ]
+            #         }
+            #     )
+            # self.SalvarDadosLocais('jogadores',self.arquiv)
+            self.arquiv = self.LerDadosLocais('jogadores',
                 default={
                         "nome": [
                             "Diogo SvS",
@@ -239,7 +295,7 @@ class layout_jogadores(ft.Column):
                             1560
                         ]
                     }
-                )
+                )            
             for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
@@ -268,7 +324,63 @@ class layout_jogadores(ft.Column):
     def Atualizar(self,e):
         self.lista_jogadores = []
         try:
-            self.arquiv = self.Ler_json(self.config_jogadores,
+            # self.arquiv = self.Ler_json(self.config_jogadores,
+            #     default={
+            #             "nome": [
+            #                 "Diogo SvS",
+            #                 "Cristiano",
+            #                 "lulmor",
+            #                 "Let\u00edcia",
+            #                 "lllll",
+            #                 "leoclash10",
+            #                 "lolop",
+            #                 "cacauesntos",
+            #                 "rochaleo",
+            #                 "Maxwell",
+            #                 "GOKU BL4CK-SE",
+            #                 "SR. ALEXANDRE",
+            #                 "xXBPCBXx",
+            #                 "GERIEL CAOS",
+            #                 "br"
+            #             ],
+            #             "nivel_cv": [
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 16,
+            #                 15,
+            #                 15,
+            #                 15,
+            #                 13,
+            #                 13
+            #             ],
+            #             "forca": [
+            #                 1950,
+            #                 1945,
+            #                 1940,
+            #                 1930,
+            #                 1925,
+            #                 1920,
+            #                 1905,
+            #                 1895,
+            #                 1890,
+            #                 1875,
+            #                 1840,
+            #                 1830,
+            #                 1825,
+            #                 1585,
+            #                 1560
+            #             ]
+            #         }
+            #     )
+            # self.SalvarDadosLocais('jogadores',self.arquiv )
+            self.arquiv = self.LerDadosLocais('jogadores',
                 default={
                         "nome": [
                             "Diogo SvS",
@@ -323,6 +435,7 @@ class layout_jogadores(ft.Column):
                         ]
                     }
                 )
+                        
             for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
@@ -362,8 +475,21 @@ class layout_jogadores(ft.Column):
             dic['nivel_cv'].append(i.nivel_cv)
             dic['forca'].append(i.forca)
         
-        self.Escrever_json(dic, self.config_jogadores)
+        # self.Escrever_json(dic, self.config_jogadores)
+        self.SalvarDadosLocais('jogadores',dic)
         self.printt('Vilas salvas com sucesso')
+
+
+
+    def SalvarDadosLocais(self, nome, valor):
+        self.page.client_storage.set(nome, valor)
+        
+
+    def LerDadosLocais(self, nome,  default=None):
+        if self.page.client_storage.contains_key(nome):
+            return self.page.client_storage.get(nome)
+        else:
+            return default
 
 
     def Escrever_json(self, data, filename):
