@@ -1,7 +1,2 @@
 exemplo.py
-*.pyc
-/__pycache__
-__pycache__/equipes_gpt.cpython-311.pyc
-__pycache__/importar.cpython-311.pyc
-__pycache__/jogadores.cpython-311.pyc
-__pycache__/vilas_gpt.cpython-311.pyc
+
