@@ -245,7 +245,7 @@ class layout_Importar(ft.Column):
     def __init__(self, printt = None, page = None):
         super().__init__()
         self.page = page
-        # self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config.json')
+        self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config.json')
         self.config_tabela = Verificar_pasta('Guerra_clash').caminho('tabela.plk')
 
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
@@ -288,10 +288,10 @@ class layout_Importar(ft.Column):
                 ]
     
         try:
-            # self.lista = self.LerPickle(self.config_tabela)
+            self.lista = self.LerPickle(self.config_tabela)
             # self.SalvarDadosLocais('lista', self.lista)
-            defal = self.Ler_json('lista_import')
-            self.lista = self.LerDadosLocais('lista', default=defal)
+            # defal = self.Ler_json('lista_import')
+            # self.lista = self.LerDadosLocais('lista', default=defal)
             self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
             self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')
             self.controls.append(ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600))
@@ -351,23 +351,23 @@ class layout_Importar(ft.Column):
 
 
 
-        # self.SalvarPickle(lista, self.config_tabela)
-        # self.Escrever_json(dic2, self.config_jogadores)
-        self.SalvarDadosLocais('jogadores',dic2)
-        self.SalvarDadosLocais('lista',lista)
+        self.SalvarPickle(lista, self.config_tabela)
+        self.Escrever_json(dic2, self.config_jogadores)
+        # self.SalvarDadosLocais('jogadores',dic2)
+        # self.SalvarDadosLocais('lista',lista)
         self.printt('Dados dos players salvo com sucesso') 
         self.Atualizar()       
 
 
-    def SalvarDadosLocais(self, nome, valor):
-        self.page.client_storage.set(nome, valor)
+    # def SalvarDadosLocais(self, nome, valor):
+    #     self.page.client_storage.set(nome, valor)
         
 
-    def LerDadosLocais(self, nome,  default=None):
-        if self.page.client_storage.contains_key(nome):
-            return self.page.client_storage.get(nome)
-        else:
-            return default
+    # def LerDadosLocais(self, nome,  default=None):
+    #     if self.page.client_storage.contains_key(nome):
+    #         return self.page.client_storage.get(nome)
+    #     else:
+    #         return default
 
 
     def GerarToken(self,e):

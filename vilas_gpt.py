@@ -287,37 +287,37 @@ class Display(ft.Container):
 
 
 
-# class Verificar_pasta:
-#     def __init__(self,pastalocal = 'tabelamandadostjse'):
-#         self.pastalocal = pastalocal
-#         self.verificar_pasta()
+class Verificar_pasta:
+    def __init__(self,pastalocal = 'tabelamandadostjse'):
+        self.pastalocal = pastalocal
+        self.verificar_pasta()
 
-#     def verificar_pasta(self):
-#         user_profile = os.environ.get('USERPROFILE')
-#         # print(user_profile)
-#         if not user_profile:
-#             # return False  # USERPROFILE não está definido
-#             self.local = None
+    def verificar_pasta(self):
+        user_profile = os.environ.get('USERPROFILE')
+        # print(user_profile)
+        if not user_profile:
+            # return False  # USERPROFILE não está definido
+            self.local = None
 
-#         # caminho = os.path.join(user_profile, self.pastalocal)
-#         caminho = self.pastalocal
+        # caminho = os.path.join(user_profile, self.pastalocal)
+        caminho = self.pastalocal
 
-#         if os.path.exists(caminho):
-#             self.local = caminho
-#             # return self.caminho
-#         else:
-#             os.mkdir(caminho)
-#             # print(caminho)
-#             if os.path.exists(caminho):
-#                 self.local = caminho
-#                 # return self.caminho
-#             # else:
-#                 # return None
+        if os.path.exists(caminho):
+            self.local = caminho
+            # return self.caminho
+        else:
+            os.mkdir(caminho)
+            # print(caminho)
+            if os.path.exists(caminho):
+                self.local = caminho
+                # return self.caminho
+            # else:
+                # return None
     
 
-#     def caminho(self, nome):
-#         # self.verificar_pasta()
-#         return os.path.join(self.local, nome)
+    def caminho(self, nome):
+        # self.verificar_pasta()
+        return os.path.join(self.local, nome)
 
 class ConfirmarSaida:
     def __init__(self, page, funcao=None):
@@ -690,7 +690,7 @@ class LayoutVilas(ft.Row):
         self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
         cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
         self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
-        # self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
+        self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         self.lista_vilas = self.inicializar_vilas()
         self.col_B.controls[1].content.controls = self.lista_vilas
         self.printt = self.saida.pprint
@@ -701,8 +701,8 @@ class LayoutVilas(ft.Row):
     def inicializar_vilas(self):
         lista_vilas = []
         try:
-            # self.arquiv = self.Ler_json(self.config_vilas)
-            self.arquiv = self.LerDadosLocais('vilas')
+            self.arquiv = self.Ler_json(self.config_vilas)
+            # self.arquiv = self.LerDadosLocais('vilas')
             # print(self.arquiv)
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
@@ -723,8 +723,8 @@ class LayoutVilas(ft.Row):
             # self.controls[1].controls[1].content.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '),ft.Text(' CV  '),ft.Text('Exposição')]),border=ft.border.all(1,'white,0.5'),width=180))
             self.lista_vilas = []
             try:
-                # self.arquiv = self.Ler_json(self.config_vilas)
-                self.arquiv = self.LerDadosLocais('vilas')
+                self.arquiv = self.Ler_json(self.config_vilas)
+                # self.arquiv = self.LerDadosLocais('vilas')
                 if int(self.num_vilas.value) <= len(self.arquiv['nome']):
                     for i,j,k,l in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['cv_exposto'], range(1,int(self.num_vilas.value)+1)):
                         self.lista_vilas.append(Vila(nome = i,nivel_cv = j,cv_exposto = k, func=self.Salvar))
@@ -755,17 +755,17 @@ class LayoutVilas(ft.Row):
             dic['nome'].append(vila.nome)
             dic['nivel_cv'].append(vila.nivel_cv)
             dic['cv_exposto'].append(vila.cv_exposto)
-        # self.Escrever_json(dic, self.config_vilas)
-        self.SalvarDadosLocais('vilas', dic)
+        self.Escrever_json(dic, self.config_vilas)
+        # self.SalvarDadosLocais('vilas', dic)
         self.printt('Vilas salvas com sucesso')
 
 
-    def SalvarDadosLocais(self, nome, valor):
-        self.page.client_storage.set(nome, valor)
+    # def SalvarDadosLocais(self, nome, valor):
+    #     self.page.client_storage.set(nome, valor)
       
 
-    def LerDadosLocais(self, nome):
-        return self.page.client_storage.get(nome)
+    # def LerDadosLocais(self, nome):
+    #     return self.page.client_storage.get(nome)
 
     def Escrever_json(self, nomedodicionario, nomedoarquivo):
         if not nomedoarquivo.endswith('json'):
