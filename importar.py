@@ -9,38 +9,38 @@ import os
 # from pandas import DataFrame
 
 
-# class Verificar_pasta:
-#     def __init__(self,pastalocal = 'Guerra_clash'):
-#         self.pastalocal = pastalocal
-#         self.verificar_pasta()
+class Verificar_pasta:
+    def __init__(self,pastalocal = 'Guerra_clash'):
+        self.pastalocal = pastalocal
+        self.verificar_pasta()
 
-#     def verificar_pasta(self):
-#         user_profile = os.environ.get('USERPROFILE')
-#         # print(user_profile)
-#         if not user_profile:
-#             # return False  # USERPROFILE não está definido
-#             self.local = None
+    def verificar_pasta(self):
+        user_profile = os.environ.get('USERPROFILE')
+        # print(user_profile)
+        if not user_profile:
+            # return False  # USERPROFILE não está definido
+            self.local = None
 
-#         # caminho = os.path.join(user_profile, self.pastalocal)
-#         caminho = self.pastalocal
+        # caminho = os.path.join(user_profile, self.pastalocal)
+        caminho = self.pastalocal
         
         
-#         if os.path.exists(caminho):
-#             self.local = caminho
-#             # return self.caminho
-#         else:
-#             os.mkdir(caminho)
-#             # print(caminho)
-#             if os.path.exists(caminho):
-#                 self.local = caminho
-#                 # return self.caminho
-#             # else:
-#                 # return None
+        if os.path.exists(caminho):
+            self.local = caminho
+            # return self.caminho
+        else:
+            os.mkdir(caminho)
+            # print(caminho)
+            if os.path.exists(caminho):
+                self.local = caminho
+                # return self.caminho
+            # else:
+                # return None
     
 
-#     def caminho(self, nome):
-#         # self.verificar_pasta()
-#         return os.path.join(self.local, nome)
+    def caminho(self, nome):
+        # self.verificar_pasta()
+        return os.path.join(self.local, nome)
 
 
 
@@ -246,7 +246,7 @@ class layout_Importar(ft.Column):
         super().__init__()
         self.page = page
         # self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config.json')
-        # self.config_tabela = Verificar_pasta('Guerra_clash').caminho('tabela.plk')
+        self.config_tabela = Verificar_pasta('Guerra_clash').caminho('tabela.plk')
 
         self.link_clan = 'https://api.clashofclans.com/v1/clans/%23299GCJ8U'
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'        
@@ -290,7 +290,8 @@ class layout_Importar(ft.Column):
         try:
             # self.lista = self.LerPickle(self.config_tabela)
             # self.SalvarDadosLocais('lista', self.lista)
-            self.lista = self.LerDadosLocais('lista')
+            defal = self.Ler_json('lista_import')
+            self.lista = self.LerDadosLocais('lista', default=defal)
             self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
             self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')
             self.controls.append(ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600))
