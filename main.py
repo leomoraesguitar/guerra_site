@@ -1547,7 +1547,7 @@ class My_tabelaC(ft.Column):
     def Linhas(self):
         self.Colunas()
         for i, k in enumerate(self._dic[self.chaves[0]]):     
-            cor  = 'black' if i%2 == 0 else  'white,0.03'  
+            cor  = 'black' if i%2 == 0 else  'white,0.05'  
             self.controls.append(
                 ft.Container(ft.Row([
                                 Display(value = self._dic[self.chaves[0]][i],opitions=self.opcoes, width=self.Larg(self.chaves[0]),height=20,text_size = 12, 
@@ -1763,8 +1763,8 @@ def main(page: ft.Page):
     page.overlay.append(ft.Text('versão - 019',bottom=10, right=10, size=8 ))
     # page.on_resized = resizer
 
-    # page.add(menu,janela)
-    page.add(ft.Text('meu ovo'))
+    page.add(menu,janela)
+    # page.add(ft.Text('meu ovo'))
     # page.update()
 
 if __name__ == '__main__':  
