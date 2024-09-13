@@ -1763,7 +1763,8 @@ def main(page: ft.Page):
     page.overlay.append(ft.Text('versão - 019',bottom=10, right=10, size=8 ))
     # page.on_resized = resizer
 
-    page.add(menu,janela)
+    # page.add(menu,janela)
+    page.add(ft.Text('meu ovo'))
     # page.update()
 
 if __name__ == '__main__':  
