@@ -527,6 +527,7 @@ class Guerra2:
         atacantes = []
 
         self.AtualizarVilas()
+        time.sleep(5)
 
         self.lista_jogadores = self.OrdenarListadeClasses(
             self.lista_jogadores, 'forca', decrecente=False)
