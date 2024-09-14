@@ -280,77 +280,77 @@ class My_tabela(ft.DataTable):
             raise(f'{dic} não é um dicionário')
 
 
-class My_tabelaE(ft.DataTable):
-    def __init__(self, df,#DataFrame ou dicionário
-                 on_tap_down = None
-                 ):
-        super().__init__()
-        self._df = df if type(df) != dict else pd.DataFrame(df)
-        self.border = ft.border.all(1,'white,0.9')
-        self.heading_row_color = 'white,0.5'
-        self.heading_row_height = 35
-        self.column_spacing = 15
-        # self.heading_row_color=colors.BLACK12
-        self.vertical_lines = ft.border.all(20,'white')
-        self.horizontal_margin = 0
-        self.data_row_max_height = 35
-        # self.data_row_min_height = 50
-        self.divider_thickness = 0
-        self.show_checkbox_column = True
-        self.sort_column_index = 4
-        self.sort_ascending = True
-        self.on_tap_down = on_tap_down
-        self.tabela = None
-        # self.data_row_color={"hovered": "0x30FF0000"}
+# class My_tabelaE(ft.DataTable):
+#     def __init__(self, df,#DataFrame ou dicionário
+#                  on_tap_down = None
+#                  ):
+#         super().__init__()
+#         self._df = df if type(df) != dict else pd.DataFrame(df)
+#         self.border = ft.border.all(1,'white,0.9')
+#         self.heading_row_color = 'white,0.5'
+#         self.heading_row_height = 35
+#         self.column_spacing = 15
+#         # self.heading_row_color=colors.BLACK12
+#         self.vertical_lines = ft.border.all(20,'white')
+#         self.horizontal_margin = 0
+#         self.data_row_max_height = 35
+#         # self.data_row_min_height = 50
+#         self.divider_thickness = 0
+#         self.show_checkbox_column = True
+#         self.sort_column_index = 4
+#         self.sort_ascending = True
+#         self.on_tap_down = on_tap_down
+#         self.tabela = None
+#         # self.data_row_color={"hovered": "0x30FF0000"}
                 
-        self.textsize = 15
-        self.Colunas_tabela()
-        self.Linhas_tabela()
+#         self.textsize = 15
+#         self.Colunas_tabela()
+#         self.Linhas_tabela()
 
-    def Colunas_tabela(self):
-        self.columns = [ft.DataColumn(ft.Row([ft.Text(i,selectable = True,theme_style=ft.TextThemeStyle.TITLE_MEDIUM,width=50 if k != 0 else 150)],alignment='center')) for k,i in enumerate(list(self._df.columns))]
+#     def Colunas_tabela(self):
+#         self.columns = [ft.DataColumn(ft.Row([ft.Text(i,selectable = True,theme_style=ft.TextThemeStyle.TITLE_MEDIUM,width=50 if k != 0 else 150)],alignment='center')) for k,i in enumerate(list(self._df.columns))]
         
     
-    def Linhas_tabela(self):
-        linhas = []
-        df_lista = self._df.values.tolist()
-        for l,i in enumerate(df_lista):
-            cell = [ ft.DataCell(ft.Row([ft.TextField(value = j,text_align='center', content_padding = 0,text_size = self.textsize, dense = True,height= 30, width=50 if k != 0 else 150)],
-                    alignment='center',spacing = 3,vertical_alignment='center'), data = [l, k, 'cel'], on_tap_down = None) for k,j in enumerate(i)]
-            cor  = 'black' if l % 2 == 0 else 'white,0.01'
-            linhas.append(ft.DataRow(cells = cell, color = cor))
-        self.rows = linhas
+#     def Linhas_tabela(self):
+#         linhas = []
+#         df_lista = self._df.values.tolist()
+#         for l,i in enumerate(df_lista):
+#             cell = [ ft.DataCell(ft.Row([ft.TextField(value = j,text_align='center', content_padding = 0,text_size = self.textsize, dense = True,height= 30, width=50 if k != 0 else 150)],
+#                     alignment='center',spacing = 3,vertical_alignment='center'), data = [l, k, 'cel'], on_tap_down = None) for k,j in enumerate(i)]
+#             cor  = 'black' if l % 2 == 0 else 'white,0.01'
+#             linhas.append(ft.DataRow(cells = cell, color = cor))
+#         self.rows = linhas
 
-    @property
-    def df(self):
-        return self._df
-    @df.setter
-    def df(self, df):
-        self._df = df if type(df) != dict else pd.DataFrame(df)
-        self.Colunas_tabela()
-        self.Linhas_tabela()
-
-
-    def func(self,e):
-        # e.control.data
-        valor = e.control.content.controls[0].value
-        # self.on_tap_down(valor)
-        self.update()
-
-    def Gerar_df(self):
-        colunas = self._df.columns
-        linhas = [i.cells for i in self.rows]
-        linhas2 = []
-
-        for i in linhas:
-            l = []
-            for j in i:
-                l.append(j.content.controls[0].value)
-            linhas2.append(l)
+#     @property
+#     def df(self):
+#         return self._df
+#     @df.setter
+#     def df(self, df):
+#         self._df = df if type(df) != dict else pd.DataFrame(df)
+#         self.Colunas_tabela()
+#         self.Linhas_tabela()
 
 
-        self.tabela =  pd.DataFrame(linhas2,columns=colunas)
-        return self.tabela
+#     def func(self,e):
+#         # e.control.data
+#         valor = e.control.content.controls[0].value
+#         # self.on_tap_down(valor)
+#         self.update()
+
+#     def Gerar_df(self):
+#         colunas = self._df.columns
+#         linhas = [i.cells for i in self.rows]
+#         linhas2 = []
+
+#         for i in linhas:
+#             l = []
+#             for j in i:
+#                 l.append(j.content.controls[0].value)
+#             linhas2.append(l)
+
+
+#         self.tabela =  pd.DataFrame(linhas2,columns=colunas)
+#         return self.tabela
 
 class Verificar_pasta:
     def __init__(self,pastalocal = 'tabelamandadostjse'):
@@ -1685,6 +1685,83 @@ class My_tabelaC(ft.Container):
         self.Atualizar()
 
 
+class ClassName(ft.Column):
+    def __init__(self,page):
+        super().__init__()
+        self.page = page
+        self.vilas = LayoutVilas(printt=print,page = self.page)
+        self.layout = LayoutGuerra(page = self.page) 
+        self.jogadores = layout_jogadores(printt=print, page=self.page)
+        self.equipes = layout_equipes(page = page)
+        self.importar = layout_Importar(printt=print, page = self.page)
+        self.config = ft.Column([ self.layout.Config(),self.importar.Configs() ]) #,                                          
+        self.janela = ft.Container()
+        self.janela.content = self.layout
+
+
+
+        def Colu(x = 4):
+            return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
+        co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
+        self.menu = ft.Container(
+            
+            content = ft.ResponsiveRow([
+                BotaoCT('Lista de Guerra',self.Escolher_janela,  text_size = 11, col = co2),
+                BotaoCT('Vilas',self.Escolher_janela, col = co2),
+                BotaoCT('Jogadores',self.Escolher_janela, col = co2),
+                BotaoCT('Equipes',self.Escolher_janela, col = co2),
+                BotaoCT('Importar',self.Escolher_janela, col = co2),
+                BotaoCT('config',self.Escolher_janela, col = co2),
+                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,columns=6), 
+                    
+            # padding=2,
+            bgcolor=ft.colors.BROWN_500,
+            border_radius=0,
+            # width=page.window.width+20
+        )
+
+        self.controls = [self.menu,self.janela]
+
+
+    def Escolher_janela(self, e):
+        match e.control.content.value:
+            case 'Lista de Guerra':
+                # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
+                self.janela.content = self.layout
+            case 'Vilas':
+                self.janela.content =  ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+            case 'Jogadores':
+                self.janela.content =  ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+            case 'Lista de Guerra':
+                self.janela.content =  ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+            case 'Equipes':
+                self.janela.content =  ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-100)
+            case 'Importar':
+                self.janela.content =    ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10) 
+            case 'config':
+                self.janela.content = self.config                                                                                               
+
+        self.page.update()
+
+    def Func(self,e):
+        match e.data:
+            case '4':
+                self.page.window.width = 630
+                self.page.window.height = 970
+                self.page.update()             
+            case '3':
+                self.page.window.width = 700
+                self.page.update() 
+            case '2':
+                self.page.window.width = 500
+                self.page.update()  
+            case '1':
+                self.page.window.width = 510
+                self.page.update()  
+            case '0':
+                self.page.window.width = 810
+        self.page.update() 
+
 
 def main(page: ft.Page):
     page.title = "Guerra de Clans - 015"
@@ -1699,170 +1776,64 @@ def main(page: ft.Page):
     page.theme = ft.Theme(visual_density = "comfortable")
 
 
-    ConfirmarSaida(page)
+    # ConfirmarSaida(page)
     # Resize(page) 
     #   
-    vilas = LayoutVilas(printt=print,page = page)
-    layout = LayoutGuerra(page = page) 
-    jogadores = layout_jogadores(printt=print, page=page)
-    equipes = layout_equipes(page = page)
-    importar = layout_Importar(printt=print, page = page)
-    config = ft.Column([ layout.Config(),importar.Configs() ]) #,
+    # def resizer(e):
+    #     page.clean()
+    #     layout = LayoutGuerra(page = page) 
+    #     janela = ft.Container()
+    #     janela.content = layout
+    #     menu = ft.Container(
+    #         content = ft.ResponsiveRow([
+    #             ft.Container(
+    #                 content = ft.Column([
+    #                     BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11),
+    #                     BotaoCT('Vilas',Escolher_janela),
+    #                 ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+    #                 border=ft.border.all(2,'white,0.4'),
+    #                 height = 50,
+    #                 col = Colu()
+    #             ),
 
-    def Func(e):
-        match e.data:
-            case '4':
-               page.window.width = 630
-               page.window.height = 970
-               page.update()             
-            case '3':
-               page.window.width = 700
-               page.update() 
-            case '2':
-               page.window.width = 500
-               page.update()  
-            case '1':
-               page.window.width = 510
-               page.update()  
-            case '0':
-               page.window.width = 810
-               page.update()                                            
+    #             ft.Container(
+    #                 content = ft.Column([
+    #                     BotaoCT('Jogadores',Escolher_janela),
+    #                     BotaoCT('Equipes',Escolher_janela),
+    #                 ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
+    #                 border=ft.border.all(2,'white,0.4'),
+    #                 height = 50,
+    #                 col = Colu()
+    #             ),
 
-    janela = ft.Container()
-    janela.content = layout
-
-    def Escolher_janela(e):
-        match e.control.content.value:
-            case 'Lista de Guerra':
-                # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
-                janela.content = layout
-            case 'Vilas':
-                janela.content =  ft.Column([vilas], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
-            case 'Jogadores':
-                janela.content =  ft.Column([jogadores], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
-            case 'Lista de Guerra':
-                janela.content =  ft.Column([layout], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10)
-            case 'Equipes':
-                janela.content =  ft.Column([equipes], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-100)
-            case 'Importar':
-                janela.content =    ft.Column([importar], scroll=ft.ScrollMode.ALWAYS, height=page.window.height-10) 
-            case 'config':
-                janela.content = config                                                                                               
-
-        page.update()
-
-    def Colu(x = 4):
-        return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
-    co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
-    menu = ft.Container(
-        # content = ft.ResponsiveRow([
-        #     ft.Container(
-        #         content = ft.Column([
-        #             BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11),
-        #             BotaoCT('Vilas',Escolher_janela),
-        #         ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
-        #         border=ft.border.all(2,'white,0.4'),
-        #         height = 50,
-        #         col = Colu()
-        #     ),
-
-        #     ft.Container(
-        #         content = ft.Column([
-        #             BotaoCT('Jogadores',Escolher_janela),
-        #             BotaoCT('Equipes',Escolher_janela),
-        #         ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
-        #         border=ft.border.all(2,'white,0.4'),
-        #         height = 50,
-        #         col = Colu()
-        #     ),
-
-        #     ft.Container(
-        #         content = ft.Column([
-        #             BotaoCT('Importar',Escolher_janela),
-        #             BotaoCT('config',Escolher_janela),
-        #             ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'), 
-        #         border=ft.border.all(2,'white,0.4'),
-        #         height = 50,
-        #         col = Colu()
-        #         )
-        #         ],spacing=0, run_spacing=5),
-
-        content = ft.ResponsiveRow([
-                    BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11, col = co2),
-                    BotaoCT('Vilas',Escolher_janela, col = co2),
-                    BotaoCT('Jogadores',Escolher_janela, col = co2),
-                    BotaoCT('Equipes',Escolher_janela, col = co2),
-                    BotaoCT('Importar',Escolher_janela, col = co2),
-                    BotaoCT('config',Escolher_janela, col = co2),
-                    ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,columns=6), 
-                
-        # padding=2,
-        bgcolor=ft.colors.BROWN_500,
-        border_radius=0,
-        # width=page.window.width+20
-    )
-
-    def resizer(e):
-        page.clean()
-        layout = LayoutGuerra(page = page) 
-        janela = ft.Container()
-        janela.content = layout
-        menu = ft.Container(
-            content = ft.ResponsiveRow([
-                ft.Container(
-                    content = ft.Column([
-                        BotaoCT('Lista de Guerra',Escolher_janela,  text_size = 11),
-                        BotaoCT('Vilas',Escolher_janela),
-                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
-                    border=ft.border.all(2,'white,0.4'),
-                    height = 50,
-                    col = Colu()
-                ),
-
-                ft.Container(
-                    content = ft.Column([
-                        BotaoCT('Jogadores',Escolher_janela),
-                        BotaoCT('Equipes',Escolher_janela),
-                    ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'),
-                    border=ft.border.all(2,'white,0.4'),
-                    height = 50,
-                    col = Colu()
-                ),
-
-                ft.Container(
-                    content = ft.Column([
-                        BotaoCT('Importar',Escolher_janela),
-                        BotaoCT('config',Escolher_janela),
-                        ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'), 
-                    border=ft.border.all(2,'white,0.4'),
-                    height = 50,
-                    col = Colu()
-                    )
-                    ],spacing=0, run_spacing=5),
+    #             ft.Container(
+    #                 content = ft.Column([
+    #                     BotaoCT('Importar',Escolher_janela),
+    #                     BotaoCT('config',Escolher_janela),
+    #                     ],spacing=6, run_spacing=0,alignment=ft.MainAxisAlignment.START, horizontal_alignment='center'), 
+    #                 border=ft.border.all(2,'white,0.4'),
+    #                 height = 50,
+    #                 col = Colu()
+    #                 )
+    #                 ],spacing=0, run_spacing=5),
                         
-            # padding=2,
-            bgcolor=ft.colors.BROWN_500,
-            border_radius=0,
-            width=page.window.width+20
-        )
+    #         # padding=2,
+    #         bgcolor=ft.colors.BROWN_500,
+    #         border_radius=0,
+    #         width=page.window.width+20
+    #     )
 
 
-        page.add(menu,janela)
-        menu.update()
-        page.update()
+    #     page.add(menu,janela)
+    #     menu.update()
+    #     page.update()
     
-    page.overlay.append(ft.Text('versão - 022',bottom=10, right=10, size=8 ))
-    # page.on_resized = resizer
+    page.overlay.append(ft.Text('versão - 023',bottom=10, right=10, size=8 ))
 
-    page.add(menu,janela)
-    # page.add(ft.Text('meu ovo'))
-    # page.update()
+    page.add(ClassName(page))
 
 if __name__ == '__main__':  
-    # layout = LayoutGuerra(page = None)
-    # def print(texto):
-    #     layout.saida.value += f'{texto}\n'
-    #     layout.saida.update()      
+   
     ft.app(main,
     #    view = ft.AppView.WEB_BROWSER
     # port = 8050
