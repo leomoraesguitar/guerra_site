@@ -10,7 +10,7 @@ on:
   # Runs on pull request events that target one of the below branches
   pull_request:
     branches: 
-      # - master
+      - master
       - main
 
   # Allows you to run this workflow manually from the Actions tab of the repository
