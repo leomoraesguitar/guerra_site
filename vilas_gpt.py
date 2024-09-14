@@ -676,7 +676,7 @@ class LayoutVilas(ft.Row):
         self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
-        self.botao_atualizar2 = ft.ElevatedButton('Atualizar2', on_click=self.AtualizarVilas2, width=115, scale=0.8)
+        self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', on_click=self.CarregarVilas, width=300, scale=0.8)
         self.saida = Saida(100,260)
 
         self.col_A = ft.Column([
@@ -702,10 +702,8 @@ class LayoutVilas(ft.Row):
         #     sleep(1)
     # def did_mount(self):
         self.inicializar_vilas()
-        self.col_B.controls[1].content.controls = self.lista_vilas
         self.printt = self.saida.pprint
-        self.controls.append(self.col_A )
-        self.controls.append(self.col_B )
+        self.controls = [self.botao_carregarvilas]
 
 
         
@@ -748,6 +746,12 @@ class LayoutVilas(ft.Row):
         self.lista_vilas = lista_vilas
         self.col_B.controls[1].content.controls = self.lista_vilas        
         self.update()        
+
+    async def CarregarVilas(self,e):
+        await self.AtualizarVilas(1)
+        self.col_B.controls[1].content.controls = self.lista_vilas
+        self.controls= [self.col_A ,self.col_B ]
+        await self.update_async()
 
     def Gera_Lista_de_Vilas(self, equipee=None):
         # self.AtualizarVilas(1)

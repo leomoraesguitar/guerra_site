@@ -1723,12 +1723,14 @@ class ClassName(ft.Column):
         self.controls = [self.menu,self.janela]
 
 
+
     def Escolher_janela(self, e):
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
             case 'Vilas':
+                
                 self.janela.content =  ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
             case 'Jogadores':
                 self.janela.content =  ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
@@ -1828,9 +1830,10 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 023',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 024',bottom=10, right=10, size=8 ))
+    c = ClassName(page)
 
-    page.add(ClassName(page))
+    page.add(c)
 
 if __name__ == '__main__':  
    
