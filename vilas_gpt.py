@@ -3,7 +3,7 @@ import flet as ft
 from operator import attrgetter
 import os
 from typing import Union
-# from time import sleep
+from time import sleep
 # from display import Display
 # from meuscontrolesflet2  import Display
 
@@ -673,12 +673,13 @@ class LayoutVilas(ft.Row):
         self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=115, scale=0.8)
         self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
-        self.saida = Saida(100,280)
+        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
+        self.saida = Saida(100,260)
 
         self.col_A = ft.Column([
 
             self.num_vilas,
-            self.botao_salvar,self.botao_zerar,self.botao_ordenar,
+            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar
             
         ])
         self.col_A.controls.append(self.saida)
@@ -692,8 +693,12 @@ class LayoutVilas(ft.Row):
         cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
         self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
-        self.lista_vilas = self.inicializar_vilas()
+        # self.lista_vilas = self.inicializar_vilas()
         # sleep(5)
+        # while not self.lista_vilas:
+        #     sleep(1)
+    # def did_mount(self):
+        self.inicializar_vilas()
         self.col_B.controls[1].content.controls = self.lista_vilas
         self.printt = self.saida.pprint
         self.controls.append(self.col_A )
@@ -703,9 +708,9 @@ class LayoutVilas(ft.Row):
     def inicializar_vilas(self):
         lista_vilas = []
         try:
-            # self.arquiv = self.Ler_json(self.config_vilas)
+            self.arquiv = self.Ler_json(self.config_vilas)
             
-            self.arquiv = self.page.client_storage.get('vilas')
+            # self.arquiv = await self.page.client_storage.get_async('vilas')
         
             # self.arquiv = self.Ler_json(self.config_vilas)
                 # pass
@@ -714,9 +719,20 @@ class LayoutVilas(ft.Row):
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
         except:
-            # lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
-            pass
-        return lista_vilas
+            lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
+            # pass
+        self.lista_vilas = lista_vilas
+        # return lista_vilas
+
+    async def AtualizarVilas(self,e):
+        self.arquiv = await self.page.client_storage.get_async('vilas')
+        lista_vilas = []
+
+        for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        self.lista_vilas = lista_vilas
+        self.col_B.controls[1].content.controls = self.lista_vilas        
+        await self.update_async()
 
     def Gera_Lista_de_Vilas(self, equipee=None):
         for vila in self.lista_vilas:
@@ -764,7 +780,7 @@ class LayoutVilas(ft.Row):
             dic['nome'].append(vila.nome)
             dic['nivel_cv'].append(vila.nivel_cv)
             dic['cv_exposto'].append(vila.cv_exposto)
-        self.Escrever_json(dic, self.config_vilas)
+        # self.Escrever_json(dic, self.config_vilas)
         self.page.client_storage.set('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
         self.printt('Vilas salvas com sucesso')
