@@ -1,16 +1,16 @@
 
-name: Web Build + Deployment to GitHub Pages 
+name: implantar
 
 on:
   # Runs on push to any of the below branches
-  push:
-    branches: 
-      - master
-      - main
+  # push:
+  #   branches: 
+  #     - master
+  #     - main
   # Runs on pull request events that target one of the below branches
   pull_request:
     branches: 
-      - master
+      # - master
       - main
 
   # Allows you to run this workflow manually from the Actions tab of the repository
@@ -84,7 +84,7 @@ jobs:
         uses: actions/configure-pages@v5
         
       - name: Deploy to GitHub Pages 🚀
-        if: github.event_name == 'push'  # deploy only on push
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}  # Deploy em push ou execução manual
         id: deployment
         uses: actions/deploy-pages@v4.0.5
         with:
