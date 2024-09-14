@@ -56,6 +56,7 @@ class Display2(ft.Container):
             content=ft.Column([ft.Text(self._value, color = self._text_color, weight='BOLD', size=self.text_size, no_wrap = False,text_align = 'center' )], alignment='center', horizontal_alignment='center'),
             items=self.opitions,
             menu_position=ft.PopupMenuPosition.UNDER,
+            
         
         )
 
@@ -172,7 +173,8 @@ class Display(ft.Container):
         self.content = ft.PopupMenuButton(
             content=ft.Column([ft.Text(self._value, color = 'white', weight='BOLD', size=self.text_size, no_wrap = False,text_align = 'center' )], alignment='center', horizontal_alignment='center'),
             items=self.opitions,
-            menu_position=ft.PopupMenuPosition.UNDER
+            menu_position=ft.PopupMenuPosition.UNDER,
+           
         )
 
     def SetarValue(self,e):

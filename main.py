@@ -42,9 +42,9 @@ class Display(ft.Container):
         self.on_click = on_click
         self.data = data
         if self.opitions is None:
-            self.opitions = [ft.PopupMenuItem(i, data = self.data, on_click = self.Clicou, padding = ft.Padding(0,0,0,0)) for i in range(30,250,1)]
+            self.opitions = [ft.PopupMenuItem(i, data = self.data, on_click = self.Clicou, padding = ft.Padding(0,0,0,0), mouse_cursor = None) for i in range(30,250,1)]
         else:
-            self.opitions = [ft.PopupMenuItem(i, data = self.data, on_click = self.Clicou, padding = ft.Padding(0,0,0,0)) for i in opitions]
+            self.opitions = [ft.PopupMenuItem(i, data = self.data, on_click = self.Clicou, padding = ft.Padding(0,0,0,0), mouse_cursor = None) for i in opitions]
 
         self.border_radius =border_radius
         self.borda_width = borda_width
@@ -407,7 +407,8 @@ class Guerra2:
             # v = layout_vilas(printt = print)
 
             
-            self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
+            # self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
+            self.AtualizarVilas()
             
         else:
             None
@@ -508,7 +509,7 @@ class Guerra2:
     def Resultado_metodo_4(self):
         atacantes = []
 
-        self.AtualizarVilas()
+        # self.AtualizarVilas()
 
         self.lista_jogadores = self.OrdenarListadeClasses(
             self.lista_jogadores, 'forca', decrecente=False)
