@@ -674,12 +674,13 @@ class LayoutVilas(ft.Row):
         self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
+        self.botao_atualizar2 = ft.ElevatedButton('Atualizar2', on_click=self.AtualizarVilas2, width=115, scale=0.8)
         self.saida = Saida(100,260)
 
         self.col_A = ft.Column([
 
             self.num_vilas,
-            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar
+            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar,self.botao_atualizar2
             
         ])
         self.col_A.controls.append(self.saida)
@@ -703,6 +704,8 @@ class LayoutVilas(ft.Row):
         self.printt = self.saida.pprint
         self.controls.append(self.col_A )
         self.controls.append(self.col_B )
+
+
         
         
     def inicializar_vilas(self):
@@ -734,7 +737,18 @@ class LayoutVilas(ft.Row):
         self.col_B.controls[1].content.controls = self.lista_vilas        
         await self.update_async()
 
+    def AtualizarVilas2(self,e):
+        self.arquiv = self.page.client_storage.get('vilas')
+        lista_vilas = []
+
+        for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        self.lista_vilas = lista_vilas
+        self.col_B.controls[1].content.controls = self.lista_vilas        
+        self.update()        
+
     def Gera_Lista_de_Vilas(self, equipee=None):
+        # self.AtualizarVilas(1)
         for vila in self.lista_vilas:
             vila.equipe = equipee
             vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv
