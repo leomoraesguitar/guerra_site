@@ -401,14 +401,14 @@ class Guerra2:
         # chama a função lista_de_vilas
         self.equipe = self.Buscar_equipe()
         # self.lista_vilas
-        # self.vilas = LayoutVilas(printt = print, page = self.page)
+        self.vilas = LayoutVilas(printt = print, page = self.page)
         if self.equipe != None:
             # self.lista_vilas = self.lista_de_vilas_func()[:]
             # v = layout_vilas(printt = print)
 
             
-            # self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
-            self.AtualizarVilas()
+            self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
+            # self.AtualizarVilas()
             
         else:
             None
@@ -494,7 +494,7 @@ class Guerra2:
 
     def AtualizarVilas(self):
         arquiv = self.page.client_storage.get('vilas')
-        time.sleep(5)
+        
         # print(arquiv)
         lista_vilas = []
 
@@ -507,10 +507,26 @@ class Guerra2:
 
         self.lista_vilas = lista_vilas
 
+    # async def AtualizarVilas(self):
+    #     arquiv = await self.page.client_storage.get_async('vilas')
+    #     time.sleep(2)
+    #     if arquiv:
+    #         lista_vilas = []
+    #         for nome, nivel_cv, cv_exposto in zip(arquiv['nome'], arquiv['nivel_cv'], arquiv['cv_exposto']):
+    #             lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=None))
+
+    #         for vila in lista_vilas:
+    #             vila.equipe = self.equipe
+    #             vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv
+    #         self.lista_vilas = lista_vilas
+    #     else:
+    #         print("Nenhuma vila encontrada no client_storage.")
+
+
     def Resultado_metodo_4(self):
         atacantes = []
 
-        # self.AtualizarVilas()
+        self.AtualizarVilas()
 
         self.lista_jogadores = self.OrdenarListadeClasses(
             self.lista_jogadores, 'forca', decrecente=False)
