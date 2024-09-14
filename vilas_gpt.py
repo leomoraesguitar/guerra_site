@@ -756,6 +756,7 @@ class LayoutVilas(ft.Row):
             dic['nivel_cv'].append(vila.nivel_cv)
             dic['cv_exposto'].append(vila.cv_exposto)
         self.Escrever_json(dic, self.config_vilas)
+        self.page.client_storage.set('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
         self.printt('Vilas salvas com sucesso')
 

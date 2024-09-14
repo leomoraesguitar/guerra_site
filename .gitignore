@@ -1,2 +1,4 @@
 exemplo.py
-
+\_pycache_
+*.pyc
+\dist
