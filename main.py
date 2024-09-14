@@ -385,7 +385,7 @@ class Verificar_pasta:
         return os.path.join(self.local, nome)
 
 class Guerra2:
-    def __init__(self, metodo, fase=None, arq_configuracoes=None, page = None):
+    def __init__(self, metodo, fase=None, arq_configuracoes=None, page = None, listavilas = None):
         # super().__init__()
         self.arq_configuracoes = arq_configuracoes
         self.metodo = metodo
@@ -401,13 +401,15 @@ class Guerra2:
         # chama a função lista_de_vilas
         self.equipe = self.Buscar_equipe()
         # self.lista_vilas
-        self.vilas = LayoutVilas(printt = print, page = self.page)
+
+        if listavilas:
+            self.lista_vilas = listavilas
         if self.equipe != None:
             # self.lista_vilas = self.lista_de_vilas_func()[:]
             # v = layout_vilas(printt = print)
-
-            
-            self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
+            if not self.lista_vilas:
+                self.vilas = LayoutVilas(printt = print, page = self.page)
+                self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
             # self.AtualizarVilas()
             
         else:
@@ -526,8 +528,8 @@ class Guerra2:
     def Resultado_metodo_4(self):
         atacantes = []
 
-        self.AtualizarVilas()
-        time.sleep(5)
+        # self.AtualizarVilas()
+        # time.sleep(5)
 
         self.lista_jogadores = self.OrdenarListadeClasses(
             self.lista_jogadores, 'forca', decrecente=False)
@@ -1243,6 +1245,7 @@ class LayoutGuerra(ft.Column):
         super().__init__()
         self.page = page
         self.num_estrelas = False, False, False, True
+        self.atualizou = False
         self.alignment=ft.MainAxisAlignment.START
         self.horizontal_alignment = 'center'
         self.g2 = None
@@ -1280,6 +1283,8 @@ class LayoutGuerra(ft.Column):
         gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75))
         resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
         resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1))
+        botao_atualizar = BotaoCT('Atualizar', on_click=self.AtualizarVilas,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
+
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
         self.saida = ft.Text('')
@@ -1304,9 +1309,9 @@ class LayoutGuerra(ft.Column):
         #                     ],vertical_alignment='start', alignment='center', expand = True, col = Colu(12))
         #                 ]
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,botao_atualizar], 
                 # width=self.width, 
-                expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
+                expand=False, spacing=0, run_spacing=0, alignment='start', columns=6),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
                     # width=self.width
@@ -1314,6 +1319,40 @@ class LayoutGuerra(ft.Column):
         ]
         self.alignment = 'start'
   
+
+
+
+    async def AtualizarVilas(self,e):
+        arquiv = await self.page.client_storage.get_async('vilas')
+        dic = {'Vila':[], 'CV':[], 'cv_exposto': []}
+        self.lista_vilas = []
+        equipe = {
+                   "Nome da Equipe": "equipe A",
+                    "GRUPO MASTER": "1930",
+                    "GRUPO ELITE": "1825",
+                    "GRUPO A": "1794",
+                    "GRUPO B": "1585",
+                    "GRUPO C": "1444",
+                    "GRUPO D": "1440",
+                    "GRUPO E": "1430"
+                }
+      
+        for nome, nivel_cv, cv_exposto in zip(arquiv['nome'], arquiv['nivel_cv'], arquiv['cv_exposto']):
+                dic['Vila'].append(nome)
+                dic['CV'].append(nivel_cv)
+                dic['cv_exposto'].append(cv_exposto)
+                self.lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=None, equipe=equipe,forca = (50 - nome) + 50 *nivel_cv,)) #forca = (50 - nome) + 50 *nivel_cv,
+
+       
+
+        self.tabela.dic = dic
+        self.tabela.larguras = ('Vila',60)
+        self.tabela.larguras = ('CV',40)
+        self.tabela.larguras = ('cv_exposto',80)
+        self.tabela.visible = True
+        self.atualizou = True
+        await self.update_async()
+
     def Config(self):
         def Valor(e):
             match e.data:
@@ -1336,40 +1375,50 @@ class LayoutGuerra(ft.Column):
 
 
     def Rodar(self,e):
-        pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
-        # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
-        inverter = self.inverter.value
-        metodo = int(self.metodo.value)
-        # print(metodo)
+        if self.atualizou:
+            pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
+            # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
+            inverter = self.inverter.value
+            metodo = int(self.metodo.value)
+            # print(metodo)
 
-        print('iniciando ...')
-        self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
-                    arq_configuracoes='equipes', page = self.page)
-        if self.g2.rodou:
-            # t1.join()
-            self.g2.rodou = False
-        # t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
-        #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
-        # t1.start()
-        
-        self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+            print('iniciando ...')
+            # if not self.lista_vilas:
+            self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
+                        arq_configuracoes='equipes', page = self.page, listavilas=self.lista_vilas)
+            if self.g2.rodou:
+                # t1.join()
+                self.g2.rodou = False
+            # t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
+            #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+            # t1.start()
+            
+            self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
-        time.sleep(1)
-        if metodo == 4:
-            # t1.join()
-            # time.sleep(10)
-            dic = self.g2.dic
-            # print(df)
-            # print(dic)
+            time.sleep(1)
+            if metodo == 4:
+                # t1.join()
+                # time.sleep(10)
+                dic = self.g2.dic
+                # print(df)
+                # print(dic)
+                self.tabela.visible = True
+                self.tabela.dic = dic# = My_tabela(df)
+                self.tabela.larguras= ('Jogador',100)
+                # self.tabela.df = self.g2.df
+                self.update()
+                # self.RedimensionarJanela(400)
+            # print(self.g2.df)
+            elif metodo == 2:
+                self.Resultado2(1)
+            self.atualizou = False
+        else:
+            self.tabela.dic = {'clique em atualizar     ':''}
+            self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
-            self.tabela.dic = dic# = My_tabela(df)
-            self.tabela.larguras= ('Jogador',100)
-            # self.tabela.df = self.g2.df
             self.update()
-            # self.RedimensionarJanela(400)
-        # print(self.g2.df)
-        elif metodo == 2:
-            self.Resultado2(1)
+            
+
 
  
     def Parar(self,e):
@@ -1653,8 +1702,8 @@ def main(page: ft.Page):
     ConfirmarSaida(page)
     # Resize(page) 
     #   
-    layout = LayoutGuerra(page = page) 
     vilas = LayoutVilas(printt=print,page = page)
+    layout = LayoutGuerra(page = page) 
     jogadores = layout_jogadores(printt=print, page=page)
     equipes = layout_equipes(page = page)
     importar = layout_Importar(printt=print, page = page)
@@ -1802,7 +1851,7 @@ def main(page: ft.Page):
         menu.update()
         page.update()
     
-    page.overlay.append(ft.Text('versão - 021',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 022',bottom=10, right=10, size=8 ))
     # page.on_resized = resizer
 
     page.add(menu,janela)
