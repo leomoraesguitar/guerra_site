@@ -743,6 +743,7 @@ class LayoutVilas(ft.Row):
 
 
 
+
     def Zerar_exposicoes(self,e):
         for i in self.lista_vilas:
             i.cv_exp = 0
