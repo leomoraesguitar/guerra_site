@@ -401,7 +401,7 @@ class Guerra2:
         # chama a função lista_de_vilas
         self.equipe = self.Buscar_equipe()
         # self.lista_vilas
-        self.vilas = LayoutVilas(printt = print, page = self.page)
+        # self.vilas = LayoutVilas(printt = print, page = self.page)
         if self.equipe != None:
             # self.lista_vilas = self.lista_de_vilas_func()[:]
             # v = layout_vilas(printt = print)
@@ -494,6 +494,7 @@ class Guerra2:
 
     def AtualizarVilas(self):
         arquiv = self.page.client_storage.get('vilas')
+        time.sleep(5)
         # print(arquiv)
         lista_vilas = []
 
