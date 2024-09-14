@@ -3,6 +3,7 @@ import flet as ft
 from operator import attrgetter
 import os
 from typing import Union
+# from time import sleep
 # from display import Display
 # from meuscontrolesflet2  import Display
 
@@ -692,6 +693,7 @@ class LayoutVilas(ft.Row):
         self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         self.lista_vilas = self.inicializar_vilas()
+        # sleep(5)
         self.col_B.controls[1].content.controls = self.lista_vilas
         self.printt = self.saida.pprint
         self.controls.append(self.col_A )
@@ -701,13 +703,19 @@ class LayoutVilas(ft.Row):
     def inicializar_vilas(self):
         lista_vilas = []
         try:
-            self.arquiv = self.Ler_json(self.config_vilas)
-            # self.arquiv = self.LerDadosLocais('vilas')
+            # self.arquiv = self.Ler_json(self.config_vilas)
+            
+            self.arquiv = self.page.client_storage.get('vilas')
+        
+            # self.arquiv = self.Ler_json(self.config_vilas)
+                # pass
+
             # print(self.arquiv)
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
         except:
-            lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
+            # lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
+            pass
         return lista_vilas
 
     def Gera_Lista_de_Vilas(self, equipee=None):
