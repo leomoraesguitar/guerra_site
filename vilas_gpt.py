@@ -682,7 +682,7 @@ class LayoutVilas(ft.Row):
         self.col_A = ft.Column([
 
             self.num_vilas,
-            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar,self.botao_atualizar2
+            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar
             
         ])
         self.col_A.controls.append(self.saida)

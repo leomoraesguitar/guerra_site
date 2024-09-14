@@ -1241,8 +1241,9 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self, page):
+    def __init__(self, page, vilas = None):
         super().__init__()
+        self.vilas = vilas
         self.page = page
         self.num_estrelas = False, False, False, True
         self.atualizou = False
@@ -1293,28 +1294,14 @@ class LayoutGuerra(ft.Column):
 
         self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
         self.tabela.larguras = ('Jogador',100)
-        # self.tabela.visible = True
-        # self.controls = [
-        #     ft.ResponsiveRow([
-        #                 ft.Column([
 
-        #                             # ft.Row([estrelas, self.metodo,], width=320, spacing=0, run_spacing=0),
-        #                             # ft.Row([self.inverter, self.n_ciclos, ], width=320, spacing=0, run_spacing=0),
-        #                             ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], width=self.width, expand=True, spacing=0, run_spacing=0, alignment='start'),
-        #                             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-30,horizontal_alignment='center')],scroll=ft.ScrollMode.ADAPTIVE,width = self.width, alignment='center', vertical_alignment='start')
-        #                         ],alignment=ft.MainAxisAlignment.START,  spacing=5, run_spacing=0, horizontal_alignment='center'),
-                    
-
-        #                 # ft.Container(content = ft.Column([self.saida], auto_scroll=True, scroll=ft.ScrollMode.ADAPTIVE,height = 400, width=200), bgcolor='white,0.01')
-        #                     ],vertical_alignment='start', alignment='center', expand = True, col = Colu(12))
-        #                 ]
         self.controls = [
             ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,botao_atualizar], 
-                # width=self.width, 
+
                 expand=False, spacing=0, run_spacing=0, alignment='start', columns=6),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
-                    # width=self.width
+
                     )
         ]
         self.alignment = 'start'
@@ -1375,7 +1362,20 @@ class LayoutGuerra(ft.Column):
 
 
     def Rodar(self,e):
+        self.atualizou = True
         if self.atualizou:
+            equipe = {
+                    "Nome da Equipe": "equipe A",
+                        "GRUPO MASTER": "1930",
+                        "GRUPO ELITE": "1825",
+                        "GRUPO A": "1794",
+                        "GRUPO B": "1585",
+                        "GRUPO C": "1444",
+                        "GRUPO D": "1440",
+                        "GRUPO E": "1430"
+                    }            
+            self.vilas.Gera_Lista_de_Vilas(equipe)
+            self.lista_vilas = self.vilas.lista_vilas
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
             # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
             inverter = self.inverter.value
@@ -1690,7 +1690,7 @@ class ClassName(ft.Column):
         super().__init__()
         self.page = page
         self.vilas = LayoutVilas(printt=print,page = self.page)
-        self.layout = LayoutGuerra(page = self.page) 
+        self.layout = LayoutGuerra(page = self.page, vilas=self.vilas) 
         self.jogadores = layout_jogadores(printt=print, page=self.page)
         self.equipes = layout_equipes(page = page)
         self.importar = layout_Importar(printt=print, page = self.page)
