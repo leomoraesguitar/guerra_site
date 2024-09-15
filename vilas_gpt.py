@@ -717,6 +717,7 @@ class LayoutVilas(ft.Row):
             # print(self.arquiv)
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        
         except:
             lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
             # pass

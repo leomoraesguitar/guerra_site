@@ -16,6 +16,17 @@ from equipes_gpt import LayoutEquipes as layout_equipes
 from importar import layout_Importar
 # from meuscontrolesflet2 import Display
 
+# as demais abas do menu não estão aparecendo apo´s a primeira execução do prog
+
+
+
+
+
+
+
+
+
+
 
 class Display(ft.Container):
     def __init__(self,
@@ -395,32 +406,35 @@ class Guerra2:
         self.metodo = metodo
         self.fase = fase
         self.page = page
-        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
+        # self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
+        self.lista_jogadores = listajogadores
+        self.equipe = equipe
+        self.lista_vilas = listavilas
 
 
         # self.lista_jogadores = self.jogadores()[:]  # chama a função jogadores
-        self.lista_jogadores = layout_jogadores(printt = print,page = self.page).Gera_Lista_de_jogadores()
+        # self.lista_jogadores = layout_jogadores(printt = print,page = self.page).Gera_Lista_de_jogadores()
         # self.lista_jogadores
         # self.ord_jogs = self.DefinirPesos()
         # chama a função lista_de_vilas
-        self.equipe = self.Buscar_equipe()
+        # self.equipe = self.Buscar_equipe()
         # self.lista_vilas
 
-        if listavilas:
-            self.lista_vilas = listavilas
-        if self.equipe != None:
-            # self.lista_vilas = self.lista_de_vilas_func()[:]
-            # v = layout_vilas(printt = print)
-            if not self.lista_vilas:
-                self.vilas = LayoutVilas(printt = print, page = self.page)
-                self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
+        # if listavilas:
+        #     self.lista_vilas = listavilas
+        # if self.equipe != None:
+        #     # self.lista_vilas = self.lista_de_vilas_func()[:]
+        #     # v = layout_vilas(printt = print)
+        #     if not self.lista_vilas:
+        #         self.vilas = LayoutVilas(printt = print, page = self.page)
+        #         self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
             # self.AtualizarVilas()
             
 
-        if listajogadores:
-            self.lista_jogadores = listajogadores
-        if equipe:
-            self.equipe = equipe            
+        # if listajogadores:
+        #     self.lista_jogadores = listajogadores
+        # if equipe:
+        #     self.equipe = equipe            
         self.GerarMapaInicial()
         self.seq = [[0], [0]]
         self.pl = 0
@@ -2031,6 +2045,7 @@ class ClassName(ft.Column):
         self.janela.content = self.layout
         self.spacing = 3
         self.run_spacing = 1
+        botao_atualizar = BotaoCT('Click aqui para carregar', on_click=self.Attt,bgcolor=ft.colors.BLUE_700,text_size=15,  col = 12)
 
 
 
@@ -2054,7 +2069,160 @@ class ClassName(ft.Column):
             # width=page.window.width+20
         )
 
-        self.controls = [self.menu,self.janela]
+        self.controls1 = [self.menu,self.janela]
+        self.controls = [botao_atualizar]
+
+    # def did_mount(self):
+    #     # time.sleep(5)
+    #     print('meu ovo')
+    #     # self.Att('_')
+    #     self.attt()
+      
+      
+    async def Attt(self,e):
+        vilas = await self.page.client_storage.contains_key_async("vilas") # True if the key exists
+        jogadores = await self.page.client_storage.contains_key_async("jogadores") # True if the key exists
+        equipe = await self.page.client_storage.contains_key_async("equipe") # True if the key exists
+        lista = await self.page.client_storage.contains_key_async("lista") # True if the key exists
+        
+
+
+        if not jogadores:
+            # await self.jogadores.ArmazenarDados()
+            dfj ={
+                    "nome": [
+                        "Diogo SvS",
+                        "Cristiano",
+                        "lulmor",
+                        "Let\u00edcia",
+                        "lllll",
+                        "leoclash10",
+                        "lolop",
+                        "cacauesntos",
+                        "rochaleo",
+                        "Maxwell",
+                        "GOKU BL4CK-SE",
+                        "SR. ALEXANDRE",
+                        "xXBPCBXx",
+                        "GERIEL CAOS",
+                        "br"
+                    ],
+                    "nivel_cv": [
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        15,
+                        15,
+                        15,
+                        13,
+                        13
+                    ],
+                    "forca": [
+                        1950,
+                        1945,
+                        1940,
+                        1930,
+                        1925,
+                        1920,
+                        1905,
+                        1895,
+                        1890,
+                        1875,
+                        1840,
+                        1830,
+                        1825,
+                        1585,
+                        1560
+                    ]
+                }        
+            
+            config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
+            arquiv = self.Ler_json(config_jogadores,default=dfj)    
+            lista_jogadores = []
+            for i,j,k in zip(arquiv['nome'],arquiv['nivel_cv'],arquiv['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+        
+            dic = {'nome':[],'nivel_cv':[],'forca':[] }
+
+            for i in lista_jogadores:
+                dic['nome'].append(i.nome)
+                dic['nivel_cv'].append(i.nivel_cv)
+                dic['forca'].append(i.forca)
+            try:
+                await self.page.client_storage.set_async('jogadores',dic)
+            except:
+                pass
+        else:
+            lista_jogadores = []
+            arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+            for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+
+
+        if not equipe:
+            # await self.equipes.ArmazenarDados()
+            config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')  
+            arquiv = self.Ler_json(config_equipes)
+            equipe = arquiv["equipe A"]
+            await self.page.client_storage.set_async('equipe',equipe)
+        else:
+            equipe = await self.page.client_storage.get_async('equipe')
+     
+        if not vilas:
+            # await self.vilas.ArmazenarDados()
+            dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
+            config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
+            self.arquiv = self.Ler_json(config_vilas)  
+            lista_vilas = []
+            for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=None, equipe = equipe,forca = (50 - nome) + 50 * nivel_cv))
+            
+    
+            for vila in lista_vilas:
+                dic['nome'].append(vila.nome)
+                dic['nivel_cv'].append(vila.nivel_cv)
+                dic['cv_exposto'].append(vila.cv_exposto)
+
+            await self.page.client_storage.set_async('vilas',dic)   
+        else:
+            arquiv_vilas = await self.page.client_storage.get_async('vilas')
+            if isinstance(arquiv_vilas, dict):
+                lista_vilas = []
+                for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                    lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+
+
+    
+
+
+        # arquiv_equipes = await self.page.client_storage.get_async('equipe')
+        # if isinstance(arquiv_equipes, dict):
+        #     equipe = arquiv_equipes["equipe A"]
+
+
+
+
+        self.layout.lista_vilas = lista_vilas
+        self.layout.listajogadores = lista_jogadores
+        self.layout.equipe = equipe
+        self.layout.atualizou = True
+
+        self.controls = self.controls1
+        self.update()
+
+
+    async def Att(self,e):
+        await self.ArmazenarDados()
+        self.controls = self.controls1
+        self.update()
+
 
 
     async def ArmazenarDados(self):
@@ -2103,9 +2271,12 @@ class ClassName(ft.Column):
     def Alterou(self,e):
         if isinstance(e, list) and e[0] == 'vilas':
             lista_vilas = e[1]
-            for vila in lista_vilas:
-                vila.equipe = self.equipes.arquiv["equipe A"]
-                vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv            
+            if lista_vilas[0].forca:
+                pass
+            else:
+                for vila in lista_vilas:
+                    vila.equipe = self.equipes.arquiv["equipe A"]
+                    vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv            
             self.layout.lista_vilas = lista_vilas
 
 
@@ -2124,25 +2295,30 @@ class ClassName(ft.Column):
 
 
 
-    async def Escolher_janela(self, e):
+    def Escolher_janela(self, e):
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
             case 'Vilas':                
-                self.janela.content =  ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
             case 'Jogadores':
-                self.janela.content =  ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
             case 'Lista de Guerra':
-                self.janela.content =  ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
             case 'Equipes':
-                self.janela.content =  ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-100)
+                self.janela.content = ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-100)
             case 'Importar':
-                self.janela.content =    ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10) 
+                self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10) 
             case 'config':
                 self.janela.content = self.config                                                                                               
 
         self.janela.update()
+        self.update()
+        print(self.controls)
+
+
+
 
     def Func(self,e):
         match e.data:
@@ -2162,6 +2338,27 @@ class ClassName(ft.Column):
             case '0':
                 self.page.window.width = 810
         self.page.update() 
+
+
+
+    def Escrever_json(self, data, filename):
+        if not filename.endswith('.json'):
+            filename += '.json'
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)
+
+    def Ler_json(self, filename, default=None):
+        if not filename.endswith('.json'):
+            filename += '.json'
+        try:
+            with open(filename, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            try:
+                self.Escrever_json(default, filename)
+            except:
+                pass
+            return default or {}
 
 
 def main(page: ft.Page):
@@ -2229,7 +2426,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 026',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 028',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
