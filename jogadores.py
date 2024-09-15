@@ -360,6 +360,7 @@ class layout_jogadores(ft.Column):
                                        ]
         self.update()
         await self.Salvar(1)
+        self.update()
 
 
 

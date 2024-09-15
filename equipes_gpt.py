@@ -201,10 +201,12 @@ class LayoutEquipes(ft.Column):
         self.arquiv = await self.page.client_storage.get_async('equipe')
         if isinstance(self.arquiv, dict):
             for key in self.equipe_fields:
-                self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
+                # self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
+                self.equipe_fields[key].value = self.arquiv.get(key, "")
 
         self.controls = self.controls1+ [self.saida]
         self.update()
+
 
 
 

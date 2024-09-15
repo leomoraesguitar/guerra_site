@@ -15,8 +15,12 @@ from jogadores import layout_jogadores,Jogador
 from equipes_gpt import LayoutEquipes as layout_equipes
 from importar import layout_Importar
 # from meuscontrolesflet2 import Display
+"""
+as demais abas do menu não estão aparecendo apo´s a primeira execução do prog - ok
+a aba jogador está precisando de dois updates para carregar apois clicar em carregar - ok
+o botão carregar da aba equipes não está funcionando - ok
 
-# as demais abas do menu não estão aparecendo apo´s a primeira execução do prog
+"""
 
 
 
@@ -2426,7 +2430,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 028',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 029',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
