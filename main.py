@@ -1470,7 +1470,7 @@ class LayoutGuerra(ft.Column):
 
           
 
-    def Rodar(self,e):
+    async def Rodar(self,e):
         self.atualizou = True
         if self.atualizou:
             equipe = {
@@ -1483,11 +1483,11 @@ class LayoutGuerra(ft.Column):
                         "GRUPO D": "1440",
                         "GRUPO E": "1430"
                     }          
-            self.equipe.CarregarEquipes(1)
+            await self.equipe.CarregarEquipes(1)
             equipe = self.equipe.arquiv["equipe A"]
-            self.jogadores.Atualizar(1)
+            await self.jogadores.Atualizar(1)
             self.listajogadores = self.jogadores.lista_jogadores
-            self.vilas.Gera_Lista_de_Vilas(equipe)
+            await self.vilas.Gera_Lista_de_Vilas(equipe)
             self.lista_vilas = self.vilas.lista_vilas
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
             # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
@@ -1510,7 +1510,7 @@ class LayoutGuerra(ft.Column):
             #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
             # t1.start()
             
-            self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+            await self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
             time.sleep(1)
             if metodo == 4:
@@ -1523,17 +1523,17 @@ class LayoutGuerra(ft.Column):
                 self.tabela.dic = dic# = My_tabela(df)
                 self.tabela.larguras= ('Jogador',100)
                 # self.tabela.df = self.g2.df
-                self.update()
+                await self.update_async()
                 # self.RedimensionarJanela(400)
             # print(self.g2.df)
             elif metodo == 2:
-                self.Resultado2(1)
+                await self.Resultado2(1)
             self.atualizou = False
         else:
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
-            self.update()
+            await self.update_async()
                         
 
 
