@@ -657,9 +657,10 @@ class Vila(ft.Row):
             self.cv.text_color = None            
 
 class LayoutVilas(ft.Row):
-    def __init__(self, num_vilas=15, printt=None, page=None):
+    def __init__(self, num_vilas=15, printt=None, page=None, func = None):
         super().__init__()
         self.page = page
+        self.func = func
         self.spacing = 0
         self.run_spacing = 0
         self.vertical_alignment = 'start'
@@ -671,6 +672,7 @@ class LayoutVilas(ft.Row):
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
         self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', on_click=self.CarregarVilas, width=300, scale=0.8)
         self.saida = Saida(100,220)
+
 
         self.col_A = ft.Column([
 
@@ -796,16 +798,19 @@ class LayoutVilas(ft.Row):
         # self.Escrever_json(dic, self.config_vilas)
         self.page.client_storage.set('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
+
+        self.func(['vilas', self.lista_vilas])
         self.printt('Vilas salvas com sucesso')
 
     async def ArmazenarDados(self):
-        dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
-        for vila in self.lista_vilas:
-            dic['nome'].append(vila.nome)
-            dic['nivel_cv'].append(vila.nivel_cv)
-            dic['cv_exposto'].append(vila.cv_exposto)
-        # self.Escrever_json(dic, self.config_vilas)
-        self.page.client_storage.set('vilas',dic)        
+        if not self.page.session.contains_key("vilas"): # True if the key exists
+            dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
+            for vila in self.lista_vilas:
+                dic['nome'].append(vila.nome)
+                dic['nivel_cv'].append(vila.nivel_cv)
+                dic['cv_exposto'].append(vila.cv_exposto)
+            # self.Escrever_json(dic, self.config_vilas)
+            self.page.client_storage.set('vilas',dic)        
 
     # def SalvarDadosLocais(self, nome, valor):
     #     self.page.client_storage.set(nome, valor)

@@ -1248,12 +1248,14 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self, page, vilas = None, equipe = None, jogadores = None):
+    def __init__(self, page,  equipe = None, func = None, jogadores = None, vilas = None ):
         super().__init__()
-        self.vilas = vilas
+        # self.vilas = vilas
         self.equipe = equipe
-        self.jogadores = jogadores
         self.page = page
+        self.jogadores = jogadores
+        self.vilas = vilas
+        self.func = func
         self.num_estrelas = False, False, False, True
         self.atualizou = False
         self.alignment=ft.MainAxisAlignment.START
@@ -1274,7 +1276,6 @@ class LayoutGuerra(ft.Column):
         def copiar_areaT(e):
             self.g2.df.to_clipboard()
             print('tabela copiada com sucesso!')
-
 
        
 
@@ -1316,49 +1317,140 @@ class LayoutGuerra(ft.Column):
     
 
     async def ArmazenarDados(self,e):
-        try:
-            await self.jogadores.ArmazenarDados()
-        except:
-            pass
-        try:
-            await self.vilas.ArmazenarDados()
-        except:
-            pass
-        try:
-            await self.equipe.ArmazenarDados()
-        except:
-            pass
-        try:
-            await self.AtualizarDados(1)
-        except:
-            pass        
+        if not self.atualizou:
 
+            # try:
+            #     await self.jogadores.ArmazenarDados()
+            # except:
+            #     pass
+            # try:
+            #     await self.vilas.ArmazenarDados()
+            # except:
+            #     pass
+            # try:
+            #     await self.equipe.ArmazenarDados()
+            # except:
+            #     pass
+            await self.func()
+            # try:           
+            # self.AtualizarDados(1)
+            # except:
+            #     pass
 
+    async def AtualizarDados2(self,e):
+        if self.page.session.contains_key("equipe"):
+            arquiv_equipes = await self.page.client_storage.get_async('equipe')
+            if isinstance(arquiv_equipes, dict):
+                equipe = arquiv_equipes["equipe A"]
+        else:
+            config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')   
+            eqp = {
+                "equipe A": {
+                        "Nome da Equipe": "equipe A",
+                        "GRUPO MASTER": "1930",
+                        "GRUPO ELITE": "1825",
+                        "GRUPO A": "1794",
+                        "GRUPO B": "1585",
+                        "GRUPO C": "1444",
+                        "GRUPO D": "1440",
+                        "GRUPO E": "1430"
+                    }
+            }
+            arquiv_equipes = self.ler_json(config_equipes, default=eqp)   
+            equipe = arquiv_equipes["equipe A"]      
 
+        if self.page.session.contains_key("vilas"):
+            arquiv_vilas = await self.page.client_storage.get_async('vilas')
+            if isinstance(arquiv_vilas, dict):
+                lista_vilas = []
+                for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                    lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+        else:
+            config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')            
+            arquiv_vilas = self.ler_json(config_vilas)
 
-    async def AtualizarDados(self,e):
-
-        arquiv_equipes = await self.page.client_storage.get_async('equipe')
-        if isinstance(arquiv_equipes, dict):
-            equipe = arquiv_equipes["equipe A"]
-
-        arquiv_vilas = await self.page.client_storage.get_async('vilas')
-        if isinstance(arquiv_vilas, dict):
             lista_vilas = []
             for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
-
         # arquiv_lista = await self.page.client_storage.get_async('lista')
 
-        lista_jogadores = []
-        arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
-        for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
-            lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+        if self.page.session.contains_key("jogadores"):
+            lista_jogadores = []
+            arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+            for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+        else:
+            dfj ={
+                    "nome": [
+                        "Diogo SvS",
+                        "Cristiano",
+                        "lulmor",
+                        "Let\u00edcia",
+                        "lllll",
+                        "leoclash10",
+                        "lolop",
+                        "cacauesntos",
+                        "rochaleo",
+                        "Maxwell",
+                        "GOKU BL4CK-SE",
+                        "SR. ALEXANDRE",
+                        "xXBPCBXx",
+                        "GERIEL CAOS",
+                        "br"
+                    ],
+                    "nivel_cv": [
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        15,
+                        15,
+                        15,
+                        13,
+                        13
+                    ],
+                    "forca": [
+                        1950,
+                        1945,
+                        1940,
+                        1930,
+                        1925,
+                        1920,
+                        1905,
+                        1895,
+                        1890,
+                        1875,
+                        1840,
+                        1830,
+                        1825,
+                        1585,
+                        1560
+                    ]
+                }
+            
+            config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
 
+            arquiv_jogadores = self.ler_json(config_jogadores,default=dfj)
+            lista_jogadores = []
+            for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))            
 
         self.lista_vilas = lista_vilas
         self.listajogadores = lista_jogadores
         self.equipe = equipe
+        self.atualizou = True
+
+
+
+        # print('lista_vilas:', self.lista_vilas)
+        # print('listajogadores:', self.listajogadores)
+        # print('equipe:', self.equipe)
         # await self.equipe.CarregarEquipes(1)
         # equipe = self.equipe.arquiv["equipe A"]
 
@@ -1367,6 +1459,67 @@ class LayoutGuerra(ft.Column):
         
         # await self.vilas.Gera_Lista_de_Vilas(equipe)
         # self.lista_vilas = self.vilas.lista_vilas
+
+
+    async def AtualizarDados(self,e):
+
+        arquiv_equipes = await self.page.client_storage.get_async('equipe')
+        if isinstance(arquiv_equipes, dict):
+            equipe = arquiv_equipes["equipe A"]
+
+
+        arquiv_vilas = await self.page.client_storage.get_async('vilas')
+        if isinstance(arquiv_vilas, dict):
+            lista_vilas = []
+            for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+
+
+        lista_jogadores = []
+        arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+        for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+            lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+
+        self.lista_vilas = lista_vilas
+        self.listajogadores = lista_jogadores
+        self.equipe = equipe
+        self.atualizou = True
+
+
+
+        # print('lista_vilas:', self.lista_vilas)
+        # print('listajogadores:', self.listajogadores)
+        # print('equipe:', self.equipe)
+        # await self.equipe.CarregarEquipes(1)
+        # equipe = self.equipe.arquiv["equipe A"]
+
+        # await self.jogadores.Atualizar(1)
+        # self.listajogadores = self.jogadores.lista_jogadores
+        
+        # await self.vilas.Gera_Lista_de_Vilas(equipe)
+        # self.lista_vilas = self.vilas.lista_vilas
+
+
+
+
+    def escrever_json(self, data, filename):
+        if not filename.endswith('.json'):
+            filename += '.json'
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)
+
+    def ler_json(self, filename, default=None):
+        if not filename.endswith('.json'):
+            filename += '.json'
+        try:
+            with open(filename, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            try:
+                self.escrever_json(default, filename)
+            except:
+                pass
+            return default or {}
 
 
 
@@ -1399,7 +1552,7 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('cv_exposto',80)
         self.tabela.visible = True
         self.atualizou = True
-        await self.update_async()
+        self.update()
 
     def Config(self):
         def Valor(e):
@@ -1423,8 +1576,9 @@ class LayoutGuerra(ft.Column):
 
 
     async def Rodar(self,e):
-        self.atualizou = True
-        if self.atualizou:
+        # self.atualizou = True
+        a = True
+        if a:
             # equipe = {
             #         "Nome da Equipe": "equipe A",
             #             "GRUPO MASTER": "1930",
@@ -1441,13 +1595,16 @@ class LayoutGuerra(ft.Column):
             # self.listajogadores = self.jogadores.lista_jogadores
             # self.vilas.Gera_Lista_de_Vilas(equipe)
             # self.lista_vilas = self.vilas.lista_vilas
-            await self.AtualizarDados(1)
+
+            await self.ArmazenarDados(1)
 
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
             # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
             inverter = self.inverter.value
             metodo = int(self.metodo.value)
             # print(metodo)
+
+
 
             print('iniciando ...')
             # if not self.lista_vilas:
@@ -1482,7 +1639,7 @@ class LayoutGuerra(ft.Column):
             # print(self.g2.df)
             elif metodo == 2:
                 await self.Resultado2(1)
-            self.atualizou = False
+            # self.atualizou = False
         else:
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
@@ -1612,7 +1769,7 @@ class LayoutGuerra(ft.Column):
 
     async def Atualizar_async(self):
         try:
-            await self.update_async()
+            self.update()
         except:
             pass    
 
@@ -1724,16 +1881,21 @@ class Resize:
     def page_resize(self, e):
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
-  
+
 class Saida(ft.Column):
-    def __init__(self):
+    def __init__(self, width=300,height=100):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
-        self.controls.append(ft.Container(ft.ListView([self.saidad],auto_scroll = True, height=150,  ),bgcolor='white,0.03' ))
+        self.controls.append(ft.Container(ft.ListView([self.saidad], auto_scroll=True, height=height), bgcolor='white,0.03'))
+
+
     def pprint(self, *texto):
-        for i in list(texto):
-            self.saidad.value += f'{i}\n'  
-        self.page.update()
+        for i in texto:
+            self.saidad.value += f'{i}\n'
+        try:
+            self.page.update()
+        except:
+            pass
 
 class Tabe(ft.Tabs):
     def __init__(self,  funcao = None, *controls):
@@ -1858,15 +2020,16 @@ class ClassName(ft.Column):
     def __init__(self,page):
         super().__init__()
         self.page = page
-        self.vilas = LayoutVilas(printt=print,page = self.page)
+        self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
-        self.equipes = layout_equipes(page = page)
-        self.layout = LayoutGuerra(page = self.page, vilas=self.vilas, equipe=self.equipes, jogadores=self.jogadores) 
-        self.importar = layout_Importar(printt=print, page = self.page)
-        self.config = ft.Column([ self.layout.Config(),self.importar.Configs() ]) #,                                          
+        self.equipes = layout_equipes(page = page,  )
+        self.layout = LayoutGuerra(page = self.page, func = self.ArmazenarDados, ) 
+        self.saida = Saida(350,150) 
+        self.importar = layout_Importar(printt=self.saida.pprint, page = self.page, func=self.Amarzenar)
+        self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
         self.janela = ft.Container()
         self.janela.content = self.layout
-        self.spacing = 1
+        self.spacing = 3
         self.run_spacing = 1
 
 
@@ -1894,6 +2057,69 @@ class ClassName(ft.Column):
         self.controls = [self.menu,self.janela]
 
 
+    async def ArmazenarDados(self):
+       
+        try:
+            await self.jogadores.ArmazenarDados()
+        except:
+            pass
+        try:
+            await self.vilas.ArmazenarDados()
+        except:
+            pass
+        try:
+            await self.equipes.ArmazenarDados()
+        except:
+            pass        
+
+        arquiv_equipes = await self.page.client_storage.get_async('equipe')
+        if isinstance(arquiv_equipes, dict):
+            equipe = arquiv_equipes["equipe A"]
+
+
+        arquiv_vilas = await self.page.client_storage.get_async('vilas')
+        if isinstance(arquiv_vilas, dict):
+            lista_vilas = []
+            for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+
+
+        lista_jogadores = []
+        arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+        for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+            lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+
+        self.layout.lista_vilas = lista_vilas
+        self.layout.listajogadores = lista_jogadores
+        self.layout.equipe = equipe
+        self.layout.atualizou = True
+
+
+
+
+
+
+
+    def Alterou(self,e):
+        if isinstance(e, list) and e[0] == 'vilas':
+            lista_vilas = e[1]
+            for vila in lista_vilas:
+                vila.equipe = self.equipes.arquiv["equipe A"]
+                vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv            
+            self.layout.lista_vilas = lista_vilas
+
+
+
+    def Amarzenar(self,valor):
+        dic2, lista = valor
+        try:
+            self.page.client_storage.set('jogadores',dic2)
+        except:
+            pass
+        try:
+            self.page.client_storage.set('lista',lista)
+        except:
+            pass        
 
 
 
@@ -1916,7 +2142,7 @@ class ClassName(ft.Column):
             case 'config':
                 self.janela.content = self.config                                                                                               
 
-        self.update()
+        self.janela.update()
 
     def Func(self,e):
         match e.data:
@@ -2011,6 +2237,6 @@ def main(page: ft.Page):
 if __name__ == '__main__':  
    
     ft.app(main,
-       view = ft.AppView.WEB_BROWSER
-    # port = 8050
+       view = ft.AppView.WEB_BROWSER,
+    # port = 6124
        )

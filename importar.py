@@ -239,9 +239,10 @@ class BotaoCT(ft.Container):
                                                       
 
 class layout_Importar(ft.Column):
-    def __init__(self, printt = None, page = None):
+    def __init__(self, printt = None, page = None, func = None):
         super().__init__()
         self.page = page
+        self.func = func
         self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config.json')
         self.config_tabela = Verificar_pasta('Guerra_clash').caminho('tabela.plk')
 
@@ -266,7 +267,7 @@ class layout_Importar(ft.Column):
         self.botao_ordenar_cv = BotaoCT('CV',data = 'nivel_cv',on_click=self.Ordenar_por, col = self.Colu(1))
         self.botao_ordenar_atenuador = BotaoCT('Atenuador',data = 'atenuador',on_click=self.Ordenar_por, col = self.Colu(2), scale=0.8)
         self.botao_ordenar_forca_final = BotaoCT('Força Final',data = 'forca_final',on_click=self.Ordenar_por, col = self.Colu(2), scale=0.8)
-        self.botao_carregarlistas = ft.ElevatedButton('Carregar vPlayers', on_click=self.AtualizarLista, width=300, scale=0.8)
+        self.botao_carregarlistas = ft.ElevatedButton('Carregar Players', on_click=self.AtualizarLista, width=300, scale=0.8)
 
         self.controls1 = [
                          
@@ -295,12 +296,13 @@ class layout_Importar(ft.Column):
     async def AtualizarLista(self,e):
         self.lista = await self.page.client_storage.get_async('lista')
         if isinstance(self.lista, list):
-            self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
-            self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')    
+            pass
         else:            
             self.lista = self.LerPickle(self.config_tabela)
+        self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
+        self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')    
         self.controls = self.controls1 + [ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600)]
-        await self.update_async()
+        self.update()
 
     def Configs(self):
         return  ft.Column([self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token])])
@@ -330,6 +332,7 @@ class layout_Importar(ft.Column):
             dic[i]= [dic[i][k] for k in novo_index ]
         return dic
 
+
     def Salvar(self,e):
         dic = {'nome':[],'nivel_cv':[],'forca':[] }
         lista = []
@@ -347,17 +350,65 @@ class layout_Importar(ft.Column):
 
         dic2 = self.OrdenarDicionario(dic, 'forca')
 
-
-
         # self.SalvarPickle(lista, self.config_tabela)
         # self.Escrever_json(dic2, self.config_jogadores)
-        self.page.client_storage.set('jogadores',dic2)
-        self.page.client_storage.set('lista',lista)
+        self.func([dic2, lista])
+
+        # self.page.client_storage.set('jogadores',dic2)
+        # self.page.client_storage.set('lista',lista)
 
         # self.SalvarDadosLocais('jogadores',dic2)
         # self.SalvarDadosLocais('lista',lista)
         self.printt('Dados dos players salvo com sucesso') 
-        self.Atualizar()       
+        self.Atualizar()  
+
+    def Salvar2(self,e):
+        dic = {'nome':[],'nivel_cv':[],'forca':[] }
+        lista = []
+
+        # for i in self.tabela:
+        for i in self.tabela:
+            if i.guerra:
+                dic['nome'].append(i.jogador)
+                dic['nivel_cv'].append(i.nivel_cv)
+                dic['forca'].append(i.forca_final)
+                # dic['atenuador'].append(i.atenuador)
+
+            lista.append([i.guerra,i.jogador,i.tag,i.nivel_cv, i.forca,i.atenuador, i.forca_final])
+        
+
+        dic2 = self.OrdenarDicionario(dic, 'forca')
+
+        # self.SalvarPickle(lista, self.config_tabela)
+        # self.Escrever_json(dic2, self.config_jogadores)
+        self.func([dic2, lista])
+
+
+        # self.page.client_storage.set('jogadores',dic2)
+        # self.page.client_storage.set('lista',lista)
+
+        # self.SalvarDadosLocais('jogadores',dic2)
+        # self.SalvarDadosLocais('lista',lista)
+        self.printt('Dados dos players salvo com sucesso') 
+        self.Atualizar()            
+
+
+    async def ArmazenarDados(self):
+        self.lista = self.LerPickle(self.config_tabela)
+        self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
+        self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final') 
+        dic = {'nome':[],'nivel_cv':[],'forca':[] }
+        lista = []
+        for i in self.tabela:
+            if i.guerra:
+                dic['nome'].append(i.jogador)
+                dic['nivel_cv'].append(i.nivel_cv)
+                dic['forca'].append(i.forca_final)
+                # dic['atenuador'].append(i.atenuador)
+
+            lista.append([i.guerra,i.jogador,i.tag,i.nivel_cv, i.forca,i.atenuador, i.forca_final])
+    
+        self.page.client_storage.set('lista',lista)
 
 
     # def SalvarDadosLocais(self, nome, valor):
@@ -636,11 +687,11 @@ class layout_Importar(ft.Column):
 
                 self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')
 
-                self.Salvar(1)
+                self.Salvar2(1)
 
 
                 self.printt('Dados importados com sucesso!')
-                self.update()
+                # self.update()
                 
                 
             else:

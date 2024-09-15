@@ -178,12 +178,14 @@ class LayoutEquipes(ft.Column):
         self.printt('Configurações salvas com sucesso')
 
     async def ArmazenarDados(self):
-        self.arquiv = self.ler_json(self.config_equipes)
-        # self.arquiv = self.LerDadosLocais('equipes')
-        for key, field in self.equipe_fields.items():
-            self.arquiv["equipe A"][key] = field.value
-        # self.escrever_json(self.arquiv, self.config_equipes)
-        self.page.client_storage.set('equipe',self.arquiv)
+        if not self.page.session.contains_key("equipe"): # True if the key exists            
+            self.arquiv = self.ler_json(self.config_equipes)
+            # self.arquiv = self.LerDadosLocais('equipes')
+            for key, field in self.equipe_fields.items():
+                self.arquiv["equipe A"][key] = field.value
+            # self.escrever_json(self.arquiv, self.config_equipes)
+            self.page.client_storage.set('equipe',self.arquiv)
+
 
 
     # def SalvarDadosLocais(self, nome, valor):
@@ -202,7 +204,7 @@ class LayoutEquipes(ft.Column):
                 self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
 
         self.controls = self.controls1+ [self.saida]
-        await self.update_async()
+        self.update()
 
 
 
