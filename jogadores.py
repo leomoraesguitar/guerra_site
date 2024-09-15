@@ -40,6 +40,7 @@ class Verificar_pasta:
         return os.path.join(self.local, nome)
 
 
+
 class ConfirmarSaida:
     def __init__(self,page, funcao = None):
         super().__init__()
@@ -330,7 +331,8 @@ class layout_jogadores(ft.Column):
             pass
 
         else:
-            self.arquiv = await self.Ler_json(self.config_jogadores,default=dfj)
+
+            self.arquiv = self.Ler_json(self.config_jogadores,default=dfj)
             # nomes = ('Cristiano',
             #         'lulmor',
             #         'lllll',
@@ -355,18 +357,90 @@ class layout_jogadores(ft.Column):
         # self.controls[3].controls = self.lista_jogadores
         self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
                                        ]
+        self.update()
+        await self.Salvar(1)
+
         
 
-        await self.update_async()
+
+    async def ArmazenarDados(self):
+        dfj ={
+                    "nome": [
+                        "Diogo SvS",
+                        "Cristiano",
+                        "lulmor",
+                        "Let\u00edcia",
+                        "lllll",
+                        "leoclash10",
+                        "lolop",
+                        "cacauesntos",
+                        "rochaleo",
+                        "Maxwell",
+                        "GOKU BL4CK-SE",
+                        "SR. ALEXANDRE",
+                        "xXBPCBXx",
+                        "GERIEL CAOS",
+                        "br"
+                    ],
+                    "nivel_cv": [
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        15,
+                        15,
+                        15,
+                        13,
+                        13
+                    ],
+                    "forca": [
+                        1950,
+                        1945,
+                        1940,
+                        1930,
+                        1925,
+                        1920,
+                        1905,
+                        1895,
+                        1890,
+                        1875,
+                        1840,
+                        1830,
+                        1825,
+                        1585,
+                        1560
+                    ]
+                }        
+        self.arquiv = self.Ler_json(self.config_jogadores,default=dfj)           
+        for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
+            self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+      
+        dic = {'nome':[],'nivel_cv':[],'forca':[] }
+        for i in self.lista_jogadores:
+            dic['nome'].append(i.nome)
+            dic['nivel_cv'].append(i.nivel_cv)
+            dic['forca'].append(i.forca)
+        try:
+            self.page.client_storage.set('jogadores',dic)
+        except:
+            pass
+
 
 
     def Gera_Lista_de_jogadores(self):
         return self.lista_jogadores
 
-
     def Chenge_num_jogadores(self, e):  
         pass   
-    def Salvar(self,e):
+
+
+    async def Salvar(self,e):
         dic = {'nome':[],'nivel_cv':[],'forca':[] }
         for i in self.controls[3].controls:
             dic['nome'].append(i.nome)
@@ -374,11 +448,12 @@ class layout_jogadores(ft.Column):
             dic['forca'].append(i.forca)
         
         # self.Escrever_json(dic, self.config_jogadores)
-        self.page.client_storage.set('jogadores',dic)
-
+        try:
+            self.page.client_storage.set('jogadores',dic)
+        except:
+            pass
         # self.SalvarDadosLocais('jogadores',dic)
-        self.printt('Vilas salvas com sucesso')
-
+        # self.printt('Vilas salvas com sucesso')
 
 
     # def SalvarDadosLocais(self, nome, valor):

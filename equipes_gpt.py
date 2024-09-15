@@ -172,10 +172,19 @@ class LayoutEquipes(ft.Column):
         for key, field in self.equipe_fields.items():
             self.arquiv["equipe A"][key] = field.value
         # self.escrever_json(self.arquiv, self.config_equipes)
-        self.page.client_storage.set('eqipe',self.arquiv)
+        self.page.client_storage.set('equipe',self.arquiv)
 
         # self.SalvarDadosLocais('equipes',self.arquiv)
         self.printt('Configurações salvas com sucesso')
+
+    async def ArmazenarDados(self):
+        self.arquiv = self.ler_json(self.config_equipes)
+        # self.arquiv = self.LerDadosLocais('equipes')
+        for key, field in self.equipe_fields.items():
+            self.arquiv["equipe A"][key] = field.value
+        # self.escrever_json(self.arquiv, self.config_equipes)
+        self.page.client_storage.set('equipe',self.arquiv)
+
 
     # def SalvarDadosLocais(self, nome, valor):
     #     self.page.client_storage.set(nome, valor)
@@ -187,7 +196,7 @@ class LayoutEquipes(ft.Column):
     #     else:
     #         return default
     async def CarregarEquipes(self,e):    
-        self.arquiv = await self.page.client_storage.get_async('equipes')
+        self.arquiv = await self.page.client_storage.get_async('equipe')
         if isinstance(self.arquiv, dict):
             for key in self.equipe_fields:
                 self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")

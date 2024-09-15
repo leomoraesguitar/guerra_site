@@ -675,7 +675,7 @@ class LayoutVilas(ft.Row):
         self.col_A = ft.Column([
 
             self.num_vilas,
-            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar
+            self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar, 
             
         ])
         self.col_A.controls.append(self.saida)
@@ -730,7 +730,7 @@ class LayoutVilas(ft.Row):
                     lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
             self.lista_vilas = lista_vilas
             self.col_B.controls[1].content.controls = self.lista_vilas        
-            await self.update_async()
+            self.update()
 
 
     def AtualizarVilas2(self,e):
@@ -747,7 +747,7 @@ class LayoutVilas(ft.Row):
         await self.AtualizarVilas(1)
         self.col_B.controls[1].content.controls = self.lista_vilas
         self.controls= [self.col_A ,self.col_B ]
-        await self.update_async()
+        self.update()
 
     def Gera_Lista_de_Vilas(self, equipee=None):
         # self.AtualizarVilas(1)
@@ -798,6 +798,14 @@ class LayoutVilas(ft.Row):
         # self.SalvarDadosLocais('vilas', dic)
         self.printt('Vilas salvas com sucesso')
 
+    async def ArmazenarDados(self):
+        dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
+        for vila in self.lista_vilas:
+            dic['nome'].append(vila.nome)
+            dic['nivel_cv'].append(vila.nivel_cv)
+            dic['cv_exposto'].append(vila.cv_exposto)
+        # self.Escrever_json(dic, self.config_vilas)
+        self.page.client_storage.set('vilas',dic)        
 
     # def SalvarDadosLocais(self, nome, valor):
     #     self.page.client_storage.set(nome, valor)

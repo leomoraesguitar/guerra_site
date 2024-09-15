@@ -1292,7 +1292,7 @@ class LayoutGuerra(ft.Column):
         gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75))
         resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
         resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1))
-        botao_atualizar = BotaoCT('Atualizar', on_click=self.AtualizarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
+        botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
@@ -1304,9 +1304,9 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
 
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,], 
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,botao_atualizar], 
 
-                expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
+                expand=False, spacing=0, run_spacing=0, alignment='start', columns=6),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
 
@@ -1315,9 +1315,30 @@ class LayoutGuerra(ft.Column):
         self.alignment = 'start'
     
 
+    async def ArmazenarDados(self,e):
+        try:
+            await self.jogadores.ArmazenarDados()
+        except:
+            pass
+        try:
+            await self.vilas.ArmazenarDados()
+        except:
+            pass
+        try:
+            await self.equipe.ArmazenarDados()
+        except:
+            pass
+        try:
+            await self.AtualizarDados(1)
+        except:
+            pass        
+
+
+
+
     async def AtualizarDados(self,e):
 
-        arquiv_equipes = await self.page.client_storage.get_async('equipes')
+        arquiv_equipes = await self.page.client_storage.get_async('equipe')
         if isinstance(arquiv_equipes, dict):
             equipe = arquiv_equipes["equipe A"]
 
@@ -1401,7 +1422,7 @@ class LayoutGuerra(ft.Column):
         ])        
 
 
-    async def Rodar1(self,e):
+    async def Rodar(self,e):
         self.atualizou = True
         if self.atualizou:
             # equipe = {
@@ -1456,21 +1477,21 @@ class LayoutGuerra(ft.Column):
                 self.tabela.dic = dic# = My_tabela(df)
                 self.tabela.larguras= ('Jogador',100)
                 # self.tabela.df = self.g2.df
-                await  self.update_async()
+                self.update()
                 # self.RedimensionarJanela(400)
             # print(self.g2.df)
             elif metodo == 2:
-                await  self.Resultado2(1)
+                await self.Resultado2(1)
             self.atualizou = False
         else:
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
-            await  self.update_async()
+            self.update()
 
           
 
-    async def Rodar(self,e):
+    async def Rodar1(self,e):
         self.atualizou = True
         if self.atualizou:
             equipe = {
@@ -1494,6 +1515,7 @@ class LayoutGuerra(ft.Column):
             inverter = self.inverter.value
             metodo = int(self.metodo.value)
             # print(metodo)
+
 
             print('iniciando ...')
             # if not self.lista_vilas:
@@ -1523,7 +1545,7 @@ class LayoutGuerra(ft.Column):
                 self.tabela.dic = dic# = My_tabela(df)
                 self.tabela.larguras= ('Jogador',100)
                 # self.tabela.df = self.g2.df
-                await self.update_async()
+                self.update()
                 # self.RedimensionarJanela(400)
             # print(self.g2.df)
             elif metodo == 2:
@@ -1533,7 +1555,7 @@ class LayoutGuerra(ft.Column):
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
-            await self.update_async()
+            self.update()
                         
 
 
@@ -1873,13 +1895,15 @@ class ClassName(ft.Column):
 
 
 
-    def Escolher_janela(self, e):
+
+
+
+    async def Escolher_janela(self, e):
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
-            case 'Vilas':
-                
+            case 'Vilas':                
                 self.janela.content =  ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
             case 'Jogadores':
                 self.janela.content =  ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
@@ -1892,7 +1916,7 @@ class ClassName(ft.Column):
             case 'config':
                 self.janela.content = self.config                                                                                               
 
-        self.page.update()
+        self.update()
 
     def Func(self,e):
         match e.data:
@@ -1979,7 +2003,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 025',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 026',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
@@ -1987,6 +2011,6 @@ def main(page: ft.Page):
 if __name__ == '__main__':  
    
     ft.app(main,
-    #    view = ft.AppView.WEB_BROWSER
+       view = ft.AppView.WEB_BROWSER
     # port = 8050
        )
