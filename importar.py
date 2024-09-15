@@ -123,15 +123,15 @@ class Players(ft.ResponsiveRow):
         super().__init__() 
         # self.page = page         
         self.func = func
-        self._guerra = ft.Checkbox(value = guerra, data = 'guerra', on_change=self.Chenge_guerra, col = self.Colu(1))
-        self._jogador = ft.Text(jogador,text_align='center',selectable = True,)
-        self._tag = ft.Text(tag,text_align='center',selectable = True,  visible=False, col = self.Colu(1))
-        self._nivel_cv = ft.Text(nivel_cv,text_align='center',selectable = True,  col = self.Colu(1))
+        self._guerra = ft.Checkbox(value = guerra, data = 'guerra', on_change=self.Chenge_guerra, col = 1)
+        self._jogador = ft.Text(jogador,text_align='center',selectable = True,col = 3)
+        self._tag = ft.Text(tag,text_align='center',selectable = True,  visible=False, col = 3)
+        self._nivel_cv = ft.Text(nivel_cv,text_align='center',selectable = True,  col = 1)
         self._forca = ft.Text(forca,text_align='center',selectable = True,  visible=False, col = self.Colu(1))
         self._atenuador = ft.TextField(value = atenuador,   bgcolor= 'white,0.08',dense=True, 
-                            data = 'atenuador',content_padding=5,  on_change=self.Chenge_atenuador, col = self.Colu(3))
+                            data = 'atenuador',content_padding=5,  on_change=self.Chenge_atenuador, col = 2)
         
-        self._forca_final = ft.Text(forca,text_align='center',selectable = True, width=80, col = self.Colu(3))
+        self._forca_final = ft.Text(forca,text_align='center',selectable = True, width=80, col = 2)
         self._forca_final.value = forca
         try:
             self._forca_final.value -= int(atenuador)
@@ -139,7 +139,8 @@ class Players(ft.ResponsiveRow):
             pass
 
         self.controls = [self._guerra,
-                         ft.Container(self._jogador, bgcolor='white,0.1',  col = self.Colu(4), ),
+                        #  ft.Container(self._jogador, bgcolor='white,0.1',  col = self.Colu(4), ),
+                        self._jogador,
                          self._tag,
                          self._nivel_cv,
                          self._forca,
@@ -147,7 +148,7 @@ class Players(ft.ResponsiveRow):
                          self._forca_final
 
         ]
-
+        self.columns = 9
 
         # self.tight = True
         self.spacing = 0
@@ -219,9 +220,6 @@ class Players(ft.ResponsiveRow):
         if self.func(e) != None:
             self.func(e)
 
-
-
-
 class BotaoCT(ft.Container):
     def __init__(self,nome,on_click = None, bgcolor = None, scale = 0.8, text_size = None, col = None, data =None ):
         super().__init__()
@@ -239,7 +237,6 @@ class BotaoCT(ft.Container):
         # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
         self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size )
                                                       
-
 
 class layout_Importar(ft.Column):
     def __init__(self, printt = None, page = None):
@@ -264,45 +261,46 @@ class layout_Importar(ft.Column):
         self.botao_ordenar_forca = ft.TextButton('Força',data = 'forca',on_click=self.Ordenar_por, col = self.Colu(2))
         self.botao_ordenar_tag = ft.TextButton('Tag',data = 'tag',on_click=self.Ordenar_por,  col = self.Colu(2))
 
-        self.botao_ordenar_guerra = ft.IconButton(icon = ft.icons.ACCESSIBILITY_NEW_ROUNDED,data = 'guerra',on_click=self.Ordenar_por, col = self.Colu(0.7), scale=0.8)
-        self.botao_ordenar_jogador = BotaoCT('Jogador',data = 'jogador',on_click=self.Ordenar_por,  col = self.Colu(4.3))
-        self.botao_ordenar_cv = BotaoCT('CV',data = 'nivel_cv',on_click=self.Ordenar_por, col = self.Colu(0.8))
-        self.botao_ordenar_atenuador = BotaoCT('Atenuador',data = 'atenuador',on_click=self.Ordenar_por, col = self.Colu(3), scale=0.8)
-        self.botao_ordenar_forca_final = BotaoCT('Força Final',data = 'forca_final',on_click=self.Ordenar_por, col = self.Colu(3), scale=0.8)
+        self.botao_ordenar_guerra = ft.IconButton(icon = ft.icons.ACCESSIBILITY_NEW_ROUNDED,data = 'guerra',on_click=self.Ordenar_por, col = self.Colu(1), scale=0.8)
+        self.botao_ordenar_jogador = BotaoCT('Jogador',data = 'jogador',on_click=self.Ordenar_por,  col = self.Colu(3))
+        self.botao_ordenar_cv = BotaoCT('CV',data = 'nivel_cv',on_click=self.Ordenar_por, col = self.Colu(1))
+        self.botao_ordenar_atenuador = BotaoCT('Atenuador',data = 'atenuador',on_click=self.Ordenar_por, col = self.Colu(2), scale=0.8)
+        self.botao_ordenar_forca_final = BotaoCT('Força Final',data = 'forca_final',on_click=self.Ordenar_por, col = self.Colu(2), scale=0.8)
+        self.botao_carregarlistas = ft.ElevatedButton('Carregar vPlayers', on_click=self.AtualizarLista, width=300, scale=0.8)
 
-        self.controls = [
+        self.controls1 = [
                          
-                         ft.ResponsiveRow([
-                             self.botao_ordenar_guerra,
-                             self.botao_ordenar_jogador,
+                         ft.Container(ft.ResponsiveRow([
+                             self.botao_ordenar_guerra,#1
+                             self.botao_ordenar_jogador,#3
                             #  self.botao_ordenar_tag,
-                             self.botao_ordenar_cv,
+                             self.botao_ordenar_cv,#1
                             #  self.botao_ordenar_forca,
-                             self.botao_ordenar_atenuador,
-                             self.botao_ordenar_forca_final,
-
-                                 
-                                 
-                        ], spacing=0, run_spacing=0, ),
+                             self.botao_ordenar_atenuador,#3
+                             self.botao_ordenar_forca_final,#2
+                                                                 
+                        ], spacing=0, run_spacing=0,columns=9),bgcolor='green,0.4'),
                          
                 ]
     
-        try:
-            self.lista = self.LerPickle(self.config_tabela)
-            # self.SalvarDadosLocais('lista', self.lista)
-            # defal = self.Ler_json('lista_import')
-            # self.lista = self.LerDadosLocais('lista', default=defal)
-            self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
-            self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')
-            self.controls.append(ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600))
-        except:
-            pass
+
         self.run_spacing = 0
         self.spacing = 0
-        self.saida = Saida()
+        # self.saida = Saida()
         self.printt = printt
-        self.controls.append(self.saida)        
+        # self.controls.append(self.saida)  
+        self.controls = [self.botao_carregarlistas]      
 
+
+    async def AtualizarLista(self,e):
+        self.lista = await self.page.client_storage.get_async('lista')
+        if isinstance(self.lista, list):
+            self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
+            self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')    
+        else:            
+            self.lista = self.LerPickle(self.config_tabela)
+        self.controls = self.controls1 + [ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600)]
+        await self.update_async()
 
     def Configs(self):
         return  ft.Column([self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token])])
@@ -318,7 +316,7 @@ class layout_Importar(ft.Column):
 
     def Ordenar_por(self, e):
         atr = e.control.data
-        self.controls[-2].controls = self.OrdenarListadeClasses(self.controls[-2].controls, atr)
+        self.controls[-1].controls = self.OrdenarListadeClasses(self.controls[-1].controls, atr)
 
         self.update()     
         self.printt(f'ordenando por {atr}')
@@ -337,7 +335,7 @@ class layout_Importar(ft.Column):
         lista = []
 
         # for i in self.tabela:
-        for i in self.controls[-2].controls:
+        for i in self.controls[-1].controls:
             if i.guerra:
                 dic['nome'].append(i.jogador)
                 dic['nivel_cv'].append(i.nivel_cv)
@@ -351,8 +349,11 @@ class layout_Importar(ft.Column):
 
 
 
-        self.SalvarPickle(lista, self.config_tabela)
-        self.Escrever_json(dic2, self.config_jogadores)
+        # self.SalvarPickle(lista, self.config_tabela)
+        # self.Escrever_json(dic2, self.config_jogadores)
+        self.page.client_storage.set('jogadores',dic2)
+        self.page.client_storage.set('lista',lista)
+
         # self.SalvarDadosLocais('jogadores',dic2)
         # self.SalvarDadosLocais('lista',lista)
         self.printt('Dados dos players salvo com sucesso') 

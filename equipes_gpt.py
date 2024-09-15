@@ -7,6 +7,7 @@ import os
 class Verificar_pasta:
     def __init__(self,pastalocal = 'Guerra_clash'):
         self.pastalocal = pastalocal
+
         self.verificar_pasta()
 
     def verificar_pasta(self):
@@ -97,6 +98,8 @@ class LayoutEquipes(ft.Column):
         self.page = page
         cp = 5
         wd = 50
+        self.botao_equipes = ft.ElevatedButton('Carregar Equipes', on_click=self.CarregarEquipes, width=300, scale=0.8)
+
         self.equipe_fields = {
             "GRUPO MASTER": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
             "GRUPO ELITE": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
@@ -106,7 +109,7 @@ class LayoutEquipes(ft.Column):
             "GRUPO D": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
             "GRUPO E": ft.TextField(width=wd, dense=True, content_padding=cp, bgcolor='white,0.08', on_change=self.salvar),
         }
-        self.controls = [
+        self.controls1 = [
             ft.Container(ft.Column([ft.Row([ft.Text(name, weight='BOLD', size=12), field ],
                 alignment=ft.MainAxisAlignment.CENTER),ft.Text(details, size=13, color='white,0.6', text_align='center')], horizontal_alignment='center', spacing=0),
                 bgcolor='blue,0.05'
@@ -123,14 +126,15 @@ class LayoutEquipes(ft.Column):
         ]
         self.saida = Saida()
         self.printt = self.saida.pprint
-        self.controls.append(self.saida)
+
+        self.controls = [self.botao_equipes,self.saida]
         self.iniciar()
     
     # def did_mount(self):
 
     def iniciar(self):
-        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
-        self.arquiv = self.ler_json(self.config_equipes, default={
+        self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')   
+        eqp = {
             "equipe A": {
                     "Nome da Equipe": "equipe A",
                     "GRUPO MASTER": "1930",
@@ -141,7 +145,8 @@ class LayoutEquipes(ft.Column):
                     "GRUPO D": "1440",
                     "GRUPO E": "1430"
                 }
-        })   
+        }
+        self.arquiv = self.ler_json(self.config_equipes, default=eqp)   
         
         # self.SalvarDadosLocais('equipes', self.arquiv)     
         # self.arquiv = self.LerDadosLocais('equipes', default={
@@ -156,16 +161,19 @@ class LayoutEquipes(ft.Column):
         #             "GRUPO E": "1430"
         #         }
         # })
-        
+        # self.page.client_storage.set('eqipe',eqp)
         for key in self.equipe_fields:
             self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
+
 
     def salvar(self, e):
         self.arquiv = self.ler_json(self.config_equipes)
         # self.arquiv = self.LerDadosLocais('equipes')
         for key, field in self.equipe_fields.items():
             self.arquiv["equipe A"][key] = field.value
-        self.escrever_json(self.arquiv, self.config_equipes)
+        # self.escrever_json(self.arquiv, self.config_equipes)
+        self.page.client_storage.set('eqipe',self.arquiv)
+
         # self.SalvarDadosLocais('equipes',self.arquiv)
         self.printt('Configurações salvas com sucesso')
 
@@ -178,8 +186,15 @@ class LayoutEquipes(ft.Column):
     #         return self.page.client_storage.get(nome)
     #     else:
     #         return default
+    async def CarregarEquipes(self,e):    
+        self.arquiv = await self.page.client_storage.get_async('equipes')
+        if isinstance(self.arquiv, dict):
+            for key in self.equipe_fields:
+                self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
 
-        
+        self.controls = self.controls1+ [self.saida]
+        await self.update_async()
+
 
 
 

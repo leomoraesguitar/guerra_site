@@ -164,23 +164,27 @@ class layout_jogadores(ft.Column):
                 content_padding=5, width=180, on_change=self.Chenge_num_jogadores)
         self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=100)
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.Atualizar, width=105)
-        self.controls.append(ft.Row([self.num_jogadores,self.botao_atualizar]))
-        self.controls.append(ft.Text(height=0))
-        self.controls.append(ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300))
+
         cp = 165+(36*int(num_jogadores))
         if self.page is None:
             pw = 500
         else:
             pw = self.page.window.height
         if cp > pw:
-            cumprimento_coluna = pw - 180
+            self.cumprimento_coluna = pw - 180
         else:
-            cumprimento_coluna = cp
-        self.controls.append(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE))
+            self.cumprimento_coluna = cp
+
         self.saida = Saida()
         self.printt = self.saida.pprint
-        self.controls.append(self.saida)        
 
+        self.controls1= [
+            ft.Row([self.num_jogadores,self.botao_atualizar]),
+            ft.Text(height=0),
+            ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300),
+       
+        ]        
+        self.controls = [self.botao_atualizar,self.saida, ]
         
         self.lista_jogadores = []
         self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
@@ -240,63 +244,7 @@ class layout_jogadores(ft.Column):
                         ]
                     }
                 )
-            # self.SalvarDadosLocais('jogadores',self.arquiv)
-            # self.arquiv = self.LerDadosLocais('jogadores',
-            #     default={
-            #             "nome": [
-            #                 "Diogo SvS",
-            #                 "Cristiano",
-            #                 "lulmor",
-            #                 "Let\u00edcia",
-            #                 "lllll",
-            #                 "leoclash10",
-            #                 "lolop",
-            #                 "cacauesntos",
-            #                 "rochaleo",
-            #                 "Maxwell",
-            #                 "GOKU BL4CK-SE",
-            #                 "SR. ALEXANDRE",
-            #                 "xXBPCBXx",
-            #                 "GERIEL CAOS",
-            #                 "br"
-            #             ],
-            #             "nivel_cv": [
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 15,
-            #                 15,
-            #                 15,
-            #                 13,
-            #                 13
-            #             ],
-            #             "forca": [
-            #                 1950,
-            #                 1945,
-            #                 1940,
-            #                 1930,
-            #                 1925,
-            #                 1920,
-            #                 1905,
-            #                 1895,
-            #                 1890,
-            #                 1875,
-            #                 1840,
-            #                 1830,
-            #                 1825,
-            #                 1585,
-            #                 1560
-            #             ]
-            #         }
-            #     )            
-            
+
             for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
@@ -320,148 +268,96 @@ class layout_jogadores(ft.Column):
             for i in nomes:
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = 15,forca = 800))
 
-        self.controls[3].controls = self.lista_jogadores
+        # self.controls[3].controls = self.lista_jogadores
 
-    def Atualizar(self,e):
+    async def Atualizar(self,e):
         self.lista_jogadores = []
-        try:
-            self.arquiv = self.Ler_json(self.config_jogadores,
-                default={
-                        "nome": [
-                            "Diogo SvS",
-                            "Cristiano",
-                            "lulmor",
-                            "Let\u00edcia",
-                            "lllll",
-                            "leoclash10",
-                            "lolop",
-                            "cacauesntos",
-                            "rochaleo",
-                            "Maxwell",
-                            "GOKU BL4CK-SE",
-                            "SR. ALEXANDRE",
-                            "xXBPCBXx",
-                            "GERIEL CAOS",
-                            "br"
-                        ],
-                        "nivel_cv": [
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            16,
-                            15,
-                            15,
-                            15,
-                            13,
-                            13
-                        ],
-                        "forca": [
-                            1950,
-                            1945,
-                            1940,
-                            1930,
-                            1925,
-                            1920,
-                            1905,
-                            1895,
-                            1890,
-                            1875,
-                            1840,
-                            1830,
-                            1825,
-                            1585,
-                            1560
-                        ]
-                    }
-                )
-            # self.SalvarDadosLocais('jogadores',self.arquiv )
-            # self.arquiv = self.LerDadosLocais('jogadores',
-            #     default={
-            #             "nome": [
-            #                 "Diogo SvS",
-            #                 "Cristiano",
-            #                 "lulmor",
-            #                 "Let\u00edcia",
-            #                 "lllll",
-            #                 "leoclash10",
-            #                 "lolop",
-            #                 "cacauesntos",
-            #                 "rochaleo",
-            #                 "Maxwell",
-            #                 "GOKU BL4CK-SE",
-            #                 "SR. ALEXANDRE",
-            #                 "xXBPCBXx",
-            #                 "GERIEL CAOS",
-            #                 "br"
-            #             ],
-            #             "nivel_cv": [
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 16,
-            #                 15,
-            #                 15,
-            #                 15,
-            #                 13,
-            #                 13
-            #             ],
-            #             "forca": [
-            #                 1950,
-            #                 1945,
-            #                 1940,
-            #                 1930,
-            #                 1925,
-            #                 1920,
-            #                 1905,
-            #                 1895,
-            #                 1890,
-            #                 1875,
-            #                 1840,
-            #                 1830,
-            #                 1825,
-            #                 1585,
-            #                 1560
-            #             ]
-            #         }
-            #     )
-                        
-            for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
-                self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+        dfj ={
+                    "nome": [
+                        "Diogo SvS",
+                        "Cristiano",
+                        "lulmor",
+                        "Let\u00edcia",
+                        "lllll",
+                        "leoclash10",
+                        "lolop",
+                        "cacauesntos",
+                        "rochaleo",
+                        "Maxwell",
+                        "GOKU BL4CK-SE",
+                        "SR. ALEXANDRE",
+                        "xXBPCBXx",
+                        "GERIEL CAOS",
+                        "br"
+                    ],
+                    "nivel_cv": [
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        15,
+                        15,
+                        15,
+                        13,
+                        13
+                    ],
+                    "forca": [
+                        1950,
+                        1945,
+                        1940,
+                        1930,
+                        1925,
+                        1920,
+                        1905,
+                        1895,
+                        1890,
+                        1875,
+                        1840,
+                        1830,
+                        1825,
+                        1585,
+                        1560
+                    ]
+                }
+        if isinstance(self.arquiv, dict):
+            self.arquiv = await self.page.client_storage.get_async('jogadores')
 
-        except:
-            self.printt('deu erro na importação dos jogadores')
-            nomes = ('Cristiano',
-                    'lulmor',
-                    'lllll',
-                    'leoclash10',
-                    "cacauesntos",
-                    "rochaleo",
-                    "lolop",
-                    "Diogo SvS",
-                    "SR.ALEXANDRE",
-                    "GOKU BL4CKSE",
-                    "xXBPCBXx",
-                    'Letícia',
-                    'MaggieMelT',
-                    'GERIEL CAOS',
-                    'br')            
-            for i in nomes:
-                self.lista_jogadores.append(Jogador(nome = i,nivel_cv = 15,forca = 800))
+        else:
+            self.arquiv = await self.Ler_json(self.config_jogadores,default=dfj)
+            # nomes = ('Cristiano',
+            #         'lulmor',
+            #         'lllll',
+            #         'leoclash10',
+            #         "cacauesntos",
+            #         "rochaleo",
+            #         "lolop",
+            #         "Diogo SvS",
+            #         "SR.ALEXANDRE",
+            #         "GOKU BL4CKSE",
+            #         "xXBPCBXx",
+            #         'Letícia',
+            #         'MaggieMelT',
+            #         'GERIEL CAOS',
+            #         'br')            
+            # for i in nomes:
+            #     self.lista_jogadores.append(Jogador(nome = i,nivel_cv = 15,forca = 800))
+        
+        for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
+            self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
-        self.controls[3].controls = self.lista_jogadores
-        self.update()
+        # self.controls[3].controls = self.lista_jogadores
+        self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
+                                       ]
+        
+
+        await self.update_async()
+
 
     def Gera_Lista_de_jogadores(self):
         return self.lista_jogadores
@@ -476,7 +372,9 @@ class layout_jogadores(ft.Column):
             dic['nivel_cv'].append(i.nivel_cv)
             dic['forca'].append(i.forca)
         
-        self.Escrever_json(dic, self.config_jogadores)
+        # self.Escrever_json(dic, self.config_jogadores)
+        self.page.client_storage.set('jogadores',dic)
+
         # self.SalvarDadosLocais('jogadores',dic)
         self.printt('Vilas salvas com sucesso')
 

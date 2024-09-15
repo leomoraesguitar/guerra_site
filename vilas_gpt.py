@@ -284,12 +284,6 @@ class Display(ft.Container):
          
         self.Atualizar()
 
-
-
-
-
-
-
 class Verificar_pasta:
     def __init__(self,pastalocal = 'tabelamandadostjse'):
         self.pastalocal = pastalocal
@@ -662,7 +656,6 @@ class Vila(ft.Row):
         else:
             self.cv.text_color = None            
 
-
 class LayoutVilas(ft.Row):
     def __init__(self, num_vilas=15, printt=None, page=None):
         super().__init__()
@@ -677,7 +670,7 @@ class LayoutVilas(ft.Row):
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
         self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', on_click=self.CarregarVilas, width=300, scale=0.8)
-        self.saida = Saida(100,260)
+        self.saida = Saida(100,220)
 
         self.col_A = ft.Column([
 
@@ -706,6 +699,7 @@ class LayoutVilas(ft.Row):
         self.controls = [self.botao_carregarvilas]
 
 
+
         
         
     def inicializar_vilas(self):
@@ -729,13 +723,15 @@ class LayoutVilas(ft.Row):
 
     async def AtualizarVilas(self,e):
         self.arquiv = await self.page.client_storage.get_async('vilas')
-        lista_vilas = []
+        if isinstance(self.arquiv, dict):
+            lista_vilas = []
 
-        for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
-                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
-        self.lista_vilas = lista_vilas
-        self.col_B.controls[1].content.controls = self.lista_vilas        
-        await self.update_async()
+            for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
+                    lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+            self.lista_vilas = lista_vilas
+            self.col_B.controls[1].content.controls = self.lista_vilas        
+            await self.update_async()
+
 
     def AtualizarVilas2(self,e):
         self.arquiv = self.page.client_storage.get('vilas')

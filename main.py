@@ -385,7 +385,11 @@ class Verificar_pasta:
         return os.path.join(self.local, nome)
 
 class Guerra2:
-    def __init__(self, metodo, fase=None, arq_configuracoes=None, page = None, listavilas = None):
+    def __init__(self, metodo, fase=None, arq_configuracoes=None, page = None, 
+                 listavilas = None,
+                listajogadores=None,
+                equipe=None,
+                 ):
         # super().__init__()
         self.arq_configuracoes = arq_configuracoes
         self.metodo = metodo
@@ -412,8 +416,11 @@ class Guerra2:
                 self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
             # self.AtualizarVilas()
             
-        else:
-            None
+
+        if listajogadores:
+            self.lista_jogadores = listajogadores
+        if equipe:
+            self.equipe = equipe            
         self.GerarMapaInicial()
         self.seq = [[0], [0]]
         self.pl = 0
@@ -1241,9 +1248,11 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self, page, vilas = None):
+    def __init__(self, page, vilas = None, equipe = None, jogadores = None):
         super().__init__()
         self.vilas = vilas
+        self.equipe = equipe
+        self.jogadores = jogadores
         self.page = page
         self.num_estrelas = False, False, False, True
         self.atualizou = False
@@ -1296,9 +1305,9 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
 
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,botao_atualizar], 
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
 
-                expand=False, spacing=0, run_spacing=0, alignment='start', columns=6),
+                expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
 
@@ -1373,7 +1382,11 @@ class LayoutGuerra(ft.Column):
                         "GRUPO C": "1444",
                         "GRUPO D": "1440",
                         "GRUPO E": "1430"
-                    }            
+                    }          
+            self.equipe.CarregarEquipes(1)
+            equipe = self.equipe.arquiv["equipe A"]
+            self.jogadores.Atualizar(1)
+            self.listajogadores = self.jogadores.lista_jogadores
             self.vilas.Gera_Lista_de_Vilas(equipe)
             self.lista_vilas = self.vilas.lista_vilas
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
@@ -1385,7 +1398,11 @@ class LayoutGuerra(ft.Column):
             print('iniciando ...')
             # if not self.lista_vilas:
             self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
-                        arq_configuracoes='equipes', page = self.page, listavilas=self.lista_vilas)
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=self.lista_vilas,
+                        listajogadores=self.listajogadores,
+                        equipe=self.equipe,
+                        )
             if self.g2.rodou:
                 # t1.join()
                 self.g2.rodou = False
@@ -1484,6 +1501,8 @@ class LayoutGuerra(ft.Column):
 
 
     def Gerar_mapa(self,e):
+
+
         def pp():
             self.tabela.visible = True
             dic = self.g2.GerarMapaDeEstrelas()
@@ -1496,7 +1515,18 @@ class LayoutGuerra(ft.Column):
             # self.RedimensionarJanela(700)
             self.Atualizar()
         # if self.g2 == None:
-        self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
+        self.equipe.CarregarEquipes(1)
+        equipe = self.equipe.arquiv["equipe A"]
+        self.jogadores.Atualizar(1)
+        self.listajogadores = self.jogadores.lista_jogadores
+        self.vilas.Gera_Lista_de_Vilas(equipe)
+        self.lista_vilas = self.vilas.lista_vilas 
+
+        self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
+                        listavilas=self.lista_vilas,
+                        listajogadores=self.listajogadores,
+                        equipe=self.equipe,                          
+                          )
         # threading.Thread(target=pp, daemon=True).start()
         pp()
         
@@ -1646,7 +1676,7 @@ class My_tabelaC(ft.Container):
                 ]+[ft.Text(self._dic[j][i],width=self.Larg(j), text_align='center') for j in self.chaves[1:]], tight=True),bgcolor=cor)
                 
                 )
-        self.content = ft.Column(self.controls,spacing=5)
+        self.content = ft.Column(self.controls,spacing=2)
         
             
     def Atualizar(self):
@@ -1690,13 +1720,15 @@ class ClassName(ft.Column):
         super().__init__()
         self.page = page
         self.vilas = LayoutVilas(printt=print,page = self.page)
-        self.layout = LayoutGuerra(page = self.page, vilas=self.vilas) 
         self.jogadores = layout_jogadores(printt=print, page=self.page)
         self.equipes = layout_equipes(page = page)
+        self.layout = LayoutGuerra(page = self.page, vilas=self.vilas, equipe=self.equipes, jogadores=self.jogadores) 
         self.importar = layout_Importar(printt=print, page = self.page)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs() ]) #,                                          
         self.janela = ft.Container()
         self.janela.content = self.layout
+        self.spacing = 1
+        self.run_spacing = 1
 
 
 
