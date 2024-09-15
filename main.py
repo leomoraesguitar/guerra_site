@@ -1401,7 +1401,7 @@ class LayoutGuerra(ft.Column):
         ])        
 
 
-    async def Rodar(self,e):
+    async def Rodar1(self,e):
         self.atualizou = True
         if self.atualizou:
             # equipe = {
@@ -1467,7 +1467,74 @@ class LayoutGuerra(ft.Column):
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
             await  self.update_async()
+
+          
+
+    def Rodar(self,e):
+        self.atualizou = True
+        if self.atualizou:
+            equipe = {
+                    "Nome da Equipe": "equipe A",
+                        "GRUPO MASTER": "1930",
+                        "GRUPO ELITE": "1825",
+                        "GRUPO A": "1794",
+                        "GRUPO B": "1585",
+                        "GRUPO C": "1444",
+                        "GRUPO D": "1440",
+                        "GRUPO E": "1430"
+                    }          
+            self.equipe.CarregarEquipes(1)
+            equipe = self.equipe.arquiv["equipe A"]
+            self.jogadores.Atualizar(1)
+            self.listajogadores = self.jogadores.lista_jogadores
+            self.vilas.Gera_Lista_de_Vilas(equipe)
+            self.lista_vilas = self.vilas.lista_vilas
+            pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
+            # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
+            inverter = self.inverter.value
+            metodo = int(self.metodo.value)
+            # print(metodo)
+
+            print('iniciando ...')
+            # if not self.lista_vilas:
+            self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=self.lista_vilas,
+                        listajogadores=self.listajogadores,
+                        equipe=self.equipe,
+                        )
+            if self.g2.rodou:
+                # t1.join()
+                self.g2.rodou = False
+            # t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
+            #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+            # t1.start()
             
+            self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+
+            time.sleep(1)
+            if metodo == 4:
+                # t1.join()
+                # time.sleep(10)
+                dic = self.g2.dic
+                # print(df)
+                # print(dic)
+                self.tabela.visible = True
+                self.tabela.dic = dic# = My_tabela(df)
+                self.tabela.larguras= ('Jogador',100)
+                # self.tabela.df = self.g2.df
+                self.update()
+                # self.RedimensionarJanela(400)
+            # print(self.g2.df)
+            elif metodo == 2:
+                self.Resultado2(1)
+            self.atualizou = False
+        else:
+            self.tabela.dic = {'clique em atualizar     ':''}
+            self.tabela.larguras= ('clique em atualizar     ',200)
+            self.tabela.visible = True
+            self.update()
+                        
 
 
  
