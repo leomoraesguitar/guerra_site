@@ -325,8 +325,9 @@ class layout_jogadores(ft.Column):
                         1560
                     ]
                 }
+        self.arquiv = await self.page.client_storage.get_async('jogadores')
         if isinstance(self.arquiv, dict):
-            self.arquiv = await self.page.client_storage.get_async('jogadores')
+            pass
 
         else:
             self.arquiv = await self.Ler_json(self.config_jogadores,default=dfj)

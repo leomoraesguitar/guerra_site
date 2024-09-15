@@ -1276,8 +1276,7 @@ class LayoutGuerra(ft.Column):
             print('tabela copiada com sucesso!')
 
 
-
-
+       
 
         self.inverter =  ft.Checkbox(label="Inverter", value=False, scale=0.8, col = 6, expand=True) 
         self.metodo = My_Dropdown('Método',None, 1,2,3,4)
@@ -1293,7 +1292,7 @@ class LayoutGuerra(ft.Column):
         gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75))
         resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
         resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1))
-        botao_atualizar = BotaoCT('Atualizar', on_click=self.AtualizarVilas,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
+        botao_atualizar = BotaoCT('Atualizar', on_click=self.AtualizarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
@@ -1305,7 +1304,7 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
 
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,], 
 
                 expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
@@ -1314,7 +1313,39 @@ class LayoutGuerra(ft.Column):
                     )
         ]
         self.alignment = 'start'
-  
+    
+
+    async def AtualizarDados(self,e):
+
+        arquiv_equipes = await self.page.client_storage.get_async('equipes')
+        if isinstance(arquiv_equipes, dict):
+            equipe = arquiv_equipes["equipe A"]
+
+        arquiv_vilas = await self.page.client_storage.get_async('vilas')
+        if isinstance(arquiv_vilas, dict):
+            lista_vilas = []
+            for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+
+        # arquiv_lista = await self.page.client_storage.get_async('lista')
+
+        lista_jogadores = []
+        arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+        for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+            lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+
+
+        self.lista_vilas = lista_vilas
+        self.listajogadores = lista_jogadores
+        self.equipe = equipe
+        # await self.equipe.CarregarEquipes(1)
+        # equipe = self.equipe.arquiv["equipe A"]
+
+        # await self.jogadores.Atualizar(1)
+        # self.listajogadores = self.jogadores.lista_jogadores
+        
+        # await self.vilas.Gera_Lista_de_Vilas(equipe)
+        # self.lista_vilas = self.vilas.lista_vilas
 
 
 
@@ -1370,25 +1401,27 @@ class LayoutGuerra(ft.Column):
         ])        
 
 
-    def Rodar(self,e):
+    async def Rodar(self,e):
         self.atualizou = True
         if self.atualizou:
-            equipe = {
-                    "Nome da Equipe": "equipe A",
-                        "GRUPO MASTER": "1930",
-                        "GRUPO ELITE": "1825",
-                        "GRUPO A": "1794",
-                        "GRUPO B": "1585",
-                        "GRUPO C": "1444",
-                        "GRUPO D": "1440",
-                        "GRUPO E": "1430"
-                    }          
-            self.equipe.CarregarEquipes(1)
-            equipe = self.equipe.arquiv["equipe A"]
-            self.jogadores.Atualizar(1)
-            self.listajogadores = self.jogadores.lista_jogadores
-            self.vilas.Gera_Lista_de_Vilas(equipe)
-            self.lista_vilas = self.vilas.lista_vilas
+            # equipe = {
+            #         "Nome da Equipe": "equipe A",
+            #             "GRUPO MASTER": "1930",
+            #             "GRUPO ELITE": "1825",
+            #             "GRUPO A": "1794",
+            #             "GRUPO B": "1585",
+            #             "GRUPO C": "1444",
+            #             "GRUPO D": "1440",
+            #             "GRUPO E": "1430"
+            #         }          
+            # self.equipe.CarregarEquipes(1)
+            # equipe = self.equipe.arquiv["equipe A"]
+            # self.jogadores.Atualizar(1)
+            # self.listajogadores = self.jogadores.lista_jogadores
+            # self.vilas.Gera_Lista_de_Vilas(equipe)
+            # self.lista_vilas = self.vilas.lista_vilas
+            await self.AtualizarDados(1)
+
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
             # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
             inverter = self.inverter.value
@@ -1423,22 +1456,22 @@ class LayoutGuerra(ft.Column):
                 self.tabela.dic = dic# = My_tabela(df)
                 self.tabela.larguras= ('Jogador',100)
                 # self.tabela.df = self.g2.df
-                self.update()
+                await  self.update_async()
                 # self.RedimensionarJanela(400)
             # print(self.g2.df)
             elif metodo == 2:
-                self.Resultado2(1)
+                await  self.Resultado2(1)
             self.atualizou = False
         else:
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
-            self.update()
+            await  self.update_async()
             
 
 
  
-    def Parar(self,e):
+    async def Parar(self,e):
         try:
             if self.g2 != None:
                 self.g2.parar = True
@@ -1457,7 +1490,7 @@ class LayoutGuerra(ft.Column):
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
-    def Resultado2(self,e):
+    async def Resultado2(self,e):
         def pp():
             if self.g2.rodou:
                 self.g2.Resultado2()
@@ -1470,9 +1503,14 @@ class LayoutGuerra(ft.Column):
             else:
                 print('Você ainda não rodou o programa, usando metódo 2')
 
+        await self.AtualizarDados(1)
 
         if self.g2 == None:
-            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
+            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
+                        listavilas=self.lista_vilas,
+                        listajogadores=self.listajogadores,
+                        equipe=self.equipe,                              
+                              )
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
@@ -1483,7 +1521,13 @@ class LayoutGuerra(ft.Column):
         except:
             pass
 
-    def Resultado_espelho(self,e):
+    async def Atualizar_async(self):
+        try:
+            await self.update_async()
+        except:
+            pass    
+
+    async def Resultado_espelho(self,e):
         def pp():
             self.g2.ResultadoEspelho()
             self.tabela.visible = True
@@ -1492,15 +1536,20 @@ class LayoutGuerra(ft.Column):
 
             # self.RedimensionarJanela(400)
             self.Atualizar()
+        await self.AtualizarDados(1)
 
         if self.g2 == None:
-            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page)
+            self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
+                            listavilas=self.lista_vilas,
+                        listajogadores=self.listajogadores,
+                        equipe=self.equipe,
+                              )
 
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
 
-    def Gerar_mapa(self,e):
+    async def Gerar_mapa(self,e):
 
 
         def pp():
@@ -1515,12 +1564,13 @@ class LayoutGuerra(ft.Column):
             # self.RedimensionarJanela(700)
             self.Atualizar()
         # if self.g2 == None:
-        self.equipe.CarregarEquipes(1)
-        equipe = self.equipe.arquiv["equipe A"]
-        self.jogadores.Atualizar(1)
-        self.listajogadores = self.jogadores.lista_jogadores
-        self.vilas.Gera_Lista_de_Vilas(equipe)
-        self.lista_vilas = self.vilas.lista_vilas 
+        # self.equipe.CarregarEquipes(1)
+        # equipe = self.equipe.arquiv["equipe A"]
+        # self.jogadores.Atualizar(1)
+        # self.listajogadores = self.jogadores.lista_jogadores
+        # self.vilas.Gera_Lista_de_Vilas(equipe)
+        # self.lista_vilas = self.vilas.lista_vilas 
+        await self.AtualizarDados(1)
 
         self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
                         listavilas=self.lista_vilas,
@@ -1862,7 +1912,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 024',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 025',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
