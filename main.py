@@ -1483,11 +1483,11 @@ class LayoutGuerra(ft.Column):
                         "GRUPO D": "1440",
                         "GRUPO E": "1430"
                     }          
-            await self.equipe.CarregarEquipes(1)
+            self.equipe.CarregarEquipes(1)
             equipe = self.equipe.arquiv["equipe A"]
-            await self.jogadores.Atualizar(1)
+            self.jogadores.Atualizar(1)
             self.listajogadores = self.jogadores.lista_jogadores
-            await self.vilas.Gera_Lista_de_Vilas(equipe)
+            self.vilas.Gera_Lista_de_Vilas(equipe)
             self.lista_vilas = self.vilas.lista_vilas
             pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.num_estrelas
             # print(pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas)
@@ -1510,7 +1510,7 @@ class LayoutGuerra(ft.Column):
             #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
             # t1.start()
             
-            await self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+            self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
             time.sleep(1)
             if metodo == 4:
