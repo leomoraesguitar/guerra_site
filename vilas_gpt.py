@@ -781,7 +781,6 @@ class LayoutVilas(ft.Row):
             self.controls[1].controls[1].content.controls = self.lista_vilas   
             self.page.update()    
         
-
     def Zerar_exposicoes(self,e):
         for i in self.lista_vilas:
             i.cv_exp = 0
@@ -797,9 +796,15 @@ class LayoutVilas(ft.Row):
         # self.Escrever_json(dic, self.config_vilas)
         self.page.client_storage.set('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
-
+        lista_vilas = []
+        for nome, nivel_cv, cv_exposto in zip(dic['nome'], dic['nivel_cv'], dic['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        self.lista_vilas = lista_vilas       
+        self.col_B.controls[1].content.controls = self.lista_vilas        
+        self.update()
         # self.func(['vilas', self.lista_vilas])
         self.printt('Vilas salvas com sucesso')
+
 
     async def ArmazenarDados(self):
         if not self.page.session.contains_key("vilas"): # True if the key exists

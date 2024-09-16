@@ -2014,13 +2014,14 @@ class ClassName(ft.Column):
         inverter = self.layout.inverter.value
         metodo = int(self.layout.metodo.value)
 
-        if self.vilas.lista_vilas[0].forca:
-            listavilas = self.vilas.lista_vilas
-        else:
-            for vila in self.vilas.lista_vilas:
-                vila.equipe = self.layout.equipe
-                vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
-            listavilas  = self.vilas.lista_vilas     
+        # if self.vilas.lista_vilas[0].forca:
+        #     listavilas = self.vilas.lista_vilas
+        # else:
+        for vila in self.vilas.lista_vilas:
+            vila.equipe = self.layout.equipe
+            vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
+        listavilas  = self.vilas.lista_vilas     
+
 
 
         match acao:
@@ -2044,6 +2045,7 @@ class ClassName(ft.Column):
                     self.update()   
                 elif metodo == 2:
                     await self.layout.Resultado2(1)
+
 
             case 'mapa':
                 def pp():
@@ -2606,7 +2608,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 036',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 037',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
