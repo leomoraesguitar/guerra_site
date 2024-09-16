@@ -2,3 +2,5 @@ exemplo.py
 \_pycache_
 *.pyc
 \dist
+back_main.py
+back_vilas.py

@@ -26,16 +26,6 @@ retirar o carregamento inicial
 """
 
 
-
-
-
-
-
-
-
-
-
-
 class Display(ft.Container):
     def __init__(self,
                  
@@ -298,79 +288,6 @@ class My_tabela(ft.DataTable):
             self.Linhas_tabela()
         else:
             raise(f'{dic} não é um dicionário')
-
-
-# class My_tabelaE(ft.DataTable):
-#     def __init__(self, df,#DataFrame ou dicionário
-#                  on_tap_down = None
-#                  ):
-#         super().__init__()
-#         self._df = df if type(df) != dict else pd.DataFrame(df)
-#         self.border = ft.border.all(1,'white,0.9')
-#         self.heading_row_color = 'white,0.5'
-#         self.heading_row_height = 35
-#         self.column_spacing = 15
-#         # self.heading_row_color=colors.BLACK12
-#         self.vertical_lines = ft.border.all(20,'white')
-#         self.horizontal_margin = 0
-#         self.data_row_max_height = 35
-#         # self.data_row_min_height = 50
-#         self.divider_thickness = 0
-#         self.show_checkbox_column = True
-#         self.sort_column_index = 4
-#         self.sort_ascending = True
-#         self.on_tap_down = on_tap_down
-#         self.tabela = None
-#         # self.data_row_color={"hovered": "0x30FF0000"}
-                
-#         self.textsize = 15
-#         self.Colunas_tabela()
-#         self.Linhas_tabela()
-
-#     def Colunas_tabela(self):
-#         self.columns = [ft.DataColumn(ft.Row([ft.Text(i,selectable = True,theme_style=ft.TextThemeStyle.TITLE_MEDIUM,width=50 if k != 0 else 150)],alignment='center')) for k,i in enumerate(list(self._df.columns))]
-        
-    
-#     def Linhas_tabela(self):
-#         linhas = []
-#         df_lista = self._df.values.tolist()
-#         for l,i in enumerate(df_lista):
-#             cell = [ ft.DataCell(ft.Row([ft.TextField(value = j,text_align='center', content_padding = 0,text_size = self.textsize, dense = True,height= 30, width=50 if k != 0 else 150)],
-#                     alignment='center',spacing = 3,vertical_alignment='center'), data = [l, k, 'cel'], on_tap_down = None) for k,j in enumerate(i)]
-#             cor  = 'black' if l % 2 == 0 else 'white,0.01'
-#             linhas.append(ft.DataRow(cells = cell, color = cor))
-#         self.rows = linhas
-
-#     @property
-#     def df(self):
-#         return self._df
-#     @df.setter
-#     def df(self, df):
-#         self._df = df if type(df) != dict else pd.DataFrame(df)
-#         self.Colunas_tabela()
-#         self.Linhas_tabela()
-
-
-#     def func(self,e):
-#         # e.control.data
-#         valor = e.control.content.controls[0].value
-#         # self.on_tap_down(valor)
-#         self.update()
-
-#     def Gerar_df(self):
-#         colunas = self._df.columns
-#         linhas = [i.cells for i in self.rows]
-#         linhas2 = []
-
-#         for i in linhas:
-#             l = []
-#             for j in i:
-#                 l.append(j.content.controls[0].value)
-#             linhas2.append(l)
-
-
-#         self.tabela =  pd.DataFrame(linhas2,columns=colunas)
-#         return self.tabela
 
 class Verificar_pasta:
     def __init__(self,pastalocal = 'tabelamandadostjse'):
@@ -1313,10 +1230,10 @@ class LayoutGuerra(ft.Column):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
         rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar')
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75), )
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75),data = 'parar' )
         gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75),data = 'mapa')
-        resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
-        resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1))
+        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5), data = 'resultado2')
+        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1), data = 'espelho')
         botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
@@ -2105,31 +2022,27 @@ class ClassName(ft.Column):
                 vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
             listavilas  = self.vilas.lista_vilas     
 
-            self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+
+        match acao:
+            case 'rodar':
+                print('iniciando ...')
+                self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
                         equipe=self.equipes.arquiv["equipe A"],
-                        )
-        match acao:
-            case 'rodar':
-                print('iniciando ...')
-
+                        )                
                 if self.g2.rodou:
                     self.g2.rodou = False
-
                 self.g2.Rodar(int(self.layout.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
-
                 time.sleep(1)
                 if metodo == 4:
                     dic = self.g2.dic
                     self.layout.tabela.visible = True
                     self.layout.tabela.dic = dic# = My_tabela(df)
                     self.layout.tabela.larguras= ('Jogador',100)
-                    self.update()
-   
+                    self.update()   
                 elif metodo == 2:
-                    # t1.join()
                     await self.layout.Resultado2(1)
 
             case 'mapa':
@@ -2142,12 +2055,63 @@ class ClassName(ft.Column):
                     for i in list(dic.keys())[1:]:
                         self.layout.tabela.larguras= (i,20)
                     self.update()
+                self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=listavilas,
+                        listajogadores=self.jogadores.lista_jogadores,
+                        equipe=self.equipes.arquiv["equipe A"],
+                        )                
+                pp()   
 
-                pp()                
+            case 'resultado2':  
+                def pp():
+                    if self.g2.rodou:
+                        self.g2.Resultado2()
+                        self.layout.tabela.visible = True
+                        self.layout.tabela.dic = self.g2.dic
+                        self.layout.tabela.larguras= ('Jogador',100)
+                        self.update()
+                    else:
+                        print('Você ainda não rodou o programa, usando metódo 2')
+
+                if self.g2 == None:
+                    self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=listavilas,
+                        listajogadores=self.jogadores.lista_jogadores,
+                        equipe=self.equipes.arquiv["equipe A"],
+                        )
+
+                pp()                           
+            case 'espelho':
+                def pp():
+                    self.g2.ResultadoEspelho()
+                    self.layout.tabela.visible = True
+                    self.layout.tabela.dic = self.g2.dic
+                    self.layout.tabela.larguras= ('Jogador',100)
+                    self.update()
+
+                if self.g2 == None:
+                    self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=listavilas,
+                        listajogadores=self.jogadores.lista_jogadores,
+                        equipe=self.equipes.arquiv["equipe A"],
+                        )
+
+                pp()
 
 
+            case 'parar':             
+                try:
+                    if self.g2 != None:
+                        self.g2.parar = True
+                except:
+                    pass
 
-        
+ 
+
+
 
       
     async def Attt(self,e):
@@ -2407,12 +2371,15 @@ class ClassName(ft.Column):
                 for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
                     lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
 
-        # self.vilas.lista_vilas = lista_vilas
+        self.vilas.lista_vilas = lista_vilas
         # self.vilas.col_B.controls[1].content.controls = self.lista_vilas
         # self.vilas.controls= [self.col_A ,self.col_B ]        
         # self.vilas.update()
         # await self.vilas.CarregarVilas(1)
+        # await self.vilas.AtualizarVilas()
+
     
+
 
 
 
@@ -2639,7 +2606,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 035',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 036',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
