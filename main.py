@@ -16,7 +16,7 @@ from equipes_gpt import LayoutEquipes as layout_equipes
 from importar import layout_Importar
 # from meuscontrolesflet2 import Display
 """
-as demais abas do menu não estão aparecendo apo´s a primeira execução do prog - ok
+as demais abas do menu não estão aparecendo apo´ss a primeira execução do prog - ok 
 a aba jogador está precisando de dois updates para carregar apois clicar em carregar - ok
 o botão carregar da aba equipes não está funcionando - ok
 
@@ -1814,8 +1814,6 @@ class LayoutGuerra(ft.Column):
 
 
     async def Gerar_mapa(self,e):
-
-
         def pp():
             self.tabela.visible = True
             dic = self.g2.GerarMapaDeEstrelas()
@@ -1834,7 +1832,10 @@ class LayoutGuerra(ft.Column):
         # self.listajogadores = self.jogadores.lista_jogadores
         # self.vilas.Gera_Lista_de_Vilas(equipe)
         # self.lista_vilas = self.vilas.lista_vilas 
-        await self.AtualizarDados(1)
+        
+        # await self.AtualizarDados(1)
+        await self.ArmazenarDados(1)
+
 
         self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
                         listavilas=self.lista_vilas,
@@ -2319,7 +2320,7 @@ class ClassName(ft.Column):
 
         self.janela.update()
         self.update()
-        print(self.controls)
+        # print(self.controls)
 
 
 
