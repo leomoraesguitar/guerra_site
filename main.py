@@ -1839,15 +1839,6 @@ class LayoutGuerra(ft.Column):
 
             # self.RedimensionarJanela(700)
             self.Atualizar()
-        # if self.g2 == None:
-        # self.equipe.CarregarEquipes(1)
-        # equipe = self.equipe.arquiv["equipe A"]
-        # self.jogadores.Atualizar(1)
-        # self.listajogadores = self.jogadores.lista_jogadores
-        # self.vilas.Gera_Lista_de_Vilas(equipe)
-        # self.lista_vilas = self.vilas.lista_vilas 
-
-        # await self.AtualizarDados(1)
         await self.ArmazenarDados(1)
 
 
@@ -2056,7 +2047,7 @@ class ClassName(ft.Column):
         self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
         self.equipes = layout_equipes(page = page,  )
-        self.layout = LayoutGuerra(page = self.page, func = self.ArmazenarDados, ) 
+        self.layout = LayoutGuerra(page = self.page, func = self.Attt1, ) 
         self.saida = Saida(350,150) 
         self.importar = layout_Importar(printt=self.saida.pprint, page = self.page, func=self.Amarzenar)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
@@ -2236,6 +2227,142 @@ class ClassName(ft.Column):
         self.controls = self.controls1
         self.update()
 
+    async def Attt1(self,e):
+        vilas = await self.page.client_storage.contains_key_async("vilas") # True if the key exists
+        jogadores = await self.page.client_storage.contains_key_async("jogadores") # True if the key exists
+        equipe = await self.page.client_storage.contains_key_async("equipe") # True if the key exists
+        lista = await self.page.client_storage.contains_key_async("lista") # True if the key exists
+        
+
+
+        if not jogadores:
+            # await self.jogadores.ArmazenarDados()
+            dfj ={
+                    "nome": [
+                        "Diogo SvS",
+                        "Cristiano",
+                        "lulmor",
+                        "Let\u00edcia",
+                        "lllll",
+                        "leoclash10",
+                        "lolop",
+                        "cacauesntos",
+                        "rochaleo",
+                        "Maxwell",
+                        "GOKU BL4CK-SE",
+                        "SR. ALEXANDRE",
+                        "xXBPCBXx",
+                        "GERIEL CAOS",
+                        "br"
+                    ],
+                    "nivel_cv": [
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        16,
+                        15,
+                        15,
+                        15,
+                        13,
+                        13
+                    ],
+                    "forca": [
+                        1950,
+                        1945,
+                        1940,
+                        1930,
+                        1925,
+                        1920,
+                        1905,
+                        1895,
+                        1890,
+                        1875,
+                        1840,
+                        1830,
+                        1825,
+                        1585,
+                        1560
+                    ]
+                }        
+            
+            config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
+            arquiv = self.Ler_json(config_jogadores,default=dfj)    
+            lista_jogadores = []
+            for i,j,k in zip(arquiv['nome'],arquiv['nivel_cv'],arquiv['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+        
+            dic = {'nome':[],'nivel_cv':[],'forca':[] }
+
+            for i in lista_jogadores:
+                dic['nome'].append(i.nome)
+                dic['nivel_cv'].append(i.nivel_cv)
+                dic['forca'].append(i.forca)
+            try:
+                await self.page.client_storage.set_async('jogadores',dic)
+            except:
+                pass
+        else:
+            lista_jogadores = []
+            arquiv_jogadores = await self.page.client_storage.get_async('jogadores')
+            for i,j,k in zip(arquiv_jogadores['nome'],arquiv_jogadores['nivel_cv'],arquiv_jogadores['forca']):
+                lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+
+
+        if not equipe:
+            # await self.equipes.ArmazenarDados()
+            config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')  
+            arquiv = self.Ler_json(config_equipes)
+            equipe = arquiv["equipe A"]
+            await self.page.client_storage.set_async('equipe',equipe)
+        else:
+            equipe = await self.page.client_storage.get_async('equipe')
+     
+        if not vilas:
+            # await self.vilas.ArmazenarDados()
+            dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
+            config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
+            self.arquiv = self.Ler_json(config_vilas)  
+            lista_vilas = []
+            for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=None, equipe = equipe,forca = (50 - nome) + 50 * nivel_cv))
+            
+    
+            for vila in lista_vilas:
+                dic['nome'].append(vila.nome)
+                dic['nivel_cv'].append(vila.nivel_cv)
+                dic['cv_exposto'].append(vila.cv_exposto)
+
+            await self.page.client_storage.set_async('vilas',dic)   
+        else:
+            arquiv_vilas = await self.page.client_storage.get_async('vilas')
+            if isinstance(arquiv_vilas, dict):
+                lista_vilas = []
+                for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
+                    lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
+
+
+    
+
+
+        # arquiv_equipes = await self.page.client_storage.get_async('equipe')
+        # if isinstance(arquiv_equipes, dict):
+        #     equipe = arquiv_equipes["equipe A"]
+
+
+
+
+        self.layout.lista_vilas = lista_vilas
+        self.layout.listajogadores = lista_jogadores
+        self.layout.equipe = equipe
+        self.layout.atualizou = True
+
+        self.update()
 
     async def Att(self,e):
         await self.ArmazenarDados()
@@ -2287,7 +2414,7 @@ class ClassName(ft.Column):
 
 
 
-    async def Alterou(self,e):
+    def Alterou(self,e):
         if isinstance(e, list) and e[0] == 'vilas':
             lista_vilas = e[1]
             if lista_vilas[0].forca:
