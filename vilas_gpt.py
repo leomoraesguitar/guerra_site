@@ -707,26 +707,20 @@ class LayoutVilas(ft.Row):
 
 
         
+
+
         
     def inicializar_vilas(self):
+        self.arquiv = self.page.client_storage.get('vilas')
         lista_vilas = []
         try:
-            self.arquiv = self.Ler_json(self.config_vilas)
-            
-            # self.arquiv = await self.page.client_storage.get_async('vilas')
-        
             # self.arquiv = self.Ler_json(self.config_vilas)
-                # pass
-
-            # print(self.arquiv)
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
-                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
-        
+                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))        
         except:
             lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
-            # pass
         self.lista_vilas = lista_vilas
-        # return lista_vilas
+
 
     async def AtualizarVilas(self,e):
         self.arquiv = await self.page.client_storage.get_async('vilas')

@@ -21,7 +21,8 @@ a aba jogador está precisando de dois updates para carregar apois clicar em car
 o botão carregar da aba equipes não está funcionando - ok
 no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alterada
 Incluir alteração dos jogadores na função 'aletrou ' de classename
-colocar as funções de execução do programa na classe mais externa
+colocar as funções de execução do programa na classe mais externa- funciona
+retirar o carregamento inicial
 """
 
 
@@ -2401,12 +2402,14 @@ class ClassName(ft.Column):
                 for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
                     lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
 
-        self.vilas.lista_vilas = lista_vilas
-        self.vilas.col_B.controls[1].content.controls = self.lista_vilas
-        self.vilas.controls= [self.col_A ,self.col_B ]        
-        self.vilas.update()
+        # self.vilas.lista_vilas = lista_vilas
+        # self.vilas.col_B.controls[1].content.controls = self.lista_vilas
+        # self.vilas.controls= [self.col_A ,self.col_B ]        
+        # self.vilas.update()
         # await self.vilas.CarregarVilas(1)
     
+
+
 
 
         # arquiv_equipes = await self.page.client_storage.get_async('equipe')
@@ -2631,10 +2634,12 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 033',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 034',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
+
+
 
 if __name__ == '__main__':  
    
@@ -2642,3 +2647,5 @@ if __name__ == '__main__':
        view = ft.AppView.WEB_BROWSER,
     # port = 6124
        )
+
+
