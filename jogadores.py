@@ -329,8 +329,14 @@ class layout_jogadores(ft.Column):
         
         self.arquiv = await self.page.client_storage.get_async('jogadores')
         if isinstance(self.arquiv, dict):
-            pass
+            for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
+                self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
+            # self.controls[3].controls = self.lista_jogadores
+            self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
+                                        ]
+            self.update()
+            self.page.update()
         else:
 
             self.arquiv = self.Ler_json(self.config_jogadores,default=dfj)
@@ -352,15 +358,15 @@ class layout_jogadores(ft.Column):
             # for i in nomes:
             #     self.lista_jogadores.append(Jogador(nome = i,nivel_cv = 15,forca = 800))
         
-        for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
-            self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
+            for i,j,k in zip(self.arquiv['nome'],self.arquiv['nivel_cv'],self.arquiv['forca']):
+                self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
-        # self.controls[3].controls = self.lista_jogadores
-        self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
-                                       ]
-        self.update()
-        await self.Salvar(1)
-        self.update()
+            # self.controls[3].controls = self.lista_jogadores
+            self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
+                                        ]
+            self.update()
+            await self.Salvar(1)
+            self.update()
 
 
 

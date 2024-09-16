@@ -2305,15 +2305,15 @@ class ClassName(ft.Column):
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
             case 'Vilas':                
-                self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
             case 'Jogadores':
-                self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
             case 'Lista de Guerra':
-                self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10)
+                self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=580)
             case 'Equipes':
-                self.janela.content = ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-100)
+                self.janela.content = ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=580)
             case 'Importar':
-                self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=self.page.window.height-10) 
+                self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
             case 'config':
                 self.janela.content = self.config                                                                                               
 
@@ -2430,7 +2430,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 029',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 030',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
