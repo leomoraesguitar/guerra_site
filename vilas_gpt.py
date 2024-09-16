@@ -800,7 +800,7 @@ class LayoutVilas(ft.Row):
         self.page.client_storage.set('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
 
-        self.func(['vilas', self.lista_vilas])
+        # self.func(['vilas', self.lista_vilas])
         self.printt('Vilas salvas com sucesso')
 
     async def ArmazenarDados(self):

@@ -2098,10 +2098,19 @@ class ClassName(ft.Column):
                 inverter = self.layout.inverter.value
                 metodo = int(self.layout.metodo.value)
                 print('iniciando ...')
+                # if self.vilas.lista_vilas[0].forca:
+                #     listavilas = self.vilas.lista_vilas
+                # else:
+                #     listavilas = self.layout.lista_vilas
+
                 if self.vilas.lista_vilas[0].forca:
                     listavilas = self.vilas.lista_vilas
                 else:
-                    listavilas = self.layout.lista_vilas
+                    for vila in self.vilas.lista_vilas:
+                        vila.equipe = self.layout.equipe
+                        vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
+                    listavilas  = self.vilas.lista_vilas     
+
                 self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
                             arq_configuracoes='equipes', page = self.page,
                             listavilas=listavilas,
@@ -2112,11 +2121,11 @@ class ClassName(ft.Column):
                     # t1.join()
                     self.g2.rodou = False
 
-                t1 = threading.Thread(target=self.g2.Rodar, args=(int(self.layout.n_ciclos.value), pocucas_0_estrelas,
-                                                            poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
-                t1.start()
+                # t1 = threading.Thread(target=self.g2.Rodar, args=(int(self.layout.n_ciclos.value), pocucas_0_estrelas,
+                #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+                # t1.start()
                 
-                # self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+                self.g2.Rodar(int(self.layout.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
                 time.sleep(1)
                 if metodo == 4:
@@ -2618,7 +2627,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 030',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 032',bottom=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
