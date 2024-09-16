@@ -19,6 +19,8 @@ from importar import layout_Importar
 as demais abas do menu não estão aparecendo apo´ss a primeira execução do prog - ok 
 a aba jogador está precisando de dois updates para carregar apois clicar em carregar - ok
 o botão carregar da aba equipes não está funcionando - ok
+no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alterada
+Incluir alteração dos jogadores na função 'aletrou ' de classename
 
 """
 
@@ -1668,7 +1670,7 @@ class LayoutGuerra(ft.Column):
             self.update()
 
           
-          
+
 
     async def Rodar1(self,e):
         self.atualizou = True
@@ -2285,14 +2287,14 @@ class ClassName(ft.Column):
 
 
 
-    def Alterou(self,e):
+    async def Alterou(self,e):
         if isinstance(e, list) and e[0] == 'vilas':
             lista_vilas = e[1]
             if lista_vilas[0].forca:
                 pass
             else:
                 for vila in lista_vilas:
-                    vila.equipe = self.equipes.arquiv["equipe A"]
+                    vila.equipe = self.layout.equipe
                     vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv            
             self.layout.lista_vilas = lista_vilas
 
