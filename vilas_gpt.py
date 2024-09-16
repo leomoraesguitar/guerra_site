@@ -711,9 +711,9 @@ class LayoutVilas(ft.Row):
 
         
     def inicializar_vilas(self):
-        self.arquiv = self.page.client_storage.get('vilas')
         lista_vilas = []
         try:
+            self.arquiv = self.page.client_storage.get('vilas')
             # self.arquiv = self.Ler_json(self.config_vilas)
             for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
                 lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))        

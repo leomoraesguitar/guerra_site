@@ -35,6 +35,7 @@ retirar o carregamento inicial
 
 
 
+
 class Display(ft.Container):
     def __init__(self,
                  
@@ -1312,8 +1313,8 @@ class LayoutGuerra(ft.Column):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
         rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar')
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75))
-        gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75))
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75), )
+        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75),data = 'mapa')
         resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
         resultado_espelho = BotaoCT('espelho',on_click = self.Resultado_espelho,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1))
         botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
@@ -2092,40 +2093,31 @@ class ClassName(ft.Column):
 
     async def Execucao(self,e):
         acao = e.control.data
+        pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.layout.num_estrelas
+        inverter = self.layout.inverter.value
+        metodo = int(self.layout.metodo.value)
+
+        if self.vilas.lista_vilas[0].forca:
+            listavilas = self.vilas.lista_vilas
+        else:
+            for vila in self.vilas.lista_vilas:
+                vila.equipe = self.layout.equipe
+                vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
+            listavilas  = self.vilas.lista_vilas     
+
+            self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                        arq_configuracoes='equipes', page = self.page,
+                        listavilas=listavilas,
+                        listajogadores=self.jogadores.lista_jogadores,
+                        equipe=self.equipes.arquiv["equipe A"],
+                        )
         match acao:
             case 'rodar':
-
-                pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.layout.num_estrelas
-                inverter = self.layout.inverter.value
-                metodo = int(self.layout.metodo.value)
                 print('iniciando ...')
-                # if self.vilas.lista_vilas[0].forca:
-                #     listavilas = self.vilas.lista_vilas
-                # else:
-                #     listavilas = self.layout.lista_vilas
 
-                if self.vilas.lista_vilas[0].forca:
-                    listavilas = self.vilas.lista_vilas
-                else:
-                    for vila in self.vilas.lista_vilas:
-                        vila.equipe = self.layout.equipe
-                        vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
-                    listavilas  = self.vilas.lista_vilas     
-
-                self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
-                            arq_configuracoes='equipes', page = self.page,
-                            listavilas=listavilas,
-                            listajogadores=self.jogadores.lista_jogadores,
-                            equipe=self.equipes.arquiv["equipe A"],
-                            )
                 if self.g2.rodou:
-                    # t1.join()
                     self.g2.rodou = False
 
-                # t1 = threading.Thread(target=self.g2.Rodar, args=(int(self.layout.n_ciclos.value), pocucas_0_estrelas,
-                #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
-                # t1.start()
-                
                 self.g2.Rodar(int(self.layout.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
                 time.sleep(1)
@@ -2137,8 +2129,21 @@ class ClassName(ft.Column):
                     self.update()
    
                 elif metodo == 2:
-                    t1.join()
+                    # t1.join()
                     await self.layout.Resultado2(1)
+
+            case 'mapa':
+                def pp():
+                    self.layout.tabela.visible = True
+                    dic = self.g2.GerarMapaDeEstrelas()
+                    self.layout.tabela.dic = dic
+                    self.layout.tabela.larguras= (list(dic.keys())[0],80)
+
+                    for i in list(dic.keys())[1:]:
+                        self.layout.tabela.larguras= (i,20)
+                    self.update()
+
+                pp()                
 
 
 
@@ -2634,7 +2639,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 034',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 035',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
