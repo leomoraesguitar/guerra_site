@@ -696,10 +696,14 @@ class LayoutVilas(ft.Row):
         # while not self.lista_vilas:
         #     sleep(1)
     # def did_mount(self):
-        self.inicializar_vilas()
-        self.printt = self.saida.pprint
-        self.controls = [self.botao_carregarvilas]
 
+        self.inicializar_vilas()
+
+        self.printt = self.saida.pprint
+        # self.controls = [self.botao_carregarvilas]
+
+        self.col_B.controls[1].content.controls = self.lista_vilas
+        self.controls= [self.col_A ,self.col_B ]
 
 
         

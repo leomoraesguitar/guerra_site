@@ -2393,7 +2393,7 @@ class ClassName(ft.Column):
                 dic['nivel_cv'].append(vila.nivel_cv)
                 dic['cv_exposto'].append(vila.cv_exposto)
 
-            await self.page.client_storage.set_async('vilas',dic)   
+            await self.page.client_storage.set_async('vilas',dic)
         else:
             arquiv_vilas = await self.page.client_storage.get_async('vilas')
             if isinstance(arquiv_vilas, dict):
@@ -2401,7 +2401,11 @@ class ClassName(ft.Column):
                 for nome, nivel_cv, cv_exposto in zip(arquiv_vilas['nome'], arquiv_vilas['nivel_cv'], arquiv_vilas['cv_exposto']):
                     lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, equipe=equipe, func=None,forca=(50 - nome) + 50 *nivel_cv))
 
-
+        self.vilas.lista_vilas = lista_vilas
+        self.vilas.col_B.controls[1].content.controls = self.lista_vilas
+        self.vilas.controls= [self.col_A ,self.col_B ]        
+        self.vilas.update()
+        # await self.vilas.CarregarVilas(1)
     
 
 
@@ -2627,7 +2631,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 032',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 033',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
