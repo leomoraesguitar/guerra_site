@@ -21,7 +21,7 @@ a aba jogador está precisando de dois updates para carregar apois clicar em car
 o botão carregar da aba equipes não está funcionando - ok
 no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alterada
 Incluir alteração dos jogadores na função 'aletrou ' de classename
-
+colocar as funções de execução do programa na classe mais externa
 """
 
 
@@ -191,11 +191,12 @@ class Display(ft.Container):
         self.Atualizar()
 
 class BotaoCT(ft.Container):
-    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None ):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None, data = None ):
         super().__init__()
         self.on_click=on_click
         self.border_radius = 0
         self.bgcolor_og = bgcolor
+        self.data = data
         self.bgcolor = bgcolor+',0.7' if bgcolor else None
         self.scale = scale
         self.col = col
@@ -1268,7 +1269,7 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self, page,  equipe = None, func = None, jogadores = None, vilas = None ):
+    def __init__(self, page,  equipe = None, func = None,func2 = None, jogadores = None, vilas = None ):
         super().__init__()
         # self.vilas = vilas
         self.equipe = equipe
@@ -1276,6 +1277,7 @@ class LayoutGuerra(ft.Column):
         self.jogadores = jogadores
         self.vilas = vilas
         self.func = func
+        self.func2 = func2
         self.num_estrelas = False, False, False, True
         self.atualizou = False
         self.alignment=ft.MainAxisAlignment.START
@@ -1308,7 +1310,7 @@ class LayoutGuerra(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        rodar = BotaoCT('Rodar', self.Rodar,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1))
+        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar')
         parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75))
         gerar_mapa =BotaoCT('mapa',on_click = self.Gerar_mapa, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75))
         resultado2 =BotaoCT('resultado2',on_click = self.Resultado2, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5))
@@ -1540,6 +1542,10 @@ class LayoutGuerra(ft.Column):
             except:
                 pass
             return default or {}
+
+
+    async def Acoes(self,e):
+        await self.func2(e)
 
 
 
@@ -2047,7 +2053,7 @@ class ClassName(ft.Column):
         self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
         self.equipes = layout_equipes(page = page,  )
-        self.layout = LayoutGuerra(page = self.page, func = self.Attt1, ) 
+        self.layout = LayoutGuerra(page = self.page, func = self.Attt1,func2 = self.Execucao ) 
         self.saida = Saida(350,150) 
         self.importar = layout_Importar(printt=self.saida.pprint, page = self.page, func=self.Amarzenar)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
@@ -2082,12 +2088,52 @@ class ClassName(ft.Column):
         self.controls1 = [self.menu,self.janela]
         self.controls = [botao_atualizar]
 
-    # def did_mount(self):
-    #     # time.sleep(5)
-    #     print('meu ovo')
-    #     # self.Att('_')
-    #     self.attt()
-      
+
+    async def Execucao(self,e):
+        acao = e.control.data
+        match acao:
+            case 'rodar':
+
+                pocucas_0_estrelas,poucas_1_estrelas,poucas_2_estrelas,poucas_3_estrelas = self.layout.num_estrelas
+                inverter = self.layout.inverter.value
+                metodo = int(self.layout.metodo.value)
+                print('iniciando ...')
+                if self.vilas.lista_vilas[0].forca:
+                    listavilas = self.vilas.lista_vilas
+                else:
+                    listavilas = self.layout.lista_vilas
+                self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                            arq_configuracoes='equipes', page = self.page,
+                            listavilas=listavilas,
+                            listajogadores=self.jogadores.lista_jogadores,
+                            equipe=self.equipes.arquiv["equipe A"],
+                            )
+                if self.g2.rodou:
+                    # t1.join()
+                    self.g2.rodou = False
+
+                t1 = threading.Thread(target=self.g2.Rodar, args=(int(self.layout.n_ciclos.value), pocucas_0_estrelas,
+                                                            poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+                t1.start()
+                
+                # self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+
+                time.sleep(1)
+                if metodo == 4:
+                    dic = self.g2.dic
+                    self.layout.tabela.visible = True
+                    self.layout.tabela.dic = dic# = My_tabela(df)
+                    self.layout.tabela.larguras= ('Jogador',100)
+                    self.update()
+   
+                elif metodo == 2:
+                    t1.join()
+                    await self.layout.Resultado2(1)
+
+
+
+        
+
       
     async def Attt(self,e):
         vilas = await self.page.client_storage.contains_key_async("vilas") # True if the key exists
