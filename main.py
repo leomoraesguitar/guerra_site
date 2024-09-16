@@ -1635,11 +1635,12 @@ class LayoutGuerra(ft.Column):
             if self.g2.rodou:
                 # t1.join()
                 self.g2.rodou = False
-            # t1 = threading.Thread(target=self.g2.Rodar, args=(self.n_ciclos, pocucas_0_estrelas,
-            #                                             poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
-            # t1.start()
+
+            t1 = threading.Thread(target=self.g2.Rodar, args=(int(self.n_ciclos.value), pocucas_0_estrelas,
+                                                        poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter), daemon=True)
+            t1.start()
             
-            self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
+            # self.g2.Rodar(int(self.n_ciclos.value), pocucas_0_estrelas,poucas_1_estrelas, poucas_2_estrelas, poucas_3_estrelas, inverter)
 
             time.sleep(1)
             if metodo == 4:
@@ -1656,14 +1657,17 @@ class LayoutGuerra(ft.Column):
                 # self.RedimensionarJanela(400)
             # print(self.g2.df)
             elif metodo == 2:
+                t1.join()
                 await self.Resultado2(1)
             # self.atualizou = False
+
         else:
             self.tabela.dic = {'clique em atualizar     ':''}
             self.tabela.larguras= ('clique em atualizar     ',200)
             self.tabela.visible = True
             self.update()
 
+          
           
 
     async def Rodar1(self,e):
@@ -1754,6 +1758,8 @@ class LayoutGuerra(ft.Column):
         # threading.Thread(target=pp, daemon=True).start()
         pp()
 
+
+
     async def Resultado2(self,e):
         def pp():
             if self.g2.rodou:
@@ -1767,7 +1773,9 @@ class LayoutGuerra(ft.Column):
             else:
                 print('Você ainda não rodou o programa, usando metódo 2')
 
-        await self.AtualizarDados(1)
+        # await self.AtualizarDados(1)
+        await self.ArmazenarDados(1)    
+
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
@@ -1777,6 +1785,7 @@ class LayoutGuerra(ft.Column):
                               )
         # threading.Thread(target=pp, daemon=True).start()
         pp()
+
 
 
     def Atualizar(self):
@@ -1800,7 +1809,10 @@ class LayoutGuerra(ft.Column):
 
             # self.RedimensionarJanela(400)
             self.Atualizar()
-        await self.AtualizarDados(1)
+
+        # await self.AtualizarDados(1)
+        await self.ArmazenarDados(1)
+        
 
         if self.g2 == None:
             self.g2 = Guerra2(metodo=self.metodo.value, page = self.page,
@@ -1832,7 +1844,7 @@ class LayoutGuerra(ft.Column):
         # self.listajogadores = self.jogadores.lista_jogadores
         # self.vilas.Gera_Lista_de_Vilas(equipe)
         # self.lista_vilas = self.vilas.lista_vilas 
-        
+
         # await self.AtualizarDados(1)
         await self.ArmazenarDados(1)
 
