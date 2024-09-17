@@ -23,6 +23,7 @@ no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alter
 Incluir alteração dos jogadores na função 'aletrou ' de classename
 colocar as funções de execução do programa na classe mais externa- funciona
 retirar o carregamento inicial
+38 - agora alterando as vilas alteraa execução - ok - melhor versão
 
 atualizar lista de jogadores
 """
@@ -2551,7 +2552,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 038',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 039',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)

@@ -718,10 +718,10 @@ class LayoutVilas(ft.Row):
         self.inicializar_vilas()
 
         self.printt = self.saida.pprint
-        # self.controls = [self.botao_carregarvilas]
+        self.controls = [self.botao_carregarvilas]
 
-        self.col_B.controls[1].content.controls = self.lista_vilas
-        self.controls= [self.col_A ,self.col_B ]
+        # self.col_B.controls[1].content.controls = self.lista_vilas
+        # self.controls= [self.col_A ,self.col_B ]
 
 
         
