@@ -199,7 +199,7 @@ class Display(ft.Container):
         self.Atualizar()
    
 
-    def Clicou(self,e):
+    async def Clicou(self,e):
         if type(e.control.text) in [int, float]:
             valor = round(e.control.text,1)
         else:
@@ -207,10 +207,11 @@ class Display(ft.Container):
         self.content.content.controls[0].value = valor
         self._value = valor
         if not self.func is None:
-            self.func(valor)
+            await self.func(valor)
         if not self.on_click is None:
             self.on_click(e)            
         self.Atualizar()
+
 
     @property
     def value(self):
@@ -381,7 +382,8 @@ class Vila(ft.Row):
         self._nome = Display(value=nome, opitions=[i for i in range(51)],borda_width=0, text_size = 12, width=60, height=20,border_radius= 2,on_click=self.Chenge_nome)
         # self.cv = ft.Dropdown(focused_bgcolor=None, bgcolor=None, filled=True, value=nivel_cv, options=[ft.dropdown.Option(i) for i in range(20)], dense=True, content_padding=5, width=60, on_change=self.cor, text_style=ft.TextStyle(weight=ft.FontWeight.BOLD))
         self.cor2(str(nivel_cv))
-        self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, bgcolor = self.corCV, borda_width=0, border_radius= 2,text_size = 15, width=50, height=20,func=self.cor)
+        self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, 
+                          bgcolor = self.corCV, borda_width=0, border_radius= 2,text_size = 15, width=50, height=20,func=self.cor)
         # self.cv.bgcolor = 'red'
         # self.exposicao = ft.Dropdown(value=cv_exposto, options=[ft.dropdown.Option(i) for i in range(2)], dense=True, content_padding=5, width=50, on_change=self.change_exposicao)
         self.exposicao = Display(value=cv_exposto, opitions=[0,1], borda_width=0, border_radius= 2,text_size = 12, width=60, height=20, on_click=self.change_exposicao)
@@ -391,7 +393,7 @@ class Vila(ft.Row):
         self.run_spacing = 0
 
         self.nome = nome
-        self.nivel_cv = nivel_cv
+        self._nivel_cv = nivel_cv
         self.forca = forca
         self.cv_exposto = cv_exposto
         self.estrelas_l = 0
@@ -438,6 +440,14 @@ class Vila(ft.Row):
         self.cv_exposto = cv_exp
         self.exposicao.value = 0
 
+    @property
+    def nivel_cv(self):
+        return self._nivel_cv
+    
+    @nivel_cv.setter
+    def nivel_cv(self, nivel_cv):
+        self._nivel_cv = self.cv.value
+
 
     
     def calcular_estrelas(self, jogador, estrela_temp):
@@ -473,19 +483,19 @@ class Vila(ft.Row):
     def metodo_2_4(self, jogador, estrela_temp):
         estrelas = 0
         if jogador.forca >= self.GRUPO_MASTER:
-            estrelas = 3 if self.nivel_cv <= 15 else 2        
+            estrelas = 3 if self._nivel_cv <= 15 else 2        
         elif jogador.forca >= self.GRUPO_ELITE:
-            estrelas = 3 if self.nivel_cv <= 14 else 2
+            estrelas = 3 if self._nivel_cv <= 14 else 2
         elif jogador.forca >= self.GRUPO_A:
-            estrelas = 3 if self.nivel_cv <= 13 else 2
+            estrelas = 3 if self._nivel_cv <= 13 else 2
         elif jogador.forca >= self.GRUPO_B:
-            estrelas = 3 if self.nivel_cv <= 12 else 2
+            estrelas = 3 if self._nivel_cv <= 12 else 2
         elif jogador.forca >= self.GRUPO_C:
-            estrelas = 3 if self.nivel_cv <= 11 else (2 if self.nivel_cv in [12, 13] else estrela_temp + 1)
+            estrelas = 3 if self._nivel_cv <= 11 else (2 if self._nivel_cv in [12, 13] else estrela_temp + 1)
         elif jogador.forca >= self.GRUPO_D:
-            estrelas = 3 if self.nivel_cv <= 10 else (2 if self.nivel_cv in [11, 12] else (1 + estrela_temp if self.nivel_cv == 13 else estrela_temp))
+            estrelas = 3 if self._nivel_cv <= 10 else (2 if self._nivel_cv in [11, 12] else (1 + estrela_temp if self._nivel_cv == 13 else estrela_temp))
         elif jogador.forca >= self.GRUPO_E:
-            estrelas = 3 if self.nivel_cv <= 9 else (2 if self.nivel_cv == 10 else (estrela_temp + 1 if self.nivel_cv == 11 else (1 if self.nivel_cv == 12 else estrela_temp)))
+            estrelas = 3 if self._nivel_cv <= 9 else (2 if self._nivel_cv == 10 else (estrela_temp + 1 if self._nivel_cv == 11 else (1 if self._nivel_cv == 12 else estrela_temp)))
         return estrelas
 
     def metodo_3(self, jogador):
@@ -496,104 +506,104 @@ class Vila(ft.Row):
         return estrelas
 
     def estrelas_para_cv_15(self, jogador):
-        if self.nivel_cv == 13:
+        if self._nivel_cv == 13:
             return 3 if jogador.forca > 90 else 2
-        elif self.nivel_cv <= 12:
+        elif self._nivel_cv <= 12:
             return 3
-        elif self.nivel_cv == 15:
+        elif self._nivel_cv == 15:
             return 3 if self.forca < 40 else 2
-        elif self.nivel_cv == 14:
+        elif self._nivel_cv == 14:
             return 2 if self.forca > 60 else 3
         return 0
 
     def estrelas_para_cv_14(self, jogador):
-        if self.nivel_cv <= 12:
+        if self._nivel_cv <= 12:
             return 3 if jogador.forca > 50 else 2
-        elif self.nivel_cv > 14:
+        elif self._nivel_cv > 14:
             return 3 if self.forca < 20 else (2 if jogador.forca > 50 else 1)
-        elif self.nivel_cv == 14:
+        elif self._nivel_cv == 14:
             return 3 if self.forca < 40 else (2 if jogador.forca > 50 else 1)
-        elif self.nivel_cv == 13:
+        elif self._nivel_cv == 13:
             return 3 if jogador.forca > 90 else (3 if self.forca < 50 else 2)
         return 0
 
     def estrelas_para_cv_13(self, jogador):
-        if self.nivel_cv > 14:
+        if self._nivel_cv > 14:
             return 2 if self.forca < 20 else 1
-        elif self.nivel_cv == 14:
+        elif self._nivel_cv == 14:
             return 3 if self.forca < 20 else 1
-        elif self.nivel_cv == 13:
+        elif self._nivel_cv == 13:
             return 3 if self.forca < 30 else 2
-        elif self.nivel_cv == 12:
+        elif self._nivel_cv == 12:
             return 3 if self.forca < 30 else 2
-        elif self.nivel_cv <= 11:
+        elif self._nivel_cv <= 11:
             return 3
         return 0
 
     def estrelas_para_cv_12(self, jogador):
-        if self.nivel_cv > 14:
+        if self._nivel_cv > 14:
             return 2 if self.forca < 20 else 1
-        elif self.nivel_cv == 14:
+        elif self._nivel_cv == 14:
             return 2 if self.forca < 60 else 1
-        elif self.nivel_cv == 13:
+        elif self._nivel_cv == 13:
             return 2 if self.forca < 50 else 1
-        elif self.nivel_cv == 12:
+        elif self._nivel_cv == 12:
             return 3 if self.forca < 20 else (2 if jogador.forca > 60 else 1)
-        elif self.nivel_cv == 11:
+        elif self._nivel_cv == 11:
             return 3 if self.forca < 30 else 2
-        elif self.nivel_cv <= 10:
+        elif self._nivel_cv <= 10:
             return 3
         return 0
 
     def estrelas_para_cv_11(self, jogador):
-        if self.nivel_cv > 14:
+        if self._nivel_cv > 14:
             return 2 if self.forca < 20 else 1
-        elif self.nivel_cv == 14:
+        elif self._nivel_cv == 14:
             return 2 if self.forca < 40 else 1
-        elif self.nivel_cv == 13:
+        elif self._nivel_cv == 13:
             return 2 if self.forca < 40 else 1
-        elif self.nivel_cv == 12:
+        elif self._nivel_cv == 12:
             return 3 if self.forca < 20 else 1
-        elif self.nivel_cv == 11:
+        elif self._nivel_cv == 11:
             return 3 if self.forca < 40 else 2
-        elif self.nivel_cv <= 10:
+        elif self._nivel_cv <= 10:
             return 3
         return 0
 
     def estrelas_para_cv_10(self, jogador):
-        if self.nivel_cv <= 9:
+        if self._nivel_cv <= 9:
             return 3
-        elif self.nivel_cv >= 14:
+        elif self._nivel_cv >= 14:
             return 1 if self.forca < 20 else 1
-        elif self.nivel_cv == 13:
+        elif self._nivel_cv == 13:
             return 2 if self.forca > 20 else 3
-        elif self.nivel_cv == 12:
+        elif self._nivel_cv == 12:
             return 2 if self.forca > 20 else 3
-        elif self.nivel_cv == 11:
+        elif self._nivel_cv == 11:
             return 2 if self.forca > 20 else 3
-        elif self.nivel_cv == 10:
+        elif self._nivel_cv == 10:
             return 2 if self.forca > 80 else 3
         return 0
 
     def estrelas_para_cv_9(self, jogador):
-        if self.nivel_cv <= 8:
+        if self._nivel_cv <= 8:
             return 3
-        elif self.nivel_cv == 12:
+        elif self._nivel_cv == 12:
             return 1 if self.forca < 20 else 0
-        elif self.nivel_cv == 10:
+        elif self._nivel_cv == 10:
             return 2 if self.forca > 50 else 3
-        elif self.nivel_cv == 9:
+        elif self._nivel_cv == 9:
             return 2 if jogador.forca < 90 else 3
         return 0
 
     def estrelas_para_cv_8(self, jogador):
-        if self.nivel_cv <= 8:
+        if self._nivel_cv <= 8:
             return 3
-        elif self.nivel_cv >= 11:
+        elif self._nivel_cv >= 11:
             return 1 if self.forca < 20 else 0
-        elif self.nivel_cv == 10:
+        elif self._nivel_cv == 10:
             return 1 if self.forca > 50 else 2
-        elif self.nivel_cv == 9:
+        elif self._nivel_cv == 9:
             return 2
         return 0
 
@@ -607,14 +617,14 @@ class Vila(ft.Row):
         if self.func:
             self.func(int(self.cv.value))
 
-    def cor(self, e):
+    async def cor(self, e):
         self.cv.color = None
         self.update()
         self.cor3(str(e))
-        self.nivel_cv = int(self.cv.value)
+        self._nivel_cv = int(self.cv.value)
         if self.func:
-            self.func(int(self.cv.value))
-        self.update()
+            await self.func(int(self.cv.value))
+        self.Atualizar()
 
     def cor2(self, cv):
         colors = {
@@ -655,6 +665,14 @@ class Vila(ft.Row):
             self.cv.text_color = 'red'
         else:
             self.cv.text_color = None            
+
+    def Atualizar(self):
+        try:
+          self.update()  
+        except:
+            pass
+
+
 
 class LayoutVilas(ft.Row):
     def __init__(self, num_vilas=15, printt=None, page=None, func = None):
@@ -787,23 +805,29 @@ class LayoutVilas(ft.Row):
         self.controls[1].controls[1].content.controls = self.lista_vilas
         self.update()
 
-    def Salvar(self, e):
+    async def Salvar(self, e):
         dic = {'nome': [], 'nivel_cv': [], 'cv_exposto': []}
         for vila in self.lista_vilas:
             dic['nome'].append(vila.nome)
             dic['nivel_cv'].append(vila.nivel_cv)
             dic['cv_exposto'].append(vila.cv_exposto)
         # self.Escrever_json(dic, self.config_vilas)
-        self.page.client_storage.set('vilas',dic)
+        await self.page.client_storage.set_async('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
-        lista_vilas = []
-        for nome, nivel_cv, cv_exposto in zip(dic['nome'], dic['nivel_cv'], dic['cv_exposto']):
-                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
-        self.lista_vilas = lista_vilas       
-        self.col_B.controls[1].content.controls = self.lista_vilas        
-        self.update()
+
+        # lista_vilas = []
+        # for nome, nivel_cv, cv_exposto in zip(dic['nome'], dic['nivel_cv'], dic['cv_exposto']):
+        #         lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        # self.lista_vilas = lista_vilas       
+        # self.col_B.controls[1].content.controls = self.lista_vilas  
+
+        # self.update()
+        await self.AtualizarVilas(e)
         # self.func(['vilas', self.lista_vilas])
         self.printt('Vilas salvas com sucesso')
+
+
+
 
 
     async def ArmazenarDados(self):

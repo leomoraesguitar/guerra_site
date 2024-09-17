@@ -23,6 +23,8 @@ no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alter
 Incluir alteração dos jogadores na função 'aletrou ' de classename
 colocar as funções de execução do programa na classe mais externa- funciona
 retirar o carregamento inicial
+
+atualizar lista de jogadores
 """
 
 
@@ -338,29 +340,7 @@ class Guerra2:
         self.lista_vilas = listavilas
 
 
-        # self.lista_jogadores = self.jogadores()[:]  # chama a função jogadores
-        # self.lista_jogadores = layout_jogadores(printt = print,page = self.page).Gera_Lista_de_jogadores()
-        # self.lista_jogadores
-        # self.ord_jogs = self.DefinirPesos()
-        # chama a função lista_de_vilas
-        # self.equipe = self.Buscar_equipe()
-        # self.lista_vilas
-
-        # if listavilas:
-        #     self.lista_vilas = listavilas
-        # if self.equipe != None:
-        #     # self.lista_vilas = self.lista_de_vilas_func()[:]
-        #     # v = layout_vilas(printt = print)
-        #     if not self.lista_vilas:
-        #         self.vilas = LayoutVilas(printt = print, page = self.page)
-        #         self.lista_vilas = self.vilas.Gera_Lista_de_Vilas(self.equipe)
-            # self.AtualizarVilas()
-            
-
-        # if listajogadores:
-        #     self.lista_jogadores = listajogadores
-        # if equipe:
-        #     self.equipe = equipe            
+          
         self.GerarMapaInicial()
         self.seq = [[0], [0]]
         self.pl = 0
@@ -368,9 +348,6 @@ class Guerra2:
         self.parar = False
         self.rodou = False
         self.meus_jogadores = None
-        # self.tempo_inicial = 0
-        # self.tempo_final = None
-        # self.delta_t = None
         self.df = None
 
 
@@ -408,7 +385,7 @@ class Guerra2:
       self.equipe = equipe['equipe A']
     #   print(self.equipe)
       return self.equipe
-#  Método 4
+
 
     def Minhas_contas(self):
         a1 = Ler_celulas2(intervalo="A2:C40",
@@ -444,7 +421,6 @@ class Guerra2:
     def AtualizarVilas(self):
         arquiv = self.page.client_storage.get('vilas')
         
-        # print(arquiv)
         lista_vilas = []
 
         for nome, nivel_cv, cv_exposto in zip(arquiv['nome'], arquiv['nivel_cv'], arquiv['cv_exposto']):
@@ -456,27 +432,10 @@ class Guerra2:
 
         self.lista_vilas = lista_vilas
 
-    # async def AtualizarVilas(self):
-    #     arquiv = await self.page.client_storage.get_async('vilas')
-    #     time.sleep(2)
-    #     if arquiv:
-    #         lista_vilas = []
-    #         for nome, nivel_cv, cv_exposto in zip(arquiv['nome'], arquiv['nivel_cv'], arquiv['cv_exposto']):
-    #             lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=None))
-
-    #         for vila in lista_vilas:
-    #             vila.equipe = self.equipe
-    #             vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv
-    #         self.lista_vilas = lista_vilas
-    #     else:
-    #         print("Nenhuma vila encontrada no client_storage.")
 
 
     def Resultado_metodo_4(self):
         atacantes = []
-
-        # self.AtualizarVilas()
-        # time.sleep(5)
 
         self.lista_jogadores = self.OrdenarListadeClasses(
             self.lista_jogadores, 'forca', decrecente=False)
@@ -487,10 +446,7 @@ class Guerra2:
         
         self.GerarMapaInicial()
         vilas = self.mapa
-        # print('MEU OVO')
-        # print(vilas)
 
-        # print(lista_de_vilas_forca)
         for i in lista_de_vilas_forca:
             estrelas = max(vilas[str(i.nome)])
             while i.atacante == 0:
@@ -505,9 +461,11 @@ class Guerra2:
                 if estrelas < 0:
                     i.atacante = ''
                     break
+
         dic = {'Jogador': [], 'Vilas': [], 'Estrelas': [], 'CV':[]}
         lista_de_vilas_forca = self.OrdenarListadeClasses(
             self.lista_vilas, 'forca', decrecente=True)
+        
         for i in lista_de_vilas_forca:
             dic['Jogador'].append(i.atacante)
             dic['Vilas'].append(i.nome)
@@ -520,19 +478,12 @@ class Guerra2:
         dic['Vilas'].append(' ')
         dic['CV'].append(' ')
 
-
-        # df = pd.DataFrame(dic)
-        # df = df.sort_values(by='Vilas')
-        # df.to_clipboard(index=False)
-        # print(df)
-        # self.df = df
-        # print(dic)
         self.dic = dic
+
 
     def Resultado_outras_contas(self):
         self.Minhas_contas()
 
-        # num_vilas = g.mapa.shape[1] - 1
         atacantes = []
         atacadas = []
         estrelas = []
@@ -728,17 +679,10 @@ class Guerra2:
         for i in self.lista_jogadores:
             estrelas_02 = []
             for j in self.lista_vilas:
-                # print(i.nome)
                 j.recebe_ataque([i])
                 estrelas_02.append(j.estrelas_l)
-            # i.estrelas = estrelas_02
             mapa.append([i.nome] + estrelas_02)
-        # print(mapa)
-        # gm = pd.DataFrame(
-        #     mapa, columns=['Jogador']+[str(i.nome) for i in self.lista_vilas])
-        # gm.to_clipboard()
-        # print(gm)
-        # self.df = gm
+
         chaves=['Jogador']+[str(i.nome) for i in self.lista_vilas]
 
         dic = {i:[] for i in chaves}
@@ -772,17 +716,15 @@ class Guerra2:
     def GerarMapaInicial(self):    
         if self.metodo in [3, 4] and self.lista_vilas != None:
             plan = self.GerarMapaDeEstrelas()
-            # plan.index = plan['Jogador']
             self.mapa = plan
             for j in self.lista_vilas:
                 j.mapa = self.mapa
                 j.metodo = self.metodo
             print('mapa gerado!')
-            # print( self.mapa)
+
         else:
             self.mapa = None
 
-            # print( self.mapa)
 
     def Rodar(self,
               ciclos=5000000,
@@ -2020,6 +1962,7 @@ class ClassName(ft.Column):
         for vila in self.vilas.lista_vilas:
             vila.equipe = self.layout.equipe
             vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv  
+
         listavilas  = self.vilas.lista_vilas     
 
 
@@ -2608,7 +2551,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 037',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 038',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
