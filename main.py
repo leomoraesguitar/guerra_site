@@ -26,6 +26,7 @@ retirar o carregamento inicial
 38 - agora alterando as vilas alteraa execução - ok - melhor versão
 
 atualizar lista de jogadores
+colocar as linhas da tabela em responsiveview
 """
 
 
@@ -1189,9 +1190,9 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
 
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho,botao_atualizar], 
+            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
 
-                expand=False, spacing=0, run_spacing=0, alignment='start', columns=6),
+                expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
 
@@ -2552,7 +2553,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 039',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 040',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
