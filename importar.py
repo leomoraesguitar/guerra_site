@@ -3,7 +3,7 @@ import pickle
 import flet as ft
 import re
 import webbrowser
-import requests
+# import requests
 from operator import attrgetter
 import os
 # from pandas import DataFrame
@@ -257,6 +257,7 @@ class layout_Importar(ft.Column):
                 )
         # dica = ft.Text('gere o token no site: https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', color = 'white,0.6',selectable = True)
         self.gerar_token = ft.IconButton(tooltip='gerar Token',icon = ft.icons.GENERATING_TOKENS, on_click=self.GerarToken, icon_size=20)
+        self.gerar_token = ft.Container(tooltip='gerar Token',content = ft.Icon(name = ft.icons.GENERATING_TOKENS), url='https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', )
         self.botao_importar = ft.ElevatedButton('Importar dados',on_click=self.Importar_players)
         
         self.botao_ordenar_forca = ft.TextButton('Força',data = 'forca',on_click=self.Ordenar_por, col = self.Colu(2))
@@ -422,8 +423,8 @@ class layout_Importar(ft.Column):
     #         return default
 
 
-    def GerarToken(self,e):
-        webbrowser.open('https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c')
+    # def GerarToken(self,e):
+    #     webbrowser.open('https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c')
 
     def _ImportarDadosAPI(self, api_key1, url):
         api_key = re.sub(r'\s+', '', api_key1)

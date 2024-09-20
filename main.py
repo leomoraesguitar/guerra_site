@@ -2553,7 +2553,7 @@ def main(page: ft.Page):
     #     menu.update()
     #     page.update()
     
-    page.overlay.append(ft.Text('versão - 040',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 041',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
