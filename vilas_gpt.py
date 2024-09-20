@@ -674,16 +674,17 @@ class Vila(ft.Row):
 
 
 
-class LayoutVilas(ft.Row):
+class LayoutVilas(ft.ResponsiveRow):
     def __init__(self, num_vilas=15, printt=None, page=None, func = None):
         super().__init__()
         self.page = page
         self.func = func
         self.spacing = 0
         self.run_spacing = 0
-        self.width = 300
+        # self.width = 300
+        self.columns = 12
         self.vertical_alignment = 'start'
-        self.alignment = ft.MainAxisAlignment.CENTER
+        self.alignment = ft.MainAxisAlignment.SPACE_BETWEEN
         self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, 
                                      options=[ft.dropdown.Option(i) for i in range(51)], 
                                      dense=True, content_padding=12,
@@ -707,10 +708,10 @@ class LayoutVilas(ft.Row):
             self.num_vilas,
             self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar, 
             
-        ])
+        ],col = 4, horizontal_alignment='start')
         self.col_A.controls.append(self.saida)
 
-        self.col_B = ft.Column(spacing=0, run_spacing=0)
+        self.col_B = ft.Column(spacing=0, run_spacing=0, col = 8, horizontal_alignment='end')
         if self.page is None:
             pw = 450
         else:
@@ -733,7 +734,7 @@ class LayoutVilas(ft.Row):
         self.inicializar_vilas()
 
         self.printt = self.saida.pprint
-        self.height = 500
+        # self.height = 500
         self.controls = [self.botao_carregarvilas]
 
         # self.col_B.controls[1].content.controls = self.lista_vilas

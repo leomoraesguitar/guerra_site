@@ -47,11 +47,13 @@ class Display(ft.Container):
             on_click = None,
             text_color = None,
             text_align = 'center', #Optional[TextAlign] = None,
-            horizontal_alignment = 'center' #CrossAxisAlignment
+            horizontal_alignment = 'center', #CrossAxisAlignment
+            col = None,
         ): 
         super().__init__()
         self.opitions = opitions
         self.func = func
+        self.col = col
         self.on_click = on_click
         self.data = data
         if self.opitions is None:
@@ -1176,7 +1178,7 @@ class LayoutGuerra(ft.Column):
         self.metodo.width = 70
         self.metodo.col = 6
         def Colu(x = 4):
-            return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
+            return {"xs":x+1,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
         rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'rodar',)
         parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'parar' )
@@ -1193,13 +1195,13 @@ class LayoutGuerra(ft.Column):
 
         self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
         self.tabela.larguras = ('Jogador',100)
-
+        
         self.controls = [
-             ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+             ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
 
-                expand_loose=True, spacing=2, run_spacing=0, alignment=ft.MainAxisAlignment.SPACE_BETWEEN, 
-                # columns=5
-                scroll=ft.ScrollMode.AUTO
+                expand_loose=True, spacing=2, run_spacing=0, alignment=ft.MainAxisAlignment.CENTER, 
+                columns={"xs":6,"sm": 5,}
+                # scroll=ft.ScrollMode.AUTO
              ),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
@@ -1864,7 +1866,8 @@ class My_tabelaC(ft.Container):
 
     def Colunas(self):
         self.controls = [ft.Container(ft.Row([ft.Text(self.chaves[0], width=self.Larg(self.chaves[0]), text_align='end', weight='BOLD')]+
-                        [ft.Text(i, width=self.Larg(i), text_align='center', weight='BOLD') for i in self.chaves[1:]], tight=True),bgcolor='white,0.3')]
+                        [ft.Text(i, width=self.Larg(i), text_align='center', weight='BOLD') for i in self.chaves[1:]], 
+                        tight=False, ),bgcolor='white,0.3')]
 
             
         
@@ -1873,14 +1876,26 @@ class My_tabelaC(ft.Container):
         for i, k in enumerate(self._dic[self.chaves[0]]):     
             cor  = 'black' if i%2 == 0 else  'white,0.05'  
             self.controls.append(
-                ft.Container(ft.Row([
-                                Display(value = self._dic[self.chaves[0]][i],opitions=self.opcoes, width=self.Larg(self.chaves[0]),height=20,text_size = 12, 
-                                        borda_width = 0,border_radius = 0, 
-                                                text_align= ft.TextAlign.CENTER, horizontal_alignment=ft.CrossAxisAlignment.END, bgcolor = 'white,0')
-                ]+[ft.Text(self._dic[j][i],width=self.Larg(j), text_align='center') for j in self.chaves[1:]], tight=True),bgcolor=cor)
-                
+                ft.Container(
+                    content = ft.Row(
+                        controls = [
+                                Display(
+                                    value = self._dic[self.chaves[0]][i],opitions=self.opcoes, 
+                                    width=self.Larg(self.chaves[0]),height=20,text_size = 12, 
+                                    borda_width = 0,border_radius = 0, text_align= ft.TextAlign.CENTER, 
+                                    horizontal_alignment=ft.CrossAxisAlignment.END, bgcolor = 'white,0',
+                                    col = 6
+                                )
+                                ]+[ft.Text(self._dic[j][i],width=self.Larg(j), text_align='center', col = 2) for j in self.chaves[1:]],
+                        # columns=12,
+                        tight=True,
+                        # expand_loose=True,
+                    ),
+                    bgcolor=cor
                 )
-        self.content = ft.Column(self.controls,spacing=2)
+                
+            )
+        self.content = ft.Column(self.controls,spacing=2, expand=True)
         
             
     def Atualizar(self):
@@ -1923,7 +1938,7 @@ class ClassName(ft.Column):
     def __init__(self,page):
         super().__init__()
         self.page = page
-        self.width = 300
+        # self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
@@ -1943,7 +1958,7 @@ class ClassName(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
         co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
-        self.menu =  ft.Row([
+        self.menu =  ft.ResponsiveRow([
                 BotaoCT('Lista de Guerra',self.Escolher_janela,   
                         col = co2, bgcolor = ft.colors.GREY_800),
                 BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
@@ -1953,10 +1968,10 @@ class ClassName(ft.Column):
                 BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
                 ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.CENTER,
                 vertical_alignment='center',
-                scroll=ft.ScrollMode.AUTO,
-                # expand=False
+                # scroll=ft.ScrollMode.AUTO,
+                # expand_loose=True
                 # width=500,
-                # columns=6
+                columns=6
                 ) 
                     
       
@@ -2611,7 +2626,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 044',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 045',top=10, right=10, size=8 ))
     c = ClassName(page)
     def Caixa(ct):  
         return ft.Container(
@@ -2623,13 +2638,14 @@ def main(page: ft.Page):
                 ),
                 border= ft.border.all(1, ft.colors.CYAN_500),
                 border_radius=8,
-                # alignment=ft.Alignment(-1, -1),
+                alignment=ft.Alignment(0, -1),
 
                 # expand=False
                 # width=370
 
             )  
-    page.add(ft.Row([Caixa(c)],alignment='center'))
+    # page.add(ft.Row([Caixa(c)],alignment='center'))
+    page.add(Caixa(c))
 
 
 
