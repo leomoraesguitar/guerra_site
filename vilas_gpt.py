@@ -699,7 +699,7 @@ class LayoutVilas(ft.Row):
                                                      width=300, 
                                                      expand_loose=True,
                                                      scale=0.8)
-        self.saida = Saida(100,220)
+        self.saida = Saida(100,200)
 
 
         self.col_A = ft.Column([

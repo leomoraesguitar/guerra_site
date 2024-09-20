@@ -187,7 +187,7 @@ class Display(ft.Container):
         self.Atualizar()
 
 class BotaoCT(ft.Container):
-    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None, data = None ):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None, data = None , opacity = 1):
         super().__init__()
         self.on_click=on_click
         self.border_radius = 0
@@ -198,14 +198,15 @@ class BotaoCT(ft.Container):
         self.col = col
         self.text_size = text_size
         self.expand = True
-        self.padding = ft.Padding(4,2,2,0)
+        self.opacity = opacity
+        self.padding = ft.Padding(12,2,12,2)
         # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
         # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
         self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size, )
         self.on_hover = self.Passoumouse 
-        self.border_radius = 6 
-        self.margin = ft.Margin(2,1,2,1)   
+        self.border_radius = 12 
+        self.margin = ft.Margin(4,1,4,1)   
         self.alignment = ft.Alignment(0,0) 
         self.ink = True                          
 
@@ -1177,12 +1178,12 @@ class LayoutGuerra(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar')
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(0.75),data = 'parar' )
-        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(0.75),data = 'mapa')
-        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.BLUE_900,text_size=12, col = Colu(1.5), data = 'resultado2')
-        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.BLUE_800,text_size=12, col = Colu(1), data = 'espelho')
-        botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.BLUE_700,text_size=12,  col = Colu(1))
+        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar',)
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(0.75),data = 'parar' )
+        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(0.75),data = 'mapa')
+        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1.5), data = 'resultado2')
+        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'espelho')
+        botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.GREEN_900,text_size=12,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
@@ -1194,9 +1195,12 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
 
         self.controls = [
-            ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+             ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
 
-                expand=False, spacing=0, run_spacing=0, alignment='start', columns=5),
+                expand_loose=True, spacing=2, run_spacing=0, alignment=ft.MainAxisAlignment.SPACE_BETWEEN, 
+                # columns=5
+                scroll=ft.ScrollMode.AUTO
+             ),
             ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
                     scroll=ft.ScrollMode.ADAPTIVE,
 
@@ -1939,15 +1943,18 @@ class ClassName(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
         co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
-        self.menu =  ft.ResponsiveRow([
-                BotaoCT('Lista de Guerra',self.Escolher_janela,  text_size = 11, 
-                        col = co2, bgcolor = ft.colors.GREEN_900),
-                BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
-                BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
-                BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
-                BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
-                BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
-                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,columns=6) 
+        self.menu =  ft.Row([
+                BotaoCT('Lista de Guerra',self.Escolher_janela,   
+                        col = co2, bgcolor = ft.colors.GREY_700),
+                BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                scroll=ft.ScrollMode.AUTO,
+                # columns=6
+                ) 
                     
       
         self.controls1 = [self.menu,self.janela]
@@ -2419,6 +2426,15 @@ class ClassName(ft.Column):
                     border_radius=8,
 
                 )      
+        for i in self.menu.controls:
+            if i.nome == e.control.nome:
+                i.opacity = 1
+                i.bgcolor = ft.colors.PURPLE_900
+
+
+            else:
+                i.bgcolor = ft.colors.GREY_700
+                i.opacity = 0.5
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
@@ -2500,12 +2516,38 @@ def main(page: ft.Page):
         scrollbar_theme = ft.ScrollbarTheme(
             thickness = {
                 # ft.ControlState.DEFAULT: 10,
-                ft.ControlState.HOVERED:20,
+                ft.ControlState.HOVERED:5,
                 # ft.ControlState.PRESSED:20, 
                 # ft.ControlState.FOCUSED:20, 
-                ft.ControlState.DRAGGED:20, 
-                ft.ControlState.SCROLLED_UNDER:20
+                ft.ControlState.DRAGGED:5, 
+                ft.ControlState.SCROLLED_UNDER:5
                   },
+                # thumb_color = {
+                #     ft.ControlState.DEFAULT: 'white,0.0',
+                #     ft.ControlState.HOVERED:'white,0.0',
+                #     # ft.ControlState.PRESSED:20, 
+                #     # ft.ControlState.FOCUSED:20, 
+                #     ft.ControlState.DRAGGED:'white,0.0', 
+                #     ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                # },
+                track_color = {
+                    ft.ControlState.DEFAULT: 'white,0.0',
+                    ft.ControlState.HOVERED:'white,0.0',
+                    # ft.ControlState.PRESSED:20, 
+                    # ft.ControlState.FOCUSED:20, 
+                    ft.ControlState.DRAGGED:'white,0.0', 
+                    ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                },
+                track_border_color = {
+                    ft.ControlState.DEFAULT: 'white,0.0',
+                    ft.ControlState.HOVERED:'white,0.0',
+                    # ft.ControlState.PRESSED:20, 
+                    # ft.ControlState.FOCUSED:20, 
+                    ft.ControlState.DRAGGED:'white,0.0', 
+                    ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                },
+
+                min_thumb_length = 10,
             # cross_axis_margin = 50,
 
         ),
@@ -2565,7 +2607,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 042',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 043',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)
