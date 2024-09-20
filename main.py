@@ -197,13 +197,13 @@ class BotaoCT(ft.Container):
         self.scale = scale
         self.col = col
         self.text_size = text_size
-        self.expand = True
+        self.expand_loose = True
         self.opacity = opacity
         self.padding = ft.Padding(12,2,12,2)
         # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
         # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
-        self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size, )
+        self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size,no_wrap=True )
         self.on_hover = self.Passoumouse 
         self.border_radius = 12 
         self.margin = ft.Margin(4,1,4,1)   
@@ -1923,7 +1923,7 @@ class ClassName(ft.Column):
     def __init__(self,page):
         super().__init__()
         self.page = page
-        
+        self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
@@ -1951,13 +1951,17 @@ class ClassName(ft.Column):
                 BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
                 BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
                 BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
-                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.CENTER,
+                vertical_alignment='center',
                 scroll=ft.ScrollMode.AUTO,
+                # expand=False
+                # width=500,
                 # columns=6
                 ) 
                     
       
-        self.controls1 = [self.menu,self.janela]
+        self.controls1 = [ft.Container(self.menu, bgcolor=ft.colors.CYAN_900),self.janela] #,self.janela
+        self.height = 500
         self.controls = [botao_atualizar]
 
 
@@ -2445,7 +2449,7 @@ class ClassName(ft.Column):
           
             case 'Jogadores':
                 # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
-                self.janela.content = Caixa(self.jogadores)
+                self.janela.content = self.jogadores
             case 'Lista de Guerra':
                 # self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=580)
                 self.janela.content = self.layout
@@ -2502,13 +2506,13 @@ class ClassName(ft.Column):
 
 def main(page: ft.Page):
     page.title = "Guerra de Clans - 015"
-    page.window.width = 330  # Define a largura da janela como 800 pixels
+    # page.window.width = 330  # Define a largura da janela como 800 pixels
     page.window.height = 600  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
     page.theme_mode = ft.ThemeMode.DARK
     page.spacing = 3
-    page.expand = True
+    # page.expand = True
     page.vertical_alignment = 'start'
     page.horizontal_alignment = ft.MainAxisAlignment.CENTER
     page.theme = ft.Theme(
@@ -2607,10 +2611,25 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 043',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 044',top=10, right=10, size=8 ))
     c = ClassName(page)
+    def Caixa(ct):  
+        return ft.Container(
+                content = ct,
+                shadow = ft.BoxShadow(
+                    blur_radius = 300,
+                    color='cyan900,0.49',
+                    blur_style = ft.ShadowBlurStyle.OUTER
+                ),
+                border= ft.border.all(1, ft.colors.CYAN_500),
+                border_radius=8,
+                # alignment=ft.Alignment(-1, -1),
 
-    page.add(c)
+                # expand=False
+                # width=370
+
+            )  
+    page.add(ft.Row([Caixa(c)],alignment='center'))
 
 
 

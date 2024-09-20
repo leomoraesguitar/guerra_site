@@ -733,6 +733,7 @@ class LayoutVilas(ft.Row):
         self.inicializar_vilas()
 
         self.printt = self.saida.pprint
+        self.height = 500
         self.controls = [self.botao_carregarvilas]
 
         # self.col_B.controls[1].content.controls = self.lista_vilas

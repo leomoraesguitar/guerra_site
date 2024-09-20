@@ -183,7 +183,9 @@ class layout_jogadores(ft.Column):
             ft.Text(height=0),
             ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300),
        
-        ]        
+        ]
+        self.height = 500
+
         self.controls = [self.botao_atualizar, ]
         
 
