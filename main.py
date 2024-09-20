@@ -198,12 +198,16 @@ class BotaoCT(ft.Container):
         self.col = col
         self.text_size = text_size
         self.expand = True
-        self.padding = ft.Padding(4,0,4,0)
+        self.padding = ft.Padding(4,2,2,0)
         # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
         # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
         self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size, )
-        self.on_hover = self.Passoumouse                                       
+        self.on_hover = self.Passoumouse 
+        self.border_radius = 6 
+        self.margin = ft.Margin(2,1,2,1)   
+        self.alignment = ft.Alignment(0,0) 
+        self.ink = True                          
 
 
     def Passoumouse(self,e):
@@ -1829,6 +1833,8 @@ class My_tabelaC(ft.Container):
         # self.spacing = 5
         # self.run_spacing = 5
         self._dic = dic 
+        self.shadow = ft.BoxShadow(blur_radius = 300,color='cyan900,0.49')
+        self.border_radius = 8
         self.visible = False 
         self.largura_default = largura_default
         self._larguras = larguras
@@ -1913,6 +1919,8 @@ class ClassName(ft.Column):
     def __init__(self,page):
         super().__init__()
         self.page = page
+        
+        self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
         self.jogadores = layout_jogadores(printt=print, page=self.page)
         self.equipes = layout_equipes(page = page,  )
@@ -1920,7 +1928,7 @@ class ClassName(ft.Column):
         self.saida = Saida(350,150) 
         self.importar = layout_Importar(printt=self.saida.pprint, page = self.page, func=self.Amarzenar)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
-        self.janela = ft.Container()
+        self.janela = ft.Container( alignment = ft.Alignment(0,0))
         self.janela.content = self.layout
         self.spacing = 3
         self.run_spacing = 1
@@ -1931,23 +1939,17 @@ class ClassName(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}
         co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
-        self.menu = ft.Container(
-            
-            content = ft.ResponsiveRow([
-                BotaoCT('Lista de Guerra',self.Escolher_janela,  text_size = 11, col = co2),
-                BotaoCT('Vilas',self.Escolher_janela, col = co2),
-                BotaoCT('Jogadores',self.Escolher_janela, col = co2),
-                BotaoCT('Equipes',self.Escolher_janela, col = co2),
-                BotaoCT('Importar',self.Escolher_janela, col = co2),
-                BotaoCT('config',self.Escolher_janela, col = co2),
-                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,columns=6), 
+        self.menu =  ft.ResponsiveRow([
+                BotaoCT('Lista de Guerra',self.Escolher_janela,  text_size = 11, 
+                        col = co2, bgcolor = ft.colors.GREEN_900),
+                BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
+                BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
+                BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
+                BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
+                BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREEN_900),
+                ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.SPACE_BETWEEN,columns=6) 
                     
-            # padding=2,
-            bgcolor=ft.colors.BROWN_500,
-            border_radius=0,
-            # width=page.window.width+20
-        )
-
+      
         self.controls1 = [self.menu,self.janela]
         self.controls = [botao_atualizar]
 
@@ -1976,7 +1978,7 @@ class ClassName(ft.Column):
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
-                        equipe=self.equipes.arquiv["equipe A"],
+                        equipe=self.equipes.arquiv,
                         )                
                 if self.g2.rodou:
                     self.g2.rodou = False
@@ -2006,7 +2008,7 @@ class ClassName(ft.Column):
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
-                        equipe=self.equipes.arquiv["equipe A"],
+                        equipe=self.equipes.arquiv,
                         )                
                 pp()   
 
@@ -2026,7 +2028,7 @@ class ClassName(ft.Column):
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
-                        equipe=self.equipes.arquiv["equipe A"],
+                        equipe=self.equipes.arquiv,
                         )
 
                 pp()                           
@@ -2043,7 +2045,7 @@ class ClassName(ft.Column):
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
-                        equipe=self.equipes.arquiv["equipe A"],
+                        equipe=self.equipes.arquiv,
                         )
 
                 pp()
@@ -2055,12 +2057,7 @@ class ClassName(ft.Column):
                         self.g2.parar = True
                 except:
                     pass
-
- 
-
-
-
-      
+    
     async def Attt(self,e):
         vilas = await self.page.client_storage.contains_key_async("vilas") # True if the key exists
         jogadores = await self.page.client_storage.contains_key_async("jogadores") # True if the key exists
@@ -2350,8 +2347,6 @@ class ClassName(ft.Column):
         self.controls = self.controls1
         self.update()
 
-
-
     async def ArmazenarDados(self):
        
         try:
@@ -2389,12 +2384,6 @@ class ClassName(ft.Column):
         self.layout.equipe = equipe
         self.layout.atualizou = True
 
-
-
-
-
-
-
     def Alterou(self,e):
         if isinstance(e, list) and e[0] == 'vilas':
             lista_vilas = e[1]
@@ -2405,8 +2394,6 @@ class ClassName(ft.Column):
                     vila.equipe = self.layout.equipe
                     vila.forca = (50 - vila.nome) + 50 * vila.nivel_cv            
             self.layout.lista_vilas = lista_vilas
-
-
 
     def Amarzenar(self,valor):
         dic2, lista = valor
@@ -2419,33 +2406,44 @@ class ClassName(ft.Column):
         except:
             pass        
 
-
-
-
     def Escolher_janela(self, e):
+        def Caixa(ct):  
+            return ft.Container(
+                    content = ct,
+                    shadow = ft.BoxShadow(
+                        blur_radius = 300,
+                        color='cyan900,0.49',
+                        blur_style = ft.ShadowBlurStyle.OUTER
+                    ),
+                    border= ft.border.all(1, ft.colors.CYAN_500),
+                    border_radius=8,
+
+                )      
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
             case 'Vilas':                
-                self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
+                # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
+                self.janela.content = Caixa(self.vilas)
+          
             case 'Jogadores':
-                self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
+                # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
+                self.janela.content = Caixa(self.jogadores)
             case 'Lista de Guerra':
-                self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=580)
+                # self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=580)
+                self.janela.content = self.layout
             case 'Equipes':
                 self.janela.content = ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=580)
             case 'Importar':
-                self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
+                # self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
+                self.janela.content = self.importar
             case 'config':
                 self.janela.content = self.config                                                                                               
 
         self.janela.update()
         self.update()
         # print(self.controls)
-
-
-
 
     def Func(self,e):
         match e.data:
@@ -2465,8 +2463,6 @@ class ClassName(ft.Column):
             case '0':
                 self.page.window.width = 810
         self.page.update() 
-
-
 
     def Escrever_json(self, data, filename):
         if not filename.endswith('.json'):
@@ -2498,9 +2494,24 @@ def main(page: ft.Page):
     page.spacing = 3
     page.expand = True
     page.vertical_alignment = 'start'
-    page.theme = ft.Theme(visual_density = "comfortable")
+    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    page.theme = ft.Theme(
+        visual_density = "comfortable",
+        scrollbar_theme = ft.ScrollbarTheme(
+            thickness = {
+                # ft.ControlState.DEFAULT: 10,
+                ft.ControlState.HOVERED:20,
+                # ft.ControlState.PRESSED:20, 
+                # ft.ControlState.FOCUSED:20, 
+                ft.ControlState.DRAGGED:20, 
+                ft.ControlState.SCROLLED_UNDER:20
+                  },
+            # cross_axis_margin = 50,
 
-
+        ),
+        # color_scheme_seed = ft.colors.WHITE,
+    )
+    '''
     # ConfirmarSaida(page)
     # Resize(page) 
     #   
@@ -2552,8 +2563,9 @@ def main(page: ft.Page):
     #     page.add(menu,janela)
     #     menu.update()
     #     page.update()
+    '''    
     
-    page.overlay.append(ft.Text('versão - 041',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 042',top=10, right=10, size=8 ))
     c = ClassName(page)
 
     page.add(c)

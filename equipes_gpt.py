@@ -146,7 +146,8 @@ class LayoutEquipes(ft.Column):
                     "GRUPO E": "1430"
                 }
         }
-        self.arquiv = self.ler_json(self.config_equipes, default=eqp)   
+        self.arquiv = self.ler_json(self.config_equipes, default=eqp)  
+        self.arquiv = self.arquiv["equipe A"] 
         
         # self.SalvarDadosLocais('equipes', self.arquiv)     
         # self.arquiv = self.LerDadosLocais('equipes', default={
@@ -163,7 +164,7 @@ class LayoutEquipes(ft.Column):
         # })
         # self.page.client_storage.set('eqipe',eqp)
         for key in self.equipe_fields:
-            self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
+            self.equipe_fields[key].value = self.arquiv.get(key, "")
 
 
     def salvar(self, e):

@@ -681,14 +681,24 @@ class LayoutVilas(ft.Row):
         self.func = func
         self.spacing = 0
         self.run_spacing = 0
+        self.width = 300
         self.vertical_alignment = 'start'
-        self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, options=[ft.dropdown.Option(i) for i in range(51)], 
-                                     dense=True, content_padding=7, width=100, on_change=self.Chenge_num_vilas)
+        self.alignment = ft.MainAxisAlignment.CENTER
+        self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, 
+                                     options=[ft.dropdown.Option(i) for i in range(51)], 
+                                     dense=True, content_padding=12,
+                                     padding= ft.Padding(0,20,0,0),width=110,
+                                     border_width=1, 
+                                     on_change=self.Chenge_num_vilas)
         self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=115, scale=0.8)
         self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
         self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
-        self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', on_click=self.CarregarVilas, width=300, scale=0.8)
+        self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', 
+                                                     on_click=self.CarregarVilas, 
+                                                     width=300, 
+                                                     expand_loose=True,
+                                                     scale=0.8)
         self.saida = Saida(100,220)
 
 
@@ -707,7 +717,12 @@ class LayoutVilas(ft.Row):
             pw = self.page.window.height
         self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
         cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
-        self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE), border=ft.border.all(1, 'white,0.5'), width=180))
+        self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, 
+                                                          scroll=ft.ScrollMode.ADAPTIVE), 
+                                                          border=ft.border.all(1, 'white,0.5'),
+                                                            width=180,
+                                                            border_radius=8
+                                                            ))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         # self.lista_vilas = self.inicializar_vilas()
         # sleep(5)

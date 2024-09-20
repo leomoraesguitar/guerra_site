@@ -158,8 +158,7 @@ class layout_jogadores(ft.Column):
         self.page = page
         self.spacing = 0
         self.run_spacing = 0
-
-
+        self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.num_jogadores = ft.Dropdown(label = 'Número de Jogadores',value = num_jogadores, 
                 options=[ft.dropdown.Option(i) for i in range(5,51)],dense=True, 
                 content_padding=5, width=180, on_change=self.Chenge_num_jogadores)
@@ -180,13 +179,14 @@ class layout_jogadores(ft.Column):
         self.printt = self.saida.pprint
 
         self.controls1= [
-            ft.Row([self.num_jogadores,self.botao_atualizar]),
+            ft.Row([self.num_jogadores,self.botao_atualizar], tight=True),
             ft.Text(height=0),
             ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300),
        
         ]        
-        self.controls = [self.botao_atualizar,self.saida, ]
+        self.controls = [self.botao_atualizar, ]
         
+
         self.lista_jogadores = []
         self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config')
         try:
@@ -333,7 +333,7 @@ class layout_jogadores(ft.Column):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
             # self.controls[3].controls = self.lista_jogadores
-            self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
+            self.controls = self.controls1+[ft.Column(self.lista_jogadores,width=300,height=self.cumprimento_coluna, scroll=ft.ScrollMode.AUTO),
                                         ]
             self.update()
             self.page.update()

@@ -42,8 +42,6 @@ class Verificar_pasta:
         # self.verificar_pasta()
         return os.path.join(self.local, nome)
 
-
-
 class ConfirmarSaida:
     def __init__(self,page, funcao = None):
         super().__init__()
@@ -256,7 +254,7 @@ class layout_Importar(ft.Column):
         value = "Aracaju",content_padding=10,filled=True, bgcolor='white,0.08'
                 )
         # dica = ft.Text('gere o token no site: https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', color = 'white,0.6',selectable = True)
-        self.gerar_token = ft.IconButton(tooltip='gerar Token',icon = ft.icons.GENERATING_TOKENS, on_click=self.GerarToken, icon_size=20)
+        # self.gerar_token = ft.IconButton(tooltip='gerar Token',icon = ft.icons.GENERATING_TOKENS, on_click=self.GerarToken, icon_size=20)
         self.gerar_token = ft.Container(tooltip='gerar Token',content = ft.Icon(name = ft.icons.GENERATING_TOKENS), url='https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', )
         self.botao_importar = ft.ElevatedButton('Importar dados',on_click=self.Importar_players)
         
@@ -281,7 +279,8 @@ class layout_Importar(ft.Column):
                              self.botao_ordenar_atenuador,#3
                              self.botao_ordenar_forca_final,#2
                                                                  
-                        ], spacing=0, run_spacing=0,columns=9),bgcolor='green,0.4'),
+                        ], spacing=0, run_spacing=0,columns=9, vertical_alignment='center'),
+                        bgcolor='green,0.4', border_radius=8),
                          
                 ]
     
