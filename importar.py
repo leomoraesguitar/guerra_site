@@ -2,8 +2,8 @@ import json
 import pickle
 import flet as ft
 import re
-import webbrowser
-# import requests
+# import webbrowser
+import requests
 from operator import attrgetter
 import os
 # from pandas import DataFrame
