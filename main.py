@@ -187,7 +187,7 @@ class Display(ft.Container):
         self.Atualizar()
 
 class BotaoCT(ft.Container):
-    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = None, col = None, data = None , opacity = 1):
+    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = 16, col = None, data = None , opacity = 1):
         super().__init__()
         self.on_click=on_click
         self.border_radius = 0
@@ -1178,12 +1178,12 @@ class LayoutGuerra(ft.Column):
         def Colu(x = 4):
             return {"xs":x,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'rodar',)
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(0.75),data = 'parar' )
-        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(0.75),data = 'mapa')
-        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1.5), data = 'resultado2')
-        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=12, col = Colu(1), data = 'espelho')
-        botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.GREEN_900,text_size=12,  col = Colu(1))
+        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'rodar',)
+        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'parar' )
+        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'mapa')
+        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1.5), data = 'resultado2')
+        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'espelho')
+        botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.GREEN_900,text_size=16,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
         
@@ -1945,12 +1945,12 @@ class ClassName(ft.Column):
         co2 = {"xs":2,"sm": 1, "md": 1, "lg": 1, "xl": 1,"xxl": 1}
         self.menu =  ft.Row([
                 BotaoCT('Lista de Guerra',self.Escolher_janela,   
-                        col = co2, bgcolor = ft.colors.GREY_700),
-                BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
-                BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
-                BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
-                BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
-                BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_700),
+                        col = co2, bgcolor = ft.colors.GREY_800),
+                BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
                 ],spacing=0, run_spacing=0,alignment=ft.MainAxisAlignment.CENTER,
                 vertical_alignment='center',
                 scroll=ft.ScrollMode.AUTO,
@@ -2437,8 +2437,8 @@ class ClassName(ft.Column):
 
 
             else:
-                i.bgcolor = ft.colors.GREY_700
-                i.opacity = 0.5
+                i.bgcolor = ft.colors.GREY_800
+                i.opacity = 0.6
         match e.control.content.value:
             case 'Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
