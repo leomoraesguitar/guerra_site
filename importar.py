@@ -237,9 +237,9 @@ class BotaoCT(ft.Container):
                                                       
 
 class layout_Importar(ft.Column):
-    def __init__(self, printt = None, page = None, func = None):
+    def __init__(self, printt = None,  func = None):
         super().__init__()
-        self.page = page
+        # self.page = page
         self.func = func
         self.config_jogadores = Verificar_pasta('Guerra_clash').caminho('jogadores_config.json')
         self.config_tabela = Verificar_pasta('Guerra_clash').caminho('tabela.plk')
@@ -301,7 +301,7 @@ class layout_Importar(ft.Column):
             self.lista = self.LerPickle(self.config_tabela)
         self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
         self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')    
-        self.controls = self.controls1 + [ft.Column(self.tabela,scroll=ft.ScrollMode.ADAPTIVE, height=600)]
+        self.controls = self.controls1 + [ft.ListView(self.tabela)]
         self.update()
 
     def Configs(self):

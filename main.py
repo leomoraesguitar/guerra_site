@@ -16,7 +16,7 @@ from equipes_gpt import LayoutEquipes as layout_equipes
 from importar import layout_Importar
 # from meuscontrolesflet2 import Display
 """
-as demais abas do menu não estão aparecendo apo´ss a primeira execução do prog - ok 
+as demais abas do menu não estão aparecendo aposs a primeira execução do prog - ok 
 a aba jogador está precisando de dois updates para carregar apois clicar em carregar - ok
 o botão carregar da aba equipes não está funcionando - ok
 no site, qundo aletro uma vila, na aba das execuç~ções não está sendo alterada
@@ -227,6 +227,7 @@ class My_Dropdown(ft.Dropdown):
         self.value = None
         self.dense = True
         self.content_padding = 7
+        self.padding = ft.Padding(0,10,0,0)
         self.scale = 0.8
     
 class My_tabela(ft.DataTable):
@@ -1139,11 +1140,11 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self, page,  equipe = None, func = None,func2 = None, jogadores = None, vilas = None ):
+    def __init__(self,   equipe = None, func = None,func2 = None, jogadores = None, vilas = None ):
         super().__init__()
         # self.vilas = vilas
         self.equipe = equipe
-        self.page = page
+        # self.page = page
         self.jogadores = jogadores
         self.vilas = vilas
         self.func = func
@@ -1160,7 +1161,7 @@ class LayoutGuerra(ft.Column):
         self.n_ciclos = ft.TextField(value = 500000, dense = True, expand=True, label = 'Num cilcos', content_padding=7, border_width=0.5, col = 6)
         # self.config_equipes = Verificar_pasta('Guerra_clash').caminho('config_guerra.json')        
         # self.scroll  = ft.ScrollMode.ADAPTIVE
-        self.height = self.page.window.height-100
+        # self.height = self.page.window.height-100
         # self.width = self.page.window.width
 
 
@@ -1195,18 +1196,39 @@ class LayoutGuerra(ft.Column):
 
         self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
         self.tabela.larguras = ('Jogador',100)
-        
+        self.tight = True
         self.controls = [
-             ft.ResponsiveRow([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+             ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
 
-                expand_loose=True, spacing=2, run_spacing=0, alignment=ft.MainAxisAlignment.CENTER, 
-                columns={"xs":6,"sm": 5,}
-                # scroll=ft.ScrollMode.AUTO
+                # expand_loose=True, 
+                spacing=2, 
+                run_spacing=0, 
+                alignment=ft.MainAxisAlignment.CENTER, 
+                vertical_alignment = ft.MainAxisAlignment.END, 
+                # columns={"xs":6,"sm": 5,}
+                scroll=ft.ScrollMode.AUTO,
+                height=30,
+                tight=True
              ),
-            ft.Row([ft.Column([self.tabela],scroll=ft.ScrollMode.ADAPTIVE,height = self.height-60,horizontal_alignment='center')],
-                    scroll=ft.ScrollMode.ADAPTIVE,
+            ft.Row(
+                [
+                    ft.Column(
+                        controls = [self.tabela],
+                        scroll=ft.ScrollMode.AUTO,
+                        expand= True,
+                        horizontal_alignment='center'
+                        # reverse = True
+                        )
+                ],
+                scroll=ft.ScrollMode.ADAPTIVE,
 
-                    )
+            ),
+            # ft.Container(expand_loose= True, bgcolor='blue', aspect_ratio=9/14),
+
+            
+                        
+        
+        
         ]
         self.alignment = 'start'
     
@@ -1880,16 +1902,24 @@ class My_tabelaC(ft.Container):
                     content = ft.Row(
                         controls = [
                                 Display(
-                                    value = self._dic[self.chaves[0]][i],opitions=self.opcoes, 
-                                    width=self.Larg(self.chaves[0]),height=20,text_size = 12, 
-                                    borda_width = 0,border_radius = 0, text_align= ft.TextAlign.CENTER, 
-                                    horizontal_alignment=ft.CrossAxisAlignment.END, bgcolor = 'white,0',
+                                    value = self._dic[self.chaves[0]][i],
+                                    opitions=self.opcoes, 
+                                    width=self.Larg(self.chaves[0]),
+                                    height=20,text_size = 12, 
+                                    borda_width = 0,
+                                    border_radius = 0, 
+                                    text_align= ft.TextAlign.CENTER, 
+                                    horizontal_alignment=ft.CrossAxisAlignment.END, 
+                                    bgcolor = 'white,0',
                                     col = 6
                                 )
-                                ]+[ft.Text(self._dic[j][i],width=self.Larg(j), text_align='center', col = 2) for j in self.chaves[1:]],
+                                ]+[ft.Text(self._dic[j][i],
+                                           width=self.Larg(j), 
+                                           text_align='center', col = 2) for j in self.chaves[1:]],
                         # columns=12,
-                        tight=True,
+                        # tight=True,
                         # expand_loose=True,
+                        
                     ),
                     bgcolor=cor
                 )
@@ -1934,18 +1964,18 @@ class My_tabelaC(ft.Container):
         self.Atualizar()
 
 
-class ClassName(ft.Column):
+class ClassName(ft.ListView):
     def __init__(self,page):
         super().__init__()
         self.page = page
         # self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
-        self.vilas = LayoutVilas(printt=print,page = self.page, func = self.Alterou)
-        self.jogadores = layout_jogadores(printt=print, page=self.page)
-        self.equipes = layout_equipes(page = page,  )
-        self.layout = LayoutGuerra(page = self.page, func = self.Attt1,func2 = self.Execucao ) 
+        self.vilas = LayoutVilas(printt=print, func = self.Alterou)
+        self.jogadores = layout_jogadores(printt=print,)
+        self.equipes = layout_equipes( )
+        self.layout = LayoutGuerra( func = self.Attt1,func2 = self.Execucao ) 
         self.saida = Saida(350,150) 
-        self.importar = layout_Importar(printt=self.saida.pprint, page = self.page, func=self.Amarzenar)
+        self.importar = layout_Importar(printt=self.saida.pprint,  func=self.Amarzenar)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
         self.janela = ft.Container( alignment = ft.Alignment(0,0))
         self.janela.content = self.layout
@@ -1975,7 +2005,7 @@ class ClassName(ft.Column):
                 ) 
                     
       
-        self.controls1 = [ft.Container(self.menu, bgcolor=ft.colors.CYAN_900),self.janela] #,self.janela
+        self.controls1 = [self.janela] #,self.janela, ft.Container(self.menu, bgcolor=ft.colors.CYAN_900),
         self.height = 500
         self.controls = [botao_atualizar]
 
@@ -2445,35 +2475,35 @@ class ClassName(ft.Column):
                     border_radius=8,
 
                 )      
-        for i in self.menu.controls:
-            if i.nome == e.control.nome:
-                i.opacity = 1
-                i.bgcolor = ft.colors.PURPLE_900
+        # for i in self.menu.controls:
+        #     if i.nome == e.control.nome:
+        #         i.opacity = 1
+        #         i.bgcolor = ft.colors.PURPLE_900
 
 
-            else:
-                i.bgcolor = ft.colors.GREY_800
-                i.opacity = 0.6
-        match e.control.content.value:
-            case 'Lista de Guerra':
+        #     else:
+        #         i.bgcolor = ft.colors.GREY_800
+        #         i.opacity = 0.6
+        # print(e.data)
+        match e.data:
+            case '0':#Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
-            case 'Vilas':                
+            case '1':#'Vilas':                
                 # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
-                self.janela.content = Caixa(self.vilas)
+                # self.janela.content = Caixa(self.vilas)
+                self.janela.content = self.vilas
           
-            case 'Jogadores':
+            case '2':#'Jogadores':
                 # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
                 self.janela.content = self.jogadores
-            case 'Lista de Guerra':
-                # self.janela.content = ft.Column([self.layout], scroll=ft.ScrollMode.ALWAYS, height=580)
-                self.janela.content = self.layout
-            case 'Equipes':
-                self.janela.content = ft.Column([self.equipes], scroll=ft.ScrollMode.ALWAYS, height=580)
-            case 'Importar':
+            case '3':#'Equipes':
+                self.janela.content = ft.ListView([self.equipes])
+                # self.janela.content = self.equipes
+            case '4':#'Importar':
                 # self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
                 self.janela.content = self.importar
-            case 'config':
+            case '5':#'config':
                 self.janela.content = self.config                                                                                               
 
         self.janela.update()
@@ -2522,7 +2552,7 @@ class ClassName(ft.Column):
 def main(page: ft.Page):
     page.title = "Guerra de Clans - 015"
     # page.window.width = 330  # Define a largura da janela como 800 pixels
-    page.window.height = 600  #    
+    # page.window.height = 600  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
     page.theme_mode = ft.ThemeMode.DARK
@@ -2530,6 +2560,30 @@ def main(page: ft.Page):
     # page.expand = True
     page.vertical_alignment = 'start'
     page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    c = ClassName(page)
+
+    page.navigation_bar = ft.CupertinoNavigationBar(
+            bgcolor= ft.colors.BLACK38,
+            inactive_color=ft.colors.GREY,
+            active_color=ft.colors.GREEN_800,
+            on_change=c.Escolher_janela,
+            destinations=[
+                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label='Lista de Guerra', data = 'Lista de Guerra'),
+                ft.NavigationBarDestination(icon=ft.icons.HOUSE, label='Vilas'),
+                ft.NavigationBarDestination(icon=ft.icons.GAMEPAD, label='Jogadores'),
+                ft.NavigationBarDestination(icon=ft.icons.JOIN_INNER, label='Equipes'),
+                ft.NavigationBarDestination(icon=ft.icons.DOWNLOAD, label="Importar"),
+                ft.NavigationBarDestination(icon=ft.icons.SETTINGS, label="config"),
+                # BotaoCT('Lista de Guerra',self.Escolher_janela,   
+                #         col = co2, bgcolor = ft.colors.GREY_800),
+                # BotaoCT('Vilas',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                # BotaoCT('Jogadores',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                # BotaoCT('Equipes',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                # BotaoCT('Importar',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),
+                # BotaoCT('config',self.Escolher_janela, col = co2, bgcolor = ft.colors.GREY_800),                
+
+            ]
+        )    
     page.theme = ft.Theme(
         visual_density = "comfortable",
         scrollbar_theme = ft.ScrollbarTheme(
@@ -2626,24 +2680,26 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 045',top=10, right=10, size=8 ))
-    c = ClassName(page)
-    def Caixa(ct):  
+    page.overlay.append(ft.Text('versão - 046',top=10, right=10, size=8 ))
+
+
+
+
+    
+    def Caixa(ct):
         return ft.Container(
-                content = ct,
-                shadow = ft.BoxShadow(
-                    blur_radius = 300,
-                    color='cyan900,0.49',
-                    blur_style = ft.ShadowBlurStyle.OUTER
-                ),
-                border= ft.border.all(1, ft.colors.CYAN_500),
-                border_radius=8,
-                alignment=ft.Alignment(0, -1),
+            content = ct,
+            shadow=ft.BoxShadow(
+                blur_radius = 300,
+                blur_style = ft.ShadowBlurStyle.OUTER,
+                color = ft.colors.CYAN
+            ),
+            border= ft.border.all(1, ft.colors.CYAN_500),
+            border_radius=8,
+            # alignment=ft.Alignment(0, 0),
+            expand = True,
 
-                # expand=False
-                # width=370
-
-            )  
+        ) 
     # page.add(ft.Row([Caixa(c)],alignment='center'))
     page.add(Caixa(c))
 

@@ -97,11 +97,11 @@ class Saida(ft.Column):
     def pprint(self, *texto):
         for i in list(texto):
             self.saidad.value += f'{i}\n'  
-        self.page.update()
+        self.update()
 
 
 
-class Jogador(ft.Row):
+class Jogador(ft.ResponsiveRow):
     def __init__(self, nome, nivel_cv, forca):
         super().__init__()
         self.peso = 0
@@ -122,14 +122,15 @@ class Jogador(ft.Row):
                 'br')
         
         # self._nome = ft.Dropdown(value = nome, options=[ft.dropdown.Option(i) for i in nomes],dense=True, content_padding=5, width=130)
-        self._nome = ft.Text(value = nome,  width=130)
+        self._nome = ft.Text(value = nome,  col = 3, text_align='start')
         # self._nivel_cv = ft.Dropdown(focused_bgcolor = None, bgcolor = None,filled = True,value = nivel_cv, options=[ft.dropdown.Option(i) for i in range(20)],dense=True, content_padding=5, width=60,  text_style = ft.TextStyle(weight = ft.FontWeight.BOLD) )
-        self._nivel_cv = ft.Text(value = nivel_cv,  width=60, )
+        self._nivel_cv = ft.Text(value = nivel_cv,  col = 1 )
         # self._forca = ft.TextField(value = forca, dense=True, content_padding=5, width=60)
-        self._forca = ft.Text(value = forca,  width=60)
+        self._forca = ft.Text(value = forca,  col = 2)
         # self._estrelas = None
         self.controls = [self._nome,self._nivel_cv, self._forca ]
-    
+        self.columns = 6
+        self.alignment = ft.MainAxisAlignment.SPACE_EVENLY
     @property
     def nome(self):
         return self._nome.value
@@ -153,35 +154,47 @@ class Jogador(ft.Row):
 
 
 class layout_jogadores(ft.Column):
-    def __init__(self, num_jogadores = 15, printt = None, page = None):
+    def __init__(self, num_jogadores = 15, printt = None, ):
         super().__init__()
-        self.page = page
+        # self.page = page
         self.spacing = 0
         self.run_spacing = 0
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.num_jogadores = ft.Dropdown(label = 'Número de Jogadores',value = num_jogadores, 
-                options=[ft.dropdown.Option(i) for i in range(5,51)],dense=True, 
-                content_padding=5, width=180, on_change=self.Chenge_num_jogadores)
+                options=[ft.dropdown.Option(i) for i in range(5,51)],dense=True, col = 8,
+                padding=ft.Padding(0,10,0,0),content_padding=5,
+                  on_change=self.Chenge_num_jogadores)
         self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=100)
-        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.Atualizar, width=105)
+        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.Atualizar, col = 4)
 
-        cp = 165+(36*int(num_jogadores))
-        if self.page is None:
-            pw = 500
-        else:
-            pw = self.page.window.height
-        if cp > pw:
-            self.cumprimento_coluna = pw - 180
-        else:
-            self.cumprimento_coluna = cp
+        # cp = 165+(36*int(num_jogadores))
+        # if self.page is None:
+        #     pw = 500
+        # else:
+        #     pw = self.page.window.height
+        # if cp > pw:
+        #     self.cumprimento_coluna = pw - 180
+        # else:
+        #     self.cumprimento_coluna = cp
 
-        self.saida = Saida()
-        self.printt = self.saida.pprint
+        # self.saida = Saida()
+        # self.printt = self.saida.pprint
 
         self.controls1= [
-            ft.Row([self.num_jogadores,self.botao_atualizar], tight=True),
+            ft.ResponsiveRow([self.num_jogadores,self.botao_atualizar], columns=12),
             ft.Text(height=0),
-            ft.Container(ft.Row([ft.Text('           Nome           '),ft.Text(' CV         '),ft.Text('forca')]),border=ft.border.all(1,'white,0.5'),width=300),
+            ft.Container(
+                content = ft.ResponsiveRow(
+                    [ft.Text('nome',col = 3),
+                     ft.Text('CV',col = 1),
+                     ft.Text('forca', col = 2)
+                     ],
+                     columns=6,
+                     alignment= ft.MainAxisAlignment.SPACE_EVENLY,
+                ),
+                border=ft.border.all(1,'white,0.5'),
+                
+            ),
        
         ]
         self.height = 500
@@ -252,7 +265,7 @@ class layout_jogadores(ft.Column):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
         except:
-            self.printt('deu erro na importação dos jogadores')
+            # self.printt('deu erro na importação dos jogadores')
             nomes = ('Cristiano',
                     'lulmor',
                     'lllll',
@@ -335,7 +348,7 @@ class layout_jogadores(ft.Column):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
             # self.controls[3].controls = self.lista_jogadores
-            self.controls = self.controls1+[ft.Column(self.lista_jogadores,width=300,height=self.cumprimento_coluna, scroll=ft.ScrollMode.AUTO),
+            self.controls = self.controls1+[ft.ListView(self.lista_jogadores),
                                         ]
             self.update()
             self.page.update()

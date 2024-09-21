@@ -140,10 +140,12 @@ class Display(ft.Container):
             border_radius = 10,
             func = None,
             on_click = None,
-            text_color = None
+            text_color = None,
+            col = None
         ): 
         super().__init__()
         self.opitions = opitions
+        self.col = col
         self.func = func
         self.on_click = on_click
         self.data = data
@@ -360,11 +362,19 @@ class Resize:
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
 
-class Saida(ft.Column):
-    def __init__(self, width=300,height=100):
+class Saida(ft.Container):
+    def __init__(self, width=300,height=100, col = None):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
-        self.controls.append(ft.Container(ft.ListView([self.saidad], auto_scroll=True, width=width,height=height), bgcolor='white,0.03'))
+         
+        self.bgcolor='white,0.03' 
+        self.col = col  
+
+        self.content = ft.ListView([self.saidad],
+                                   auto_scroll=True,
+                                   col = self.col,
+                                   expand = True,
+                                   )
 
     def pprint(self, *texto):
         for i in texto:
@@ -374,23 +384,33 @@ class Saida(ft.Column):
         except:
             pass
 
-class Vila(ft.Row):
-    def __init__(self, nome=None, nivel_cv=None, forca=None, cv_exposto=None, equipe=None, metodo=2, mapa=None, func=None):
+class Vila(ft.Container):
+    def __init__(self, nome=None, nivel_cv=None, forca=None, cv_exposto=None, equipe=None, metodo=2, mapa=None, func=None, bgcolor = None):
         super().__init__()
         self.func = func
+        self.bgcolor  = bgcolor
         # self._nome = ft.Dropdown(value=nome, options=[ft.dropdown.Option(i) for i in range(51)], dense=True, content_padding=5, width=60, on_change=self.Chenge_nome)
-        self._nome = Display(value=nome, opitions=[i for i in range(51)],borda_width=0, text_size = 12, width=60, height=20,border_radius= 2,on_click=self.Chenge_nome)
+        self._nome = Display(value=nome, opitions=[i for i in range(51)],borda_width=0, text_size = 12, 
+                             width=60, height=20,border_radius= 2,on_click=self.Chenge_nome,col = 2, bgcolor = 'white,0.0')
         # self.cv = ft.Dropdown(focused_bgcolor=None, bgcolor=None, filled=True, value=nivel_cv, options=[ft.dropdown.Option(i) for i in range(20)], dense=True, content_padding=5, width=60, on_change=self.cor, text_style=ft.TextStyle(weight=ft.FontWeight.BOLD))
         self.cor2(str(nivel_cv))
-        self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, 
-                          bgcolor = self.corCV, borda_width=0, border_radius= 2,text_size = 15, width=50, height=20,func=self.cor)
+        self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, col = 2,
+                          bgcolor = self.corCV, borda_width=0, border_radius= 8,text_size = 12, width=50, height=18,func=self.cor)
         # self.cv.bgcolor = 'red'
         # self.exposicao = ft.Dropdown(value=cv_exposto, options=[ft.dropdown.Option(i) for i in range(2)], dense=True, content_padding=5, width=50, on_change=self.change_exposicao)
-        self.exposicao = Display(value=cv_exposto, opitions=[0,1], borda_width=0, border_radius= 2,text_size = 12, width=60, height=20, on_click=self.change_exposicao)
+        self.exposicao = Display(value=cv_exposto, opitions=[0,1], borda_width=0, border_radius= 2,text_size = 12, width=60, height=20, 
+                                 on_click=self.change_exposicao,col = 2, bgcolor = 'white,0.0')
+        # self.alignment = ft.MainAxisAlignment.SPACE_EVENLY
+        
         self.controls = [self._nome, self.cv, self.exposicao]
-        self.tight = True
-        self.spacing = 0
-        self.run_spacing = 0
+        self.content = ft.ResponsiveRow(
+            controls = self.controls, 
+            alignment = ft.MainAxisAlignment.SPACE_EVENLY,
+            spacing = 0,
+            run_spacing = 0,
+            columns=6
+        )
+        # self.tight = True
 
         self.nome = nome
         self._nivel_cv = nivel_cv
@@ -675,55 +695,91 @@ class Vila(ft.Row):
 
 
 class LayoutVilas(ft.ResponsiveRow):
-    def __init__(self, num_vilas=15, printt=None, page=None, func = None):
+    def __init__(self, num_vilas=15, printt=None,  func = None):
         super().__init__()
-        self.page = page
+        # self.page = page
         self.func = func
         self.spacing = 0
         self.run_spacing = 0
         # self.width = 300
         self.columns = 12
-        self.vertical_alignment = 'start'
-        self.alignment = ft.MainAxisAlignment.SPACE_BETWEEN
+        self.vertical_alignment = ft.MainAxisAlignment.START
+        self.alignment = ft.MainAxisAlignment.SPACE_EVENLY
         self.num_vilas = ft.Dropdown(label='Número de Vilas', value=num_vilas, 
                                      options=[ft.dropdown.Option(i) for i in range(51)], 
                                      dense=True, content_padding=12,
-                                     padding= ft.Padding(0,20,0,0),width=110,
+                                     padding= ft.Padding(0,5,0,0),
+                                    #  width=110,
                                      border_width=1, 
                                      on_change=self.Chenge_num_vilas)
-        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar, width=115, scale=0.8)
-        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, width=115, scale=0.8)
-        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas, width=115, scale=0.8)
-        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, width=115, scale=0.8)
+        self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar,  scale=0.8)
+        self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, scale=0.8)
+        self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas,  scale=0.8)
+        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, scale=0.8)
         self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', 
                                                      on_click=self.CarregarVilas, 
-                                                     width=300, 
+                                                    #  width=300, 
                                                      expand_loose=True,
                                                      scale=0.8)
-        self.saida = Saida(100,200)
+        self.saida = Saida(100,200, 8)
 
 
-        self.col_A = ft.Column([
+        self.col_A = ft.ListView([
 
             self.num_vilas,
             self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar, 
             
-        ],col = 4, horizontal_alignment='start')
+            ],col = {'xs':8, 'sm':9, 'md':1}, 
+            # horizontal_alignment='start'
+        )
         self.col_A.controls.append(self.saida)
 
-        self.col_B = ft.Column(spacing=0, run_spacing=0, col = 8, horizontal_alignment='end')
-        if self.page is None:
-            pw = 450
-        else:
-            pw = self.page.window.height
-        self.col_B.controls.append(ft.Container(ft.Row([ft.Text('  Nome    '), ft.Text(' CV  '), ft.Text('Exposição')]), border=ft.border.all(1, 'white,0.5'), width=180))
-        cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
-        self.col_B.controls.append(ft.Container(ft.Column(height=cumprimento_coluna, 
-                                                          scroll=ft.ScrollMode.ADAPTIVE), 
-                                                          border=ft.border.all(1, 'white,0.5'),
-                                                            width=180,
-                                                            border_radius=8
-                                                            ))
+        c1 = self.columns-self.col_A.col['xs']
+        c2 = self.columns-self.col_A.col['sm']
+        c3 = self.columns-self.col_A.col['md']
+        self.col_B = ft.ListView(
+            spacing=0, 
+            # run_spacing=0, 
+            col =  {'xs':c1, 'sm':c2, 'md':c3}, 
+            # horizontal_alignment='end'
+        )
+        # if self.page is None:
+        #     pw = 450
+        # else:
+        #     pw = self.page.window.height
+        self.col_B.controls.append(
+            ft.Container(
+                ft.ResponsiveRow(
+                    [ft.Text('  Nome    ', col = 2, size = 10, text_align='center', weight='BOLD'), 
+                     ft.Text(' CV  ', col = 2, size = 10, text_align='center', weight='BOLD'), 
+                     ft.Text('Exposição', col = 2, size = 10, text_align='center', weight='BOLD')],
+                    columns = 6,
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY
+                ), 
+                border=ft.Border(
+                    top = ft.BorderSide(1, 'white,0.5'),
+                    left = ft.BorderSide(1, 'white,0.5'),
+                    bottom = ft.BorderSide(1, 'white,0.5'),
+                    right = ft.BorderSide(1, 'white,0.5'),
+                ), 
+                # width=180,
+                
+            )
+        )
+        # cumprimento_coluna = min(pw-160, 165 + (36 * int(num_vilas)))
+        self.col_B.controls.append(ft.Container(ft.ListView(
+            # height=cumprimento_coluna, 
+            # scroll=ft.ScrollMode.ADAPTIVE
+            ), 
+            border=ft.Border(
+                bottom = ft.BorderSide(1, 'white,0.5'),
+                left = ft.BorderSide(1, 'white,0.5'),
+                top = None,
+                right = ft.BorderSide(1, 'white,0.5'),
+            ), 
+            # width=180,
+            border_radius=8
+            ))
         self.config_vilas = Verificar_pasta('Guerra_clash').caminho('vilas_config.json')
         # self.lista_vilas = self.inicializar_vilas()
         # sleep(5)
@@ -750,8 +806,15 @@ class LayoutVilas(ft.ResponsiveRow):
         try:
             self.arquiv = self.page.client_storage.get('vilas')
             # self.arquiv = self.Ler_json(self.config_vilas)
-            for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
-                lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))        
+            
+            for nome, nivel_cv, cv_exposto , c in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto'], range(60)):
+                cor  = ft.colors.GREY_900 if c%2 == 0 else ft.colors.GREY_500
+                lista_vilas.append(
+                   
+                        Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar,bgcolor=cor),
+                  
+                  
+                    )        
         except:
             lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
         self.lista_vilas = lista_vilas
@@ -762,8 +825,15 @@ class LayoutVilas(ft.ResponsiveRow):
         if isinstance(self.arquiv, dict):
             lista_vilas = []
 
-            for nome, nivel_cv, cv_exposto in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto']):
-                    lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+            for nome, nivel_cv, cv_exposto, c in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto'], range(60)):
+                    # lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+                cor  = ft.colors.GREY_900 if c%2 == 0 else ft.colors.GREY_800
+                lista_vilas.append(
+            
+                        Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar, bgcolor=cor),
+                        
+                   
+                    )                    
             self.lista_vilas = lista_vilas
             self.col_B.controls[1].content.controls = self.lista_vilas        
             self.update()

@@ -92,10 +92,10 @@ class Saida(ft.Column):
         self.page.update()
 
 class LayoutEquipes(ft.Column):
-    def __init__(self, printt=None, page=None):
+    def __init__(self, printt=None):
         super().__init__()
         self.printt = printt
-        self.page = page
+        # self.page = page
         cp = 5
         wd = 50
         self.botao_equipes = ft.ElevatedButton('Carregar Equipes', on_click=self.CarregarEquipes, width=300, scale=0.8)
