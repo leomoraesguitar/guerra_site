@@ -1181,11 +1181,11 @@ class LayoutGuerra(ft.Column):
         def Colu(x = 4):
             return {"xs":x+1,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'rodar',)
-        parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'parar' )
-        gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'mapa')
-        resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1.5), data = 'resultado2')
-        resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'espelho')
+        self.rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'rodar',)
+        self.parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'parar' )
+        self.gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'mapa')
+        self.resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1.5), data = 'resultado2')
+        self.resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'espelho')
         botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.GREEN_900,text_size=16,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
@@ -1198,18 +1198,18 @@ class LayoutGuerra(ft.Column):
         self.tabela.larguras = ('Jogador',100)
         self.tight = True
         self.controls = [
-             ft.Row([rodar,parar, gerar_mapa, resultado2,resultado_espelho], 
+            #  ft.Row([self.rodar,self.parar, self.gerar_mapa, self.resultado2,self.resultado_espelho], 
 
-                # expand_loose=True, 
-                spacing=2, 
-                run_spacing=0, 
-                alignment=ft.MainAxisAlignment.CENTER, 
-                vertical_alignment = ft.MainAxisAlignment.END, 
-                # columns={"xs":6,"sm": 5,}
-                scroll=ft.ScrollMode.AUTO,
-                height=30,
-                tight=True
-             ),
+            #     # expand_loose=True, 
+            #     spacing=2, 
+            #     run_spacing=0, 
+            #     alignment=ft.MainAxisAlignment.CENTER, 
+            #     vertical_alignment = ft.MainAxisAlignment.END, 
+            #     # columns={"xs":6,"sm": 5,}
+            #     scroll=ft.ScrollMode.AUTO,
+            #     height=30,
+            #     tight=True
+            #  ),
             ft.Row(
                 [
                     ft.Column(
@@ -2250,6 +2250,14 @@ class ClassName(ft.ListView):
         self.layout.atualizou = True
 
         self.controls = self.controls1
+        self.page.appbar.actions = [
+                        self.layout.rodar, 
+                        self.layout.parar,
+                        self.layout.gerar_mapa,
+                        self.layout.resultado2,
+                        self.layout.resultado_espelho, 
+        ] 
+        self.page.update()       
         self.update()
 
     async def Attt1(self,e):
@@ -2489,6 +2497,7 @@ class ClassName(ft.ListView):
             case '0':#Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
+
             case '1':#'Vilas':                
                 # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
                 # self.janela.content = Caixa(self.vilas)
@@ -2584,6 +2593,30 @@ def main(page: ft.Page):
 
             ]
         )    
+    page.appbar = ft.AppBar(
+        actions = [],
+        title=ft.Text(
+            value = 'Guerra de Clans', 
+            weight='BOLD',
+            text_align='center',
+            size = 15, 
+            color=ft.colors.GREEN_600,
+            style=ft.TextStyle(
+                shadow = ft.BoxShadow(
+                    blur_radius = 300,
+
+                    color = ft.colors.WHITE
+                ),                
+            )
+            ),
+        shadow_color=ft.colors.BLUE,
+        elevation=8,
+        toolbar_height = 30,
+        bgcolor=ft.colors.BLACK38,
+        automatically_imply_leading=False,
+    )     
+    
+    
     page.theme = ft.Theme(
         visual_density = "comfortable",
         scrollbar_theme = ft.ScrollbarTheme(
@@ -2680,7 +2713,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 046',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 047',top=10, right=10, size=8 ))
 
 
 
