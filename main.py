@@ -227,7 +227,7 @@ class BotaoCT(ft.Container):
         else:
             self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size,no_wrap=True )
         self.border_radius = 12 
-        self.margin = ft.Margin(4,1,4,1)   
+        self.margin = ft.Margin(8,1,8,1)   
         self.alignment = ft.Alignment(0,0) 
         self.ink = True                          
 
@@ -1070,6 +1070,8 @@ class Guerra2:
             print('Você ainda não rodou o programa (Rodar)')
 
     def ResultadoEspelho(self):
+        self.lista_jogadores = self.OrdenarListadeClasses(
+            self.lista_jogadores, 'forca', decrecente=True)        
         if len(self.lista_jogadores) == len(self.lista_vilas):
             mapa = self.GerarMapaDeEstrelas()
             # mapa.index = mapa['Jogador']
@@ -1219,7 +1221,8 @@ class LayoutGuerra(ft.Column):
         
         dic = {'Jogador':list(range(15)), 'Vila':list(range(15)), 'Estrelas': list(range(15))}
 
-        self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
+        # self.tabela = My_tabelaC(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
+        self.tabela = My_tabelaC2(dic, larguras={'Jogador':100, 'Vilas':35, 'Estrelas': 60, 'CV':40})
         self.tabela.larguras = ('Jogador',100)
         self.tight = True
         self.controls = [
@@ -1249,12 +1252,13 @@ class LayoutGuerra(ft.Column):
 
             ),
             # ft.Container(expand_loose= True, bgcolor='blue', aspect_ratio=9/14),
-
             
                         
         
         
         ]
+        self.controls = [self.tabela]
+        
         self.alignment = 'start'
     
 
@@ -2011,6 +2015,164 @@ class My_tabelaC(ft.Container):
         self.Linhas()
         self.Atualizar()
 
+    
+class My_tabelaC2(ft.ListView):
+    def __init__(self, dic,# dicionário
+                 larguras = None, #dict
+                 largura_default = 60
+                    ):
+        super().__init__()
+        # self.spacing = 5
+        # self.run_spacing = 5
+        self._dic = dic 
+        self.shadow = ft.BoxShadow(blur_radius = 300,color='cyan900,0.49')
+        self.border_radius = 8
+        self.visible = True 
+        self.largura_default = largura_default
+        self._larguras = larguras
+        self.spacing = 8
+        if self._larguras is None:
+            self._larguras = {}
+
+        self.Iniciar()     
+        self.qtd_colunas = len(self.chaves)
+        self.col1 = 1 if self.qtd_colunas > 6 else 2
+        if self.col1 == 2:
+            self.qtd_colunas += 1
+        self.Linhas()
+        self.border=ft.border.all(1,'white,0.5')
+
+    def Larg(self,coluna):
+        if not self._larguras is None:
+            return  self._larguras.get(coluna,self.largura_default)
+        else:
+            return self.largura_default
+
+    def Iniciar(self):
+        self.chaves = list(self._dic.keys())
+        # if self._larguras is None:
+        #     self._larguras = {i:60 for i in self.chaves}
+        self.opcoes = self._dic[self.chaves[0]]
+
+
+    def Colunas(self):
+        if self.qtd_colunas > 6:
+            self.controls = [ft.Container(ft.Row([ft.Text(self.chaves[0], width=self.Larg(self.chaves[0]), text_align='end', size= 15,weight='BOLD')]+
+                        [ft.Text(i, width=self.Larg(i), text_align='center', weight='BOLD', size = 15) for i in self.chaves[1:]], 
+                        tight=False, ),bgcolor='white,0.3')]
+        else:
+            self.controls = [ft.Container(ft.ResponsiveRow(
+                [ft.Text(self.chaves[0],  text_align='end', weight='BOLD', selectable = True, col = self.col1)]+
+                [ft.Text(i, width=self.Larg(i), text_align='center', weight='BOLD',selectable = True, col = 1) for i in self.chaves[1:]],
+
+                columns=self.qtd_colunas,
+                alignment=ft.MainAxisAlignment.SPACE_AROUND
+                ),bgcolor='white,0.3')
+            ]
+        # print(len(self.chaves))
+
+            
+        
+    def Linhas(self):
+        self.qtd_colunas = len(self.chaves)
+        self.col1 = 1
+
+        def Tipo_linha(i):
+            if self.qtd_colunas < 6:
+                return ft.ResponsiveRow(
+                        [Display(
+                            value = self._dic[self.chaves[0]][i],
+                            opitions=self.opcoes, 
+                            # width=self.Larg(self.chaves[0]),
+                            height=20,
+                            text_size = 15, 
+                            borda_width = 0,
+                            border_radius = 0, 
+                            text_align= ft.TextAlign.CENTER, 
+                            horizontal_alignment=ft.CrossAxisAlignment.END, 
+                            bgcolor = 'white,0',
+                            col = self.col1
+                        )
+                        ]+[ft.Text(self._dic[j][i],
+                                    selectable = True,
+                                    text_align='center',size = 15, col = 1) for j in self.chaves[1:]],
+                    columns=self.qtd_colunas,
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY                                
+                    )
+            else:
+                return ft.Row(
+                        [Display(
+                            value = self._dic[self.chaves[0]][i],
+                            opitions=self.opcoes, 
+                            width=self.Larg(self.chaves[0]),
+                            height=20,
+                            text_size = 15, 
+                            borda_width = 0,
+                            border_radius = 0, 
+                            text_align= ft.TextAlign.CENTER, 
+                            horizontal_alignment=ft.CrossAxisAlignment.END, 
+                            bgcolor = 'white,0',
+                            # col = self.col1
+                        )
+                        ]+[ft.Text(self._dic[j][i],
+                                    selectable = True,
+                                    text_align='center',width=self.Larg(j),size = 15) for j in self.chaves[1:]],
+                    # columns=self.qtd_colunas,
+                    alignment=ft.MainAxisAlignment.START                                
+                    )                
+
+        self.Colunas()
+
+        for i, k in enumerate(self._dic[self.chaves[0]]):     
+            cor  = 'black' if i%2 == 0 else 'cyan900,0.49'
+            self.controls.append(
+                ft.Container(
+                    content = Tipo_linha(i),
+                    bgcolor=cor
+                )
+
+            )
+          
+        # self.controls = [ft.Row(self.controls,scroll=ft.ScrollMode.AUTO, width=300)]
+        # print(self.controls)
+        # self.content = ft.Column(self.controls,spacing=2, expand=True)
+        
+            
+    def Atualizar(self):
+        try:
+            self.update()
+        except:
+            pass
+
+
+    @property
+    def dic(self):
+        return self._dic
+    
+    @dic.setter
+    def dic(self, dic):
+        if isinstance(dic, dict):
+            self._dic = dic
+            # self._larguras = None
+            self.Iniciar()
+            self.Linhas()
+        self.Atualizar()
+
+    @property
+    def larguras(self):
+        return self._larguras
+    
+    @larguras.setter
+    def larguras(self,  valor = ('chave','valor')):        
+        if valor[0] in self.chaves and isinstance(valor[1], int):
+            # self.Iniciar()
+            self._larguras[valor[0]] = valor[1]
+            # print('aceitou')
+        else:
+            print('chave ou valor inválido')
+        self.Linhas()
+        self.Atualizar()
+
 
 class ClassName(ft.ListView):
     def __init__(self,page, pprint = None):
@@ -2104,7 +2266,9 @@ class ClassName(ft.ListView):
                     self.layout.tabela.visible = True
                     dic = self.g2.GerarMapaDeEstrelas()
                     self.layout.tabela.dic = dic
-                    self.layout.tabela.larguras= (list(dic.keys())[0],80)
+                    self.layout.tabela.larguras= (list(dic.keys())[0],100)
+
+
 
                     for i in list(dic.keys())[1:]:
                         self.layout.tabela.larguras= (i,20)
@@ -2144,14 +2308,22 @@ class ClassName(ft.ListView):
                     self.layout.tabela.dic = self.g2.dic
                     self.layout.tabela.larguras= ('Jogador',100)
                     self.update()
-
-                if self.g2 == None:
+                if hasattr(self, 'g2'):
+                    if self.g2 == None:
+                        self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
+                            arq_configuracoes='equipes', page = self.page,
+                            listavilas=listavilas,
+                            listajogadores=self.jogadores.lista_jogadores,
+                            equipe=self.equipes.arquiv,
+                            )
+                else:
                     self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
                         listajogadores=self.jogadores.lista_jogadores,
                         equipe=self.equipes.arquiv,
-                        )
+                        )                    
+
 
                 pp()
 
@@ -2767,7 +2939,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 048',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 049',bottom=10, right=10, size=8 ))
 
 
 
