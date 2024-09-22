@@ -189,9 +189,10 @@ class Display(ft.Container):
         self.Atualizar()
 
 class BotaoCT(ft.Container):
-    def __init__(self,nome,on_click = None, bgcolor = None, scale = None, text_size = 16, col = None, data = None , opacity = 1):
+    def __init__(self,nome, on_click = None, bgcolor = None, scale = None, text_size = 16, col = None, data = None , opacity = 1, icone = None,):
         super().__init__()
         self.on_click=on_click
+        self.icone = icone
         self.border_radius = 0
         self.bgcolor_og = bgcolor
         self.data = data
@@ -201,12 +202,30 @@ class BotaoCT(ft.Container):
         self.text_size = text_size
         self.expand_loose = True
         self.opacity = opacity
-        self.padding = ft.Padding(12,2,12,2)
+        self.padding = ft.Padding(0,0,0,0)
         # self.border=ft.Border(right=ft.BorderSide(2,'white,0.4'))
         self.nome = nome
         # self.content = ft.Row([ft.VerticalDivider(color='blue', width=2), ft.Text(nome, weight='BOLD', text_align='center'),ft.VerticalDivider(color='blue', width=2),],alignment='center')
-        self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size,no_wrap=True )
+        
         self.on_hover = self.Passoumouse 
+        if self.icone:
+            self.content = ft.Column(
+                [
+                    ft.Icon(name = icone ),
+                    ft.Text(nome, text_align='center', size = 10,no_wrap=True ),
+                ],
+                tight=True,
+                alignment=ft.MainAxisAlignment.START,
+                horizontal_alignment= ft.CrossAxisAlignment.CENTER,
+                spacing=0,
+                run_spacing=0
+            )
+            self.bgcolor = None
+            self.on_hover = None
+
+
+        else:
+            self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size,no_wrap=True )
         self.border_radius = 12 
         self.margin = ft.Margin(4,1,4,1)   
         self.alignment = ft.Alignment(0,0) 
@@ -1140,9 +1159,10 @@ class Guerra2:
             return default or {}
        
 class LayoutGuerra(ft.Column):
-    def __init__(self,   equipe = None, func = None,func2 = None, jogadores = None, vilas = None ):
+    def __init__(self,   equipe = None, func = None,func2 = None, jogadores = None, vilas = None,printt=None):
         super().__init__()
         # self.vilas = vilas
+        self.printt=printt
         self.equipe = equipe
         # self.page = page
         self.jogadores = jogadores
@@ -1181,11 +1201,16 @@ class LayoutGuerra(ft.Column):
         def Colu(x = 4):
             return {"xs":x+1,"sm": x, "md": x, "lg": x, "xl": x,"xxl": x}        
 
-        self.rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'rodar',)
-        self.parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'parar' )
-        self.gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(0.75),data = 'mapa')
-        self.resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1.5), data = 'resultado2')
-        self.resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, col = Colu(1), data = 'espelho')
+        self.rodar = BotaoCT('Rodar', self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, 
+                             col = Colu(1), data = 'rodar', icone=ft.icons.DIRECTIONS_RUN_OUTLINED)
+        self.parar =BotaoCT('parar', on_click = self.Parar, bgcolor=ft.colors.GREEN_900,text_size=16, 
+                            col = Colu(0.75),data = 'parar',icone=ft.icons.STOP_CIRCLE_ROUNDED )
+        self.gerar_mapa =BotaoCT('mapa',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, 
+                                 col = Colu(0.75),data = 'mapa',icone=ft.icons.MAPS_UGC)
+        self.resultado2 =BotaoCT('resultado2',on_click = self.Acoes, bgcolor=ft.colors.GREEN_900,text_size=16, 
+                                 col = Colu(1.5), data = 'resultado2',icone=ft.icons.ACCOUNT_BALANCE_WALLET_ROUNDED)
+        self.resultado_espelho = BotaoCT('espelho',on_click = self.Acoes,bgcolor=ft.colors.GREEN_900,text_size=16, 
+                                         col = Colu(1), data = 'espelho',icone=ft.icons.AIRLINES)
         botao_atualizar = BotaoCT('Atualizar', on_click=self.ArmazenarDados,bgcolor=ft.colors.GREEN_900,text_size=16,  col = Colu(1))
 
         copiar = ft.IconButton(icon = ft.icons.COPY, tooltip = 'copiar tabela para área de transferência', on_click= copiar_areaT)
@@ -1527,7 +1552,7 @@ class LayoutGuerra(ft.Column):
 
 
 
-            print('iniciando ...')
+            self.printt('iniciando ...1')
             # if not self.lista_vilas:
             self.g2 = Guerra2(metodo=metodo,  fase=self.fase,
                         arq_configuracoes='equipes', page = self.page,
@@ -1807,7 +1832,7 @@ class Resize:
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
 
-class Saida(ft.Column):
+class Saida2(ft.Column):
     def __init__(self, width=300,height=100):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
@@ -1821,6 +1846,29 @@ class Saida(ft.Column):
             self.page.update()
         except:
             pass
+
+
+class Saida:
+    def __init__(self,  page = None):
+        self.page = page
+        self.snac = ft.SnackBar(
+                    content = ft.Text('', selectable=True, color=ft.colors.BROWN_100),
+                    open=True,
+                    bgcolor=ft.colors.GREY_900,
+                )
+ 
+    
+    def pprint(self, *texto):
+        for i in list(texto):
+            self.snac.content.value = f'{i}'
+            self.page.open(
+                self.snac
+            )            
+        try:
+            self.page.update()
+        except:
+            pass
+
 
 class Tabe(ft.Tabs):
     def __init__(self,  funcao = None, *controls):
@@ -1965,18 +2013,19 @@ class My_tabelaC(ft.Container):
 
 
 class ClassName(ft.ListView):
-    def __init__(self,page):
+    def __init__(self,page, pprint = None):
         super().__init__()
         self.page = page
+        self.pprint = pprint
         # self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
-        self.vilas = LayoutVilas(printt=print, func = self.Alterou)
-        self.jogadores = layout_jogadores(printt=print,)
+        self.vilas = LayoutVilas(printt=self.pprint, func = self.Alterou)
+        self.jogadores = layout_jogadores(printt=print)
         self.equipes = layout_equipes( )
-        self.layout = LayoutGuerra( func = self.Attt1,func2 = self.Execucao ) 
-        self.saida = Saida(350,150) 
-        self.importar = layout_Importar(printt=self.saida.pprint,  func=self.Amarzenar)
-        self.config = ft.Column([ self.layout.Config(),self.importar.Configs(),self.saida ]) #,                                          
+        self.layout = LayoutGuerra( func = self.Attt1,func2 = self.Execucao, printt=self.pprint) 
+        # self.saida = Saida(350,150) 
+        self.importar = layout_Importar(printt=print,  func=self.Amarzenar)
+        self.config = ft.Column([ self.layout.Config(),self.importar.Configs() ]) #,                                          
         self.janela = ft.Container( alignment = ft.Alignment(0,0))
         self.janela.content = self.layout
         self.spacing = 3
@@ -2029,7 +2078,7 @@ class ClassName(ft.ListView):
 
         match acao:
             case 'rodar':
-                print('iniciando ...')
+                self.pprint('iniciando ...')
                 self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
                         arq_configuracoes='equipes', page = self.page,
                         listavilas=listavilas,
@@ -2077,7 +2126,7 @@ class ClassName(ft.ListView):
                         self.layout.tabela.larguras= ('Jogador',100)
                         self.update()
                     else:
-                        print('Você ainda não rodou o programa, usando metódo 2')
+                        self.pprint('Você ainda não rodou o programa, usando metódo 2')
 
                 if self.g2 == None:
                     self.g2 = Guerra2(metodo=metodo,  fase=self.layout.fase,
@@ -2497,6 +2546,7 @@ class ClassName(ft.ListView):
             case '0':#Lista de Guerra':
                 # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
                 self.janela.content = self.layout
+                # self.pprint('meu ovo')
 
             case '1':#'Vilas':                
                 # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
@@ -2569,7 +2619,9 @@ def main(page: ft.Page):
     # page.expand = True
     page.vertical_alignment = 'start'
     page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-    c = ClassName(page)
+    saida = Saida(page)
+    # print = saida.pprint
+    c = ClassName(page, saida.pprint)
 
     page.navigation_bar = ft.CupertinoNavigationBar(
             bgcolor= ft.colors.BLACK38,
@@ -2593,6 +2645,8 @@ def main(page: ft.Page):
 
             ]
         )    
+    
+    
     page.appbar = ft.AppBar(
         actions = [],
         title=ft.Text(
@@ -2611,7 +2665,7 @@ def main(page: ft.Page):
             ),
         shadow_color=ft.colors.BLUE,
         elevation=8,
-        toolbar_height = 30,
+        toolbar_height = 50,
         bgcolor=ft.colors.BLACK38,
         automatically_imply_leading=False,
     )     
@@ -2713,7 +2767,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 047',top=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 048',top=10, right=10, size=8 ))
 
 
 
@@ -2735,6 +2789,7 @@ def main(page: ft.Page):
         ) 
     # page.add(ft.Row([Caixa(c)],alignment='center'))
     page.add(Caixa(c))
+
 
 
 
