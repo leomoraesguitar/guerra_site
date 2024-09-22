@@ -206,6 +206,18 @@ class Display(ft.Container):
             valor = round(e.control.text,1)
         else:
            valor = e.control.text 
+        colors = {
+            '16': 'red',
+            '15': '#ff9900',
+            '14': '#ffd966',
+            '13': '#93c47d',
+            '12': '#ea9999',
+            '11': '#ffff00',
+            '10': '#d9ead3',
+            '9': '#c9daf8',
+            '8': '#d9d9d9',
+        }   
+        # self.content.content.controls[0].color =  colors.get(valor, 'white')        
         self.content.content.controls[0].value = valor
         self._value = valor
         if not self.func is None:
@@ -230,6 +242,7 @@ class Display(ft.Container):
         try:
             self.update()
         except:
+            print('erou')
             pass
 
     @value.setter
@@ -266,7 +279,8 @@ class Display(ft.Container):
 
     @text_color.setter
     def text_color(self, cor):
-        self._text_color = cor  
+        self._text_color = cor 
+        print(cor) 
         colors = {
             '16': 'red',
             '15': '#ff9900',
@@ -284,7 +298,7 @@ class Display(ft.Container):
             items=self.opitions,
             menu_position=ft.PopupMenuPosition.UNDER,        
         )
-         
+        # self.content.content.controls[0].update()   
         self.Atualizar()
 
 class Verificar_pasta:
@@ -391,7 +405,7 @@ class Vila(ft.Container):
         self.bgcolor  = bgcolor
         # self._nome = ft.Dropdown(value=nome, options=[ft.dropdown.Option(i) for i in range(51)], dense=True, content_padding=5, width=60, on_change=self.Chenge_nome)
         self._nome = Display(value=nome, opitions=[i for i in range(51)],borda_width=0, text_size = 12, 
-                             width=60, height=20,border_radius= 2,on_click=self.Chenge_nome,col = 2, bgcolor = 'white,0.0')
+                             width=60, height=20,border_radius= 2,on_click=self.Chenge_nome,col = 2, bgcolor = ft.colors.TRANSPARENT)
         # self.cv = ft.Dropdown(focused_bgcolor=None, bgcolor=None, filled=True, value=nivel_cv, options=[ft.dropdown.Option(i) for i in range(20)], dense=True, content_padding=5, width=60, on_change=self.cor, text_style=ft.TextStyle(weight=ft.FontWeight.BOLD))
         self.cor2(str(nivel_cv))
         self.cv = Display(value=nivel_cv, opitions=[i for i in range(7,20)], text_color = self.corTextoCV, col = 2,
@@ -399,7 +413,7 @@ class Vila(ft.Container):
         # self.cv.bgcolor = 'red'
         # self.exposicao = ft.Dropdown(value=cv_exposto, options=[ft.dropdown.Option(i) for i in range(2)], dense=True, content_padding=5, width=50, on_change=self.change_exposicao)
         self.exposicao = Display(value=cv_exposto, opitions=[0,1], borda_width=0, border_radius= 2,text_size = 12, width=60, height=20, 
-                                 on_click=self.change_exposicao,col = 2, bgcolor = 'white,0.0')
+                                 on_click=self.change_exposicao,col = 2, bgcolor = ft.colors.TRANSPARENT)
         # self.alignment = ft.MainAxisAlignment.SPACE_EVENLY
         
         self.controls = [self._nome, self.cv, self.exposicao]
@@ -667,6 +681,7 @@ class Vila(ft.Container):
             self.corTextoCV = None
 
     def cor3(self, cv):
+        # print(cv)
         colors = {
             '16': 'red',
             '15': '#ff9900',
@@ -695,9 +710,9 @@ class Vila(ft.Container):
 
 
 class LayoutVilas(ft.ResponsiveRow):
-    def __init__(self, num_vilas=15, printt=None,  func = None):
+    def __init__(self, num_vilas=15, printt=None,  func = None, page = None):
         super().__init__()
-        # self.page = page
+        self.page = page
         self.func = func
         self.spacing = 0
         self.run_spacing = 0
@@ -729,7 +744,7 @@ class LayoutVilas(ft.ResponsiveRow):
             self.num_vilas,
             self.botao_salvar,self.botao_zerar,self.botao_ordenar,self.botao_atualizar, 
             
-            ],col = {'xs':8, 'sm':9, 'md':1}, 
+            ],col = {'xs':8, 'sm':9, 'md':7}, 
             # horizontal_alignment='start'
         )
         self.col_A.controls.append(self.saida)
@@ -770,6 +785,7 @@ class LayoutVilas(ft.ResponsiveRow):
         self.col_B.controls.append(ft.Container(ft.ListView(
             # height=cumprimento_coluna, 
             # scroll=ft.ScrollMode.ADAPTIVE
+            spacing=8
             ), 
             border=ft.Border(
                 bottom = ft.BorderSide(1, 'white,0.5'),
@@ -808,7 +824,7 @@ class LayoutVilas(ft.ResponsiveRow):
             # self.arquiv = self.Ler_json(self.config_vilas)
             
             for nome, nivel_cv, cv_exposto , c in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto'], range(60)):
-                cor  = ft.colors.GREY_900 if c%2 == 0 else ft.colors.GREY_500
+                cor  = ft.colors.TRANSPARENT if c%2 == 0 else ft.colors.GREY_500
                 lista_vilas.append(
                    
                         Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar,bgcolor=cor),
@@ -827,7 +843,7 @@ class LayoutVilas(ft.ResponsiveRow):
 
             for nome, nivel_cv, cv_exposto, c in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto'], range(60)):
                     # lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
-                cor  = ft.colors.GREY_900 if c%2 == 0 else ft.colors.GREY_800
+                cor  = ft.colors.TRANSPARENT if c%2 == 0 else ft.colors.GREY_800
                 lista_vilas.append(
             
                         Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar, bgcolor=cor),

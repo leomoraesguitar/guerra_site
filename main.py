@@ -2027,7 +2027,7 @@ class My_tabelaC2(ft.ListView):
         self._dic = dic 
         self.shadow = ft.BoxShadow(blur_radius = 300,color='cyan900,0.49')
         self.border_radius = 8
-        self.visible = True 
+        self.visible = False 
         self.largura_default = largura_default
         self._larguras = larguras
         self.spacing = 8
@@ -2035,10 +2035,10 @@ class My_tabelaC2(ft.ListView):
             self._larguras = {}
 
         self.Iniciar()     
-        self.qtd_colunas = len(self.chaves)
-        self.col1 = 1 if self.qtd_colunas > 6 else 2
-        if self.col1 == 2:
-            self.qtd_colunas += 1
+        # self.qtd_colunas = len(self.chaves)
+        # self.col1 = 1 if self.qtd_colunas > 6 else 2
+        # if self.col1 == 2:
+        #     self.qtd_colunas += 1
         self.Linhas()
         self.border=ft.border.all(1,'white,0.5')
 
@@ -2074,8 +2074,8 @@ class My_tabelaC2(ft.ListView):
             
         
     def Linhas(self):
-        self.qtd_colunas = len(self.chaves)
-        self.col1 = 1
+        self.qtd_colunas = len(self.chaves)+1
+        self.col1 = 2
 
         def Tipo_linha(i):
             if self.qtd_colunas < 6:
@@ -2181,7 +2181,7 @@ class ClassName(ft.ListView):
         self.pprint = pprint
         # self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
-        self.vilas = LayoutVilas(printt=self.pprint, func = self.Alterou)
+        self.vilas = LayoutVilas(printt=self.pprint, func = self.Alterou, page  = self.page)
         self.jogadores = layout_jogadores(printt=print)
         self.equipes = layout_equipes( )
         self.layout = LayoutGuerra( func = self.Attt1,func2 = self.Execucao, printt=self.pprint) 
@@ -2939,7 +2939,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 049',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 050',bottom=10, right=10, size=8 ))
 
 
 
