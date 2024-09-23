@@ -80,7 +80,7 @@ class Resize:
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
 
-class Saida(ft.Column):
+class Saida2(ft.Column):
     def __init__(self,height = 50):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
@@ -90,6 +90,29 @@ class Saida(ft.Column):
         for i in texto:
             self.saidad.value += f'{i}\n'
         self.page.update()
+
+
+class Saida:
+    def __init__(self,  page = None):
+        self.page = page
+        self.snac = ft.SnackBar(
+                    content = ft.Text('', selectable=True, color=ft.colors.BROWN_100),
+                    open=True,
+                    bgcolor=ft.colors.GREY_900,
+                )
+ 
+    
+    def pprint(self, *texto):
+        for i in list(texto):
+            self.snac.content.value = f'{i}'
+            self.page.open(
+                self.snac
+            )            
+        try:
+            self.page.update()
+        except:
+            pass
+
 
 class LayoutEquipes(ft.Column):
     def __init__(self, printt=None):
@@ -124,10 +147,10 @@ class LayoutEquipes(ft.Column):
                 ("GRUPO E", self.equipe_fields["GRUPO E"], '3 em cv9-, 2 em cv10, 1 + cv expoto em cv11, 1 em cv12, 1 em cv13 se cv exposto'),
             ]
         ]
-        self.saida = Saida()
-        self.printt = self.saida.pprint
+        # self.saida = Saida()
+        # self.printt = self.saida.pprint
 
-        self.controls = [self.botao_equipes,self.saida]
+        self.controls = [self.botao_equipes]
         self.iniciar()
     
     # def did_mount(self):
@@ -205,7 +228,8 @@ class LayoutEquipes(ft.Column):
                 # self.equipe_fields[key].value = self.arquiv["equipe A"].get(key, "")
                 self.equipe_fields[key].value = self.arquiv.get(key, "")
 
-        self.controls = self.controls1+ [self.saida]
+        # self.controls = self.controls1+ [self.saida]
+        self.controls = self.controls1
         self.update()
 
 
@@ -237,7 +261,7 @@ def main(page: ft.Page):
     page.title = "Guerra de Clans"
     page.vertical_alignment = ft.MainAxisAlignment.START
     ConfirmarSaida(page)
-    saida = Saida()
+    saida = Saida(page)
     Resize(page)
     layout = LayoutEquipes(printt=saida.pprint, page=page)
     page.add(layout)

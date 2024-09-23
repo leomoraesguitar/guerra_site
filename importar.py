@@ -89,7 +89,7 @@ class Resize:
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
   
-class Saida(ft.Column):
+class Saida2(ft.Column):
     def __init__(self,height = 50):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
@@ -105,6 +105,31 @@ class Saida(ft.Column):
         for i in list(texto):
             self.saidad.value += f'{i}\n'  
         self.Atualizar()
+
+
+class Saida:
+    def __init__(self,  page = None):
+        self.page = page
+        self.snac = ft.SnackBar(
+                    content = ft.Text('', selectable=True, color=ft.colors.BROWN_100),
+                    open=True,
+                    bgcolor=ft.colors.GREY_900,
+                )
+ 
+    
+    def pprint(self, *texto):
+        for i in list(texto):
+            self.snac.content.value = f'{i}'
+            self.page.open(
+                self.snac
+            )            
+        try:
+            self.page.update()
+        except:
+            pass
+
+
+
 class Players(ft.ResponsiveRow):
     def __init__(self, 
                  guerra = None,
@@ -126,7 +151,7 @@ class Players(ft.ResponsiveRow):
         self._tag = ft.Text(tag,text_align='center',selectable = True,  visible=False, col = 3)
         self._nivel_cv = ft.Text(nivel_cv,text_align='center',selectable = True,  col = 1)
         self._forca = ft.Text(forca,text_align='center',selectable = True,  visible=False, col = self.Colu(1))
-        self._atenuador = ft.TextField(value = atenuador,   bgcolor= 'white,0.08',dense=True, 
+        self._atenuador = ft.TextField(value = atenuador,   bgcolor= None,dense=True, border_width=0,text_align='center',
                             data = 'atenuador',content_padding=5,  on_change=self.Chenge_atenuador, col = 2)
         
         self._forca_final = ft.Text(forca,text_align='center',selectable = True, width=80, col = 2)
@@ -151,6 +176,7 @@ class Players(ft.ResponsiveRow):
         # self.tight = True
         self.spacing = 0
         self.run_spacing = 0
+        self.vertical_alignment = ft.CrossAxisAlignment.CENTER
 
 
     def Colu(self, x = 4):
@@ -248,13 +274,13 @@ class layout_Importar(ft.Column):
         self.link_player = 'https://api.clashofclans.com/v1/players/%23'        
         self.Tokken = ft.TextField(label='Tokken', width=400,dense=True, content_padding=10, bgcolor='white,0.08',)
         self.Tokken.value ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjgwZTdmZTkzLTM5ZDAtNGFmYi1hZjA0LTc1YzgzMmJiNmY0MiIsImlhdCI6MTcyNTM1NTE4OSwic3ViIjoiZGV2ZWxvcGVyLzJiNjI4OWNiLTVkOGYt NzM2Yy03YzIxLTE1NmY4NzVjMTVmOSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE3OS40Mi44NS4xMjgiXSwidHlwZSI6ImNsaWVudCJ9XX0.h27D7KDVBmpHMEwMcF-pC_fSwXNueXtaOy7dozOF_3J6Y43NZaxlqABJgIGKa0_1xc0vw-qWgm09pXibtZUdBQ'
-        # self.tag = ft.TextField(label='tag do clan', width=400,dense=True, content_padding=10, bgcolor='white,0.08',)
+
+
         self.tag = ft.Dropdown(label = 'escolha a tag do clan:', 
         options=[ft.dropdown.Option("Aracaju"),ft.dropdown.Option("SkyWarrios"),ft.dropdown.Option("Outro") ], 
         value = "Aracaju",content_padding=10,filled=True, bgcolor='white,0.08'
                 )
-        # dica = ft.Text('gere o token no site: https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', color = 'white,0.6',selectable = True)
-        # self.gerar_token = ft.IconButton(tooltip='gerar Token',icon = ft.icons.GENERATING_TOKENS, on_click=self.GerarToken, icon_size=20)
+
         self.gerar_token = ft.Container(tooltip='gerar Token',content = ft.Icon(name = ft.icons.GENERATING_TOKENS), url='https://developer.clashofclans.com/#/key/e7ff0da5-5d92-42b7-990f-d7431f5ab41c', )
         self.botao_importar = ft.ElevatedButton('Importar dados',on_click=self.Importar_players)
         
@@ -300,12 +326,15 @@ class layout_Importar(ft.Column):
         else:            
             self.lista = self.LerPickle(self.config_tabela)
         self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
-        self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')    
-        self.controls = self.controls1 + [ft.ListView(self.tabela)]
+        self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')  
+        self.tabela = [ft.Container(k, bgcolor = 'cyan900,0.49' if j%2 != 0  else None) for j, k in enumerate(self.tabela)]  
+
+        self.controls = self.controls1 + [ft.ListView(self.tabela, aspect_ratio=9/16)]
+        # self.controls = [ft.ListView(self.tabela)]
         self.update()
 
     def Configs(self):
-        return  ft.Column([self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token])])
+        return  ft.Column([self.tag,self.Tokken,ft.Row([self.botao_importar,self.gerar_token, ])])
 
 
     def Colu(self, x = 4):
@@ -318,7 +347,10 @@ class layout_Importar(ft.Column):
 
     def Ordenar_por(self, e):
         atr = e.control.data
-        self.controls[-1].controls = self.OrdenarListadeClasses(self.controls[-1].controls, atr)
+        lista = [i.content for i in self.controls[-1].controls]
+        # self.controls[-1].controls = self.OrdenarListadeClasses(self.controls[-1].controls, atr)
+        lista = self.OrdenarListadeClasses(lista, atr)
+        self.controls[-1].controls = [ft.Container(k, bgcolor = 'cyan900,0.49' if j%2 != 0  else None) for j, k in enumerate(lista)]  
 
         self.update()     
         self.printt(f'ordenando por {atr}')
@@ -326,10 +358,15 @@ class layout_Importar(ft.Column):
 
     def OrdenarDicionario(self, dic, col):
         coluna_old = dic[col]
+        # print(dic['nome'])
         ord = sorted(dic[col], reverse = True)
-        novo_index = [coluna_old.index(i) for i in ord]
+        # novo_index = [coluna_old.index(i) for i in ord]
+        novo_index = [i for i in range(len(ord))]
+        # print(novo_index)
         for i in dic.keys():
-            dic[i]= [dic[i][k] for k in novo_index ]
+            dic[i]= [dic[i][k] for k in range(len(ord)) ]
+        
+        # print(dic['nome'])
         return dic
 
 
@@ -339,26 +376,18 @@ class layout_Importar(ft.Column):
 
         # for i in self.tabela:
         for i in self.controls[-1].controls:
-            if i.guerra:
-                dic['nome'].append(i.jogador)
-                dic['nivel_cv'].append(i.nivel_cv)
-                dic['forca'].append(i.forca_final)
-                # dic['atenuador'].append(i.atenuador)
+            if i.content.guerra:
+                dic['nome'].append(i.content.jogador)
+                dic['nivel_cv'].append(i.content.nivel_cv)
+                dic['forca'].append(i.content.forca_final)
+                # dic['atenuador'].append(i.content.atenuador)
 
-            lista.append([i.guerra,i.jogador,i.tag,i.nivel_cv, i.forca,i.atenuador, i.forca_final])
+            lista.append([i.content.guerra,i.content.jogador,i.content.tag,i.content.nivel_cv, 
+                          i.content.forca,i.content.atenuador, i.content.forca_final])
         
-
+        # print(dic['nome'])
         dic2 = self.OrdenarDicionario(dic, 'forca')
-
-        # self.SalvarPickle(lista, self.config_tabela)
-        # self.Escrever_json(dic2, self.config_jogadores)
         self.func([dic2, lista])
-
-        # self.page.client_storage.set('jogadores',dic2)
-        # self.page.client_storage.set('lista',lista)
-
-        # self.SalvarDadosLocais('jogadores',dic2)
-        # self.SalvarDadosLocais('lista',lista)
         self.printt('Dados dos players salvo com sucesso') 
         self.Atualizar()  
 
@@ -745,15 +774,58 @@ class layout_Importar(ft.Column):
 
 def main(page: ft.Page):
     page.window.width = 330  # Define a largura da janela como 800 pixels
-    page.window.height = 600  #    
+    # page.window.height = 600  #    
     page.title = "Guerra de Clans"
     page.vertical_alignment = ft.MainAxisAlignment.START  
+    page.theme = ft.Theme(
+        visual_density = "comfortable",
+        scrollbar_theme = ft.ScrollbarTheme(
+            thickness = {
+                # ft.ControlState.DEFAULT: 10,
+                ft.ControlState.HOVERED:5,
+                # ft.ControlState.PRESSED:20, 
+                # ft.ControlState.FOCUSED:20, 
+                ft.ControlState.DRAGGED:20, 
+                ft.ControlState.SCROLLED_UNDER:20
+                  },
+                # thumb_color = {
+                #     ft.ControlState.DEFAULT: 'white,0.0',
+                #     ft.ControlState.HOVERED:'white,0.0',
+                #     # ft.ControlState.PRESSED:20, 
+                #     # ft.ControlState.FOCUSED:20, 
+                #     ft.ControlState.DRAGGED:'white,0.0', 
+                #     ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                # },
+                track_color = {
+                    ft.ControlState.DEFAULT: 'white,0.0',
+                    ft.ControlState.HOVERED:'white,0.0',
+                    # ft.ControlState.PRESSED:20, 
+                    # ft.ControlState.FOCUSED:20, 
+                    ft.ControlState.DRAGGED:'white,0.0', 
+                    ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                },
+                track_border_color = {
+                    ft.ControlState.DEFAULT: 'white,0.0',
+                    ft.ControlState.HOVERED:'white,0.0',
+                    # ft.ControlState.PRESSED:20, 
+                    # ft.ControlState.FOCUSED:20, 
+                    ft.ControlState.DRAGGED:'white,0.0', 
+                    ft.ControlState.SCROLLED_UNDER:'white,0.0'
+                },
+
+                min_thumb_length = 10,
+            # cross_axis_margin = 50,
+
+        ),
+        # color_scheme_seed = ft.colors.WHITE,
+    )
+        
     ConfirmarSaida(page)
-    saida = Saida() 
+    saida = Saida(page) 
 
     Resize(page) 
-    i =  layout_Importar( printt = saida.pprint, page = page)    
-    page.add(i, saida)
+    i =  layout_Importar( printt = saida.pprint)    
+    page.add(i)
 
 
 

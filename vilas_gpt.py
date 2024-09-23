@@ -376,7 +376,7 @@ class Resize:
         self.pw.value = f"{self.page.window.width}*{self.page.window.height} px"
         self.pw.update()
 
-class Saida(ft.Container):
+class Saida2(ft.Container):
     def __init__(self, width=300,height=100, col = None):
         super().__init__()
         self.saidad = ft.Text('', selectable=True)
@@ -397,6 +397,29 @@ class Saida(ft.Container):
             self.page.update()
         except:
             pass
+
+
+class Saida:
+    def __init__(self,  page = None):
+        self.page = page
+        self.snac = ft.SnackBar(
+                    content = ft.Text('', selectable=True, color=ft.colors.BROWN_100),
+                    open=True,
+                    bgcolor=ft.colors.GREY_900,
+                )
+ 
+    
+    def pprint(self, *texto):
+        for i in list(texto):
+            self.snac.content.value = f'{i}'
+            self.page.open(
+                self.snac
+            )            
+        try:
+            self.page.update()
+        except:
+            pass
+
 
 class Vila(ft.Container):
     def __init__(self, nome=None, nivel_cv=None, forca=None, cv_exposto=None, equipe=None, metodo=2, mapa=None, func=None, bgcolor = None):
@@ -713,6 +736,7 @@ class LayoutVilas(ft.ResponsiveRow):
     def __init__(self, num_vilas=15, printt=None,  func = None, page = None):
         super().__init__()
         self.page = page
+        self.printt = printt
         self.func = func
         self.spacing = 0
         self.run_spacing = 0
@@ -736,7 +760,7 @@ class LayoutVilas(ft.ResponsiveRow):
                                                     #  width=300, 
                                                      expand_loose=True,
                                                      scale=0.8)
-        self.saida = Saida(100,200, 8)
+        # self.saida = Saida(100,200, 8)
 
 
         self.col_A = ft.ListView([
@@ -747,7 +771,7 @@ class LayoutVilas(ft.ResponsiveRow):
             ],col = {'xs':8, 'sm':9, 'md':7}, 
             # horizontal_alignment='start'
         )
-        self.col_A.controls.append(self.saida)
+        # self.col_A.controls.append(self.saida)
 
         c1 = self.columns-self.col_A.col['xs']
         c2 = self.columns-self.col_A.col['sm']
@@ -805,7 +829,7 @@ class LayoutVilas(ft.ResponsiveRow):
 
         self.inicializar_vilas()
 
-        self.printt = self.saida.pprint
+        # self.printt = self.saida.pprint
         # self.height = 500
         self.controls = [self.botao_carregarvilas]
 
@@ -982,7 +1006,7 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.START
     # page.theme = ft.ThemeMode.DARK
     ConfirmarSaida(page)
-    saida = Saida(360,50)
+    saida = Saida(page)
     Resize(page)
     v = LayoutVilas(15, printt=saida.pprint, page=page)
     # page.add(ft.Row([ft.Column([v]), ft.Column([saida], alignment='center', width=150, height=600)]))

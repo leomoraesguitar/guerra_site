@@ -227,7 +227,7 @@ class BotaoCT(ft.Container):
         else:
             self.content = ft.Text(nome, weight='BOLD', text_align='center', size = self.text_size,no_wrap=True )
         self.border_radius = 12 
-        self.margin = ft.Margin(8,1,8,1)   
+        self.margin = ft.Margin(12,1,12,1)   
         self.alignment = ft.Alignment(0,0) 
         self.ink = True                          
 
@@ -2182,11 +2182,11 @@ class ClassName(ft.ListView):
         # self.width = 300
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.vilas = LayoutVilas(printt=self.pprint, func = self.Alterou, page  = self.page)
-        self.jogadores = layout_jogadores(printt=print)
-        self.equipes = layout_equipes( )
+        self.jogadores = layout_jogadores(printt=self.pprint)
+        self.equipes = layout_equipes(printt = self.pprint)
         self.layout = LayoutGuerra( func = self.Attt1,func2 = self.Execucao, printt=self.pprint) 
         # self.saida = Saida(350,150) 
-        self.importar = layout_Importar(printt=print,  func=self.Amarzenar)
+        self.importar = layout_Importar(printt=self.pprint,  func=self.Amarzenar)
         self.config = ft.Column([ self.layout.Config(),self.importar.Configs() ]) #,                                          
         self.janela = ft.Container( alignment = ft.Alignment(0,0))
         self.janela.content = self.layout
@@ -2704,40 +2704,34 @@ class ClassName(ft.ListView):
                     border_radius=8,
 
                 )      
-        # for i in self.menu.controls:
-        #     if i.nome == e.control.nome:
-        #         i.opacity = 1
-        #         i.bgcolor = ft.colors.PURPLE_900
+        # print(type(self.controls[0]))
+        if not isinstance(self.controls[0], BotaoCT):
+            match e.data:
+                case '0':#Lista de Guerra':
+                    # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
+                    self.janela.content = self.layout
+                    # self.pprint('meu ovo')
 
-
-        #     else:
-        #         i.bgcolor = ft.colors.GREY_800
-        #         i.opacity = 0.6
-        # print(e.data)
-        match e.data:
-            case '0':#Lista de Guerra':
-                # janela.content = ft.Row([layout], scroll=ft.ScrollMode.ALWAYS, width=page.window.width-10)
-                self.janela.content = self.layout
-                # self.pprint('meu ovo')
-
-            case '1':#'Vilas':                
-                # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
-                # self.janela.content = Caixa(self.vilas)
-                self.janela.content = self.vilas
-          
-            case '2':#'Jogadores':
-                # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
-                self.janela.content = self.jogadores
-            case '3':#'Equipes':
-                self.janela.content = ft.ListView([self.equipes])
-                # self.janela.content = self.equipes
-            case '4':#'Importar':
-                # self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
-                self.janela.content = self.importar
-            case '5':#'config':
-                self.janela.content = self.config                                                                                               
-
-        self.janela.update()
+                case '1':#'Vilas':                
+                    # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
+                    # self.janela.content = Caixa(self.vilas)
+                    self.janela.content = self.vilas
+            
+                case '2':#'Jogadores':
+                    # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
+                    self.janela.content = self.jogadores
+                case '3':#'Equipes':
+                    self.janela.content = ft.ListView([self.equipes])
+                    # self.janela.content = self.equipes
+                case '4':#'Importar':
+                    # self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
+                    self.janela.content = self.importar
+                case '5':#'config':
+                    self.janela.content = self.config                                                                                               
+        
+            self.janela.update()
+        else:
+            self.pprint('Click em carregar')
         self.update()
         # print(self.controls)
 
@@ -2821,20 +2815,22 @@ def main(page: ft.Page):
     
     page.appbar = ft.AppBar(
         actions = [],
-        title=ft.Text(
-            value = 'Guerra de Clans', 
-            weight='BOLD',
-            text_align='center',
-            size = 15, 
-            color=ft.colors.GREEN_600,
-            style=ft.TextStyle(
-                shadow = ft.BoxShadow(
-                    blur_radius = 300,
+        # title=ft.Text(
+        #     value = 'Guerra de Clans', 
+        #     weight='BOLD',
+        #     text_align='center',
+        #     size = 15, 
+        #     color=ft.colors.GREEN_600,
+        #     style=ft.TextStyle(
+        #         shadow = ft.BoxShadow(
+        #             blur_radius = 300,
 
-                    color = ft.colors.WHITE
-                ),                
-            )
-            ),
+        #             color = ft.colors.WHITE
+        #         ),                
+        #     )
+        #     ),
+        
+        title = ft.Image(src = f'Clash_of_Clans_Logo.png', width=100, height=45),
         shadow_color=ft.colors.BLUE,
         elevation=8,
         toolbar_height = 50,
@@ -2885,6 +2881,7 @@ def main(page: ft.Page):
         ),
         # color_scheme_seed = ft.colors.WHITE,
     )
+    
     '''
     # ConfirmarSaida(page)
     # Resize(page) 
@@ -2939,7 +2936,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 050',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 051',bottom=10, right=10, size=8 ))
 
 
 

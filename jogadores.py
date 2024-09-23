@@ -377,7 +377,7 @@ class layout_jogadores(ft.Column):
                 self.lista_jogadores.append(Jogador(nome = i,nivel_cv = j,forca = k))
 
             # self.controls[3].controls = self.lista_jogadores
-            self.controls = self.controls1+[ft.Column(self.lista_jogadores,height=self.cumprimento_coluna, scroll=ft.ScrollMode.ADAPTIVE),
+            self.controls = self.controls1+[ft.ListView(self.lista_jogadores),
                                         ]
             self.update()
             await self.Salvar(1)
