@@ -1240,11 +1240,11 @@ class LayoutGuerra(ft.Column):
             #  ),
             ft.Row(
                 [
-                    ft.Column(
+                    ft.ListView(
                         controls = [self.tabela],
-                        scroll=ft.ScrollMode.AUTO,
+                        # scroll=ft.ScrollMode.AUTO,
                         expand= True,
-                        horizontal_alignment='center'
+                        # horizontal_alignment='center'
                         # reverse = True
                         )
                 ],
@@ -2084,7 +2084,7 @@ class My_tabelaC2(ft.ListView):
                             value = self._dic[self.chaves[0]][i],
                             opitions=self.opcoes, 
                             # width=self.Larg(self.chaves[0]),
-                            height=20,
+                            height=30,
                             text_size = 15, 
                             borda_width = 0,
                             border_radius = 0, 
@@ -2105,7 +2105,7 @@ class My_tabelaC2(ft.ListView):
                             value = self._dic[self.chaves[0]][i],
                             opitions=self.opcoes, 
                             width=self.Larg(self.chaves[0]),
-                            height=20,
+                            height=35,
                             text_size = 15, 
                             borda_width = 0,
                             border_radius = 0, 
@@ -2133,7 +2133,7 @@ class My_tabelaC2(ft.ListView):
 
             )
           
-        # self.controls = [ft.Row(self.controls,scroll=ft.ScrollMode.AUTO, width=300)]
+        self.controls = [ft.Container(ft.ListView(self.controls),bgcolor=ft.colors.with_opacity(0.9, ft.colors.BLACK))]
         # print(self.controls)
         # self.content = ft.Column(self.controls,spacing=2, expand=True)
         
@@ -2218,7 +2218,11 @@ class ClassName(ft.ListView):
       
         self.controls1 = [self.janela] #,self.janela, ft.Container(self.menu, bgcolor=ft.colors.CYAN_900),
         self.height = 500
-        self.controls = [botao_atualizar]
+        self.controls = [botao_atualizar, 
+            # ft.Container(ft.Image(src = f'carregamento.png',
+            #         fit=ft.ImageFit.COVER, aspect_ratio=9/16), expand=True)
+                    ]
+
 
 
     async def Execucao(self,e):
@@ -2936,7 +2940,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 051',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 052',bottom=10, right=10, size=8 ))
 
 
 
@@ -2954,6 +2958,14 @@ def main(page: ft.Page):
             border_radius=8,
             # alignment=ft.Alignment(0, 0),
             expand = True,
+            # image_fit= ft.ImageFit.COVER,   
+            image= ft.DecorationImage(
+                src =  "carregamento.png",  # URL da imagem de fundo
+                fit = ft.ImageFit.COVER
+            ),
+
+            
+           
 
         ) 
     # page.add(ft.Row([Caixa(c)],alignment='center'))
