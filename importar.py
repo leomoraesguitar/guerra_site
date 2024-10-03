@@ -306,7 +306,7 @@ class layout_Importar(ft.Column):
                              self.botao_ordenar_forca_final,#2
                                                                  
                         ], spacing=0, run_spacing=0,columns=9, vertical_alignment='center'),
-                        bgcolor='green,0.4', border_radius=8),
+                        bgcolor='green,0.8', border_radius=8),
                          
                 ]
     
@@ -315,6 +315,7 @@ class layout_Importar(ft.Column):
         self.spacing = 0
         # self.saida = Saida()
         self.printt = printt
+        self.expand = True
         # self.controls.append(self.saida)  
         self.controls = [self.botao_carregarlistas]      
 
@@ -327,9 +328,11 @@ class layout_Importar(ft.Column):
             self.lista = self.LerPickle(self.config_tabela)
         self.tabela = [Players(*i,func = self.Salvar)  for i in self.lista]
         self.tabela = self.OrdenarListadeClasses(self.tabela, 'forca_final')  
-        self.tabela = [ft.Container(k, bgcolor = 'cyan900,0.49' if j%2 != 0  else None) for j, k in enumerate(self.tabela)]  
+        self.tabela = [ft.Container(k, bgcolor = 'black' if j%2 == 0 else 'cyan900,0.99') for j, k in enumerate(self.tabela)] 
+        # self.tabela = [ft.Container(self.tabela, bgcolor=ft.colors.with_opacity(0.9, ft.colors.BLACK ))] 
+        
 
-        self.controls = self.controls1 + [ft.ListView(self.tabela, aspect_ratio=9/16)]
+        self.controls = self.controls1 + [ft.Column(self.tabela,  spacing=0, run_spacing=0, expand = True)]
         # self.controls = [ft.ListView(self.tabela)]
         self.update()
 
@@ -350,7 +353,7 @@ class layout_Importar(ft.Column):
         lista = [i.content for i in self.controls[-1].controls]
         # self.controls[-1].controls = self.OrdenarListadeClasses(self.controls[-1].controls, atr)
         lista = self.OrdenarListadeClasses(lista, atr)
-        self.controls[-1].controls = [ft.Container(k, bgcolor = 'cyan900,0.49' if j%2 != 0  else None) for j, k in enumerate(lista)]  
+        self.controls[-1].controls = [ft.Container(k, bgcolor = 'black' if j%2 == 0 else 'cyan900,0.99') for j, k in enumerate(lista)]  
 
         self.update()     
         self.printt(f'ordenando por {atr}')
@@ -407,9 +410,12 @@ class layout_Importar(ft.Column):
         
 
         dic2 = self.OrdenarDicionario(dic, 'forca')
+        try:
+            self.SalvarPickle(lista, self.config_tabela)
+            self.Escrever_json(dic2, self.config_jogadores)
+        except:
+            self.printt('Erro ao salvar os no PC (fixos)') 
 
-        # self.SalvarPickle(lista, self.config_tabela)
-        # self.Escrever_json(dic2, self.config_jogadores)
         self.func([dic2, lista])
 
 
@@ -771,6 +777,7 @@ class layout_Importar(ft.Column):
             self.update()
         except:
             pass
+
 
 def main(page: ft.Page):
     page.window.width = 330  # Define a largura da janela como 800 pixels

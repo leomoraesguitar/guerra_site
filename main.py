@@ -2719,19 +2719,21 @@ class ClassName(ft.ListView):
                 case '1':#'Vilas':                
                     # self.janela.content = ft.Column([self.vilas], scroll=ft.ScrollMode.ALWAYS, height=580)
                     # self.janela.content = Caixa(self.vilas)
-                    self.janela.content = self.vilas
+                    self.janela.content = ft.Container(ft.ListView([self.vilas]), bgcolor='black,0.85', expand = True)
+                    
             
                 case '2':#'Jogadores':
                     # self.janela.content = ft.Column([self.jogadores], scroll=ft.ScrollMode.ALWAYS, height=580)
-                    self.janela.content = self.jogadores
+                    self.janela.content = ft.Container(self.jogadores, bgcolor='black,0.85')
                 case '3':#'Equipes':
-                    self.janela.content = ft.ListView([self.equipes])
+                    self.janela.content = ft.Container(ft.ListView([self.equipes]), bgcolor='black,0.85')
                     # self.janela.content = self.equipes
                 case '4':#'Importar':
                     # self.janela.content = ft.Column([self.importar], scroll=ft.ScrollMode.ALWAYS, height=580) 
                     self.janela.content = self.importar
                 case '5':#'config':
-                    self.janela.content = self.config                                                                                               
+                    self.janela.content =  ft.Container(ft.ListView([self.config ]), bgcolor='black,0.85', expand = False) 
+                                                                                                                
         
             self.janela.update()
         else:
@@ -2940,7 +2942,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 052',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 053',bottom=10, right=10, size=8 ))
 
 
 

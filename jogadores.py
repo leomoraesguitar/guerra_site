@@ -159,6 +159,7 @@ class layout_jogadores(ft.Column):
         # self.page = page
         self.spacing = 0
         self.run_spacing = 0
+        self.expand = True
         self.horizontal_alignment = ft.MainAxisAlignment.CENTER
         self.num_jogadores = ft.Dropdown(label = 'Número de Jogadores',value = num_jogadores, 
                 options=[ft.dropdown.Option(i) for i in range(5,51)],dense=True, col = 8,
@@ -197,7 +198,7 @@ class layout_jogadores(ft.Column):
             ),
        
         ]
-        self.height = 500
+        # self.height = 500
 
         self.controls = [self.botao_atualizar, ]
         
