@@ -223,7 +223,7 @@ class Display(ft.Container):
         if not self.func is None:
             await self.func(valor)
         if not self.on_click is None:
-            self.on_click(e)            
+            await self.on_click(e)            
         # self.Atualizar()
 
 
@@ -685,10 +685,11 @@ class Vila(ft.Container):
         if self.func:
             self.func(int(self.cv.value))
 
-    def change_exposicao(self, e):
+    async def change_exposicao(self, e):
         self.cv_exposto = int(self.exposicao.value)
         if self.func:
-            self.func(int(self.cv.value))
+            # print('aqui, change')
+            await self.func(int(self.cv.value))
 
     async def cor(self, e):
         self.cv.color = None
@@ -773,7 +774,7 @@ class LayoutVilas(ft.ResponsiveRow):
         self.botao_salvar = ft.ElevatedButton('Salvar', on_click=self.Salvar,  scale=0.8)
         self.botao_zerar = ft.ElevatedButton('zerar exp', on_click=self.Zerar_exposicoes, scale=0.8)
         self.botao_ordenar = ft.ElevatedButton('Ordenar', on_click=self.Ordenar_vilas,  scale=0.8)
-        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas, scale=0.8)
+        self.botao_atualizar = ft.ElevatedButton('Atualizar', on_click=self.AtualizarVilas2, scale=0.8)
         self.botao_carregarvilas = ft.ElevatedButton('Carregar vilas', 
                                                      on_click=self.CarregarVilas, 
                                                     #  width=300, 
@@ -879,7 +880,25 @@ class LayoutVilas(ft.ResponsiveRow):
         self.lista_vilas = lista_vilas
 
 
-    async def AtualizarVilas(self,e):
+    def AtualizarVilas(self,e):
+        # self.arquiv = await self.page.client_storage.get_async('vilas')
+        # if isinstance(self.arquiv, dict):
+        #     lista_vilas = []
+
+        #     for nome, nivel_cv, cv_exposto, c in zip(self.arquiv['nome'], self.arquiv['nivel_cv'], self.arquiv['cv_exposto'], range(60)):
+        #             # lista_vilas.append(Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar))
+        #         cor  = ft.colors.TRANSPARENT if c%2 == 0 else ft.colors.GREY_800
+        #         lista_vilas.append(
+            
+        #                 Vila(nome=nome, nivel_cv=nivel_cv, cv_exposto=cv_exposto, func=self.Salvar, bgcolor=cor),
+                        
+                   
+        #             )                    
+        #     self.lista_vilas = lista_vilas
+        self.col_B.controls[1].content.controls = self.lista_vilas        
+        self.update()
+
+    async def AtualizarVilas2(self,e):
         self.arquiv = await self.page.client_storage.get_async('vilas')
         if isinstance(self.arquiv, dict):
             lista_vilas = []
@@ -895,7 +914,8 @@ class LayoutVilas(ft.ResponsiveRow):
                     )                    
             self.lista_vilas = lista_vilas
             self.col_B.controls[1].content.controls = self.lista_vilas        
-            self.update()
+        self.update()
+
 
 
     def AtualizarVilas2(self,e):
@@ -908,8 +928,8 @@ class LayoutVilas(ft.ResponsiveRow):
         self.col_B.controls[1].content.controls = self.lista_vilas        
         self.update()        
 
-    async def CarregarVilas(self,e):
-        await self.AtualizarVilas(1)
+    def CarregarVilas(self,e):
+        self.AtualizarVilas(1)
         self.col_B.controls[1].content.controls = self.lista_vilas
         self.controls= [self.col_A ,self.col_B ]
         self.update()
@@ -958,6 +978,7 @@ class LayoutVilas(ft.ResponsiveRow):
             dic['nivel_cv'].append(vila.nivel_cv)
             dic['cv_exposto'].append(vila.cv_exposto)
         # self.Escrever_json(dic, self.config_vilas)
+        # print('aqio')
         await self.page.client_storage.set_async('vilas',dic)
         # self.SalvarDadosLocais('vilas', dic)
 
@@ -968,7 +989,7 @@ class LayoutVilas(ft.ResponsiveRow):
         # self.col_B.controls[1].content.controls = self.lista_vilas  
 
         # self.update()
-        await self.AtualizarVilas(e)
+        self.AtualizarVilas(e)
         # self.func(['vilas', self.lista_vilas])
         self.printt('Vilas salvas com sucesso')
 

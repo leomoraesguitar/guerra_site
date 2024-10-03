@@ -471,8 +471,10 @@ class layout_jogadores(ft.Column):
             dic['nome'].append(i.nome)
             dic['nivel_cv'].append(i.nivel_cv)
             dic['forca'].append(i.forca)
-        
-        # self.Escrever_json(dic, self.config_jogadores)
+        try:
+            self.Escrever_json(dic, self.config_jogadores)
+        except:
+            pass
         try:
             self.page.client_storage.set('jogadores',dic)
         except:
