@@ -2942,7 +2942,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 053',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 054',bottom=10, right=10, size=8 ))
 
 
 

@@ -173,7 +173,7 @@ class Display(ft.Container):
         self.on_long_press = self.VirarCampoTexto
 
         self.content = ft.PopupMenuButton(
-            content=ft.Column([ft.Text(self._value, color = 'white', weight='BOLD', size=self.text_size, no_wrap = False,text_align = 'center' )], alignment='center', horizontal_alignment='center'),
+            content=ft.Column([ft.Text(self._value, color = self._text_color, weight='BOLD', size=self.text_size, no_wrap = False,text_align = 'center' )], alignment='center', horizontal_alignment='center'),
             items=self.opitions,
             menu_position=ft.PopupMenuPosition.UNDER,
            
@@ -224,7 +224,7 @@ class Display(ft.Container):
             await self.func(valor)
         if not self.on_click is None:
             self.on_click(e)            
-        self.Atualizar()
+        # self.Atualizar()
 
 
     @property
@@ -280,7 +280,7 @@ class Display(ft.Container):
     @text_color.setter
     def text_color(self, cor):
         self._text_color = cor 
-        print(cor) 
+        print('cor = ', cor) 
         colors = {
             '16': 'red',
             '15': '#ff9900',
@@ -293,12 +293,28 @@ class Display(ft.Container):
             '8': '#d9d9d9',
         }        
 
-        self.content = ft.PopupMenuButton(
-            content=ft.Column([ft.Text(self._value, color = self._text_color, weight='BOLD', size=self.text_size, no_wrap = False,text_align = 'center' )], alignment='center', horizontal_alignment='center'),
-            items=self.opitions,
-            menu_position=ft.PopupMenuPosition.UNDER,        
-        )
-        # self.content.content.controls[0].update()   
+        # self.content = ft.PopupMenuButton(
+        #     content=ft.Column(
+        #         [
+        #             ft.Text(
+        #                 self._value, 
+        #                 color = self._text_color, 
+        #                 weight='BOLD', 
+        #                 size=self.text_size, 
+        #                 no_wrap = False,
+        #                 text_align = 'center' 
+                        
+        #             )
+        #         ], 
+        #         alignment='center', 
+        #         horizontal_alignment='center'
+        #     ),
+        #     items=self.opitions,
+        #     menu_position=ft.PopupMenuPosition.UNDER,        
+        # )
+        self.content.content.controls[0].color = cor
+        print(self.content.content.controls[0].color, 'conte')
+        self.content.update()
         self.Atualizar()
 
 class Verificar_pasta:
@@ -716,10 +732,13 @@ class Vila(ft.Container):
             '9': '#c9daf8',
             '8': '#d9d9d9',
         }
+        # print('cv=', cv)
         self.cv.bgcolor = colors.get(cv, None)
         # self.corCV = colors.get(cv, None)
         if cv in ['14', '13', '12', '11', '10', '9', '8']:
             # self.cv.color = 'red'
+            print('cv=', cv)
+
             self.cv.text_color = 'red'
         else:
             self.cv.text_color = None            
