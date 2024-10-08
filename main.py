@@ -2786,11 +2786,12 @@ def main(page: ft.Page):
     # page.window.height = 600  #    
     # page.vertical_alignment = ft.MainAxisAlignment.START  
     # page.theme = ft.ThemeMode.DARK
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
     page.spacing = 3
     # page.expand = True
     page.vertical_alignment = 'start'
-    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+
     saida = Saida(page)
     # print = saida.pprint
     c = ClassName(page, saida.pprint)
@@ -2800,6 +2801,7 @@ def main(page: ft.Page):
             inactive_color=ft.colors.GREY,
             active_color=ft.colors.GREEN_800,
             on_change=c.Escolher_janela,
+            width=600,
             destinations=[
                 ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label='Lista de Guerra', data = 'Lista de Guerra'),
                 ft.NavigationBarDestination(icon=ft.icons.HOUSE, label='Vilas'),
@@ -2942,7 +2944,7 @@ def main(page: ft.Page):
     #     page.update()
     '''    
     
-    page.overlay.append(ft.Text('versão - 055',bottom=10, right=10, size=8 ))
+    page.overlay.append(ft.Text('versão - 056',bottom=10, right=10, size=8 ))
 
 
 
@@ -2960,6 +2962,7 @@ def main(page: ft.Page):
             border_radius=8,
             # alignment=ft.Alignment(0, 0),
             expand = True,
+            # width=600,
             # image_fit= ft.ImageFit.COVER,   
             image= ft.DecorationImage(
                 src =  "carregamento.png",  # URL da imagem de fundo

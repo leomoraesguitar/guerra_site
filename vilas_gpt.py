@@ -797,7 +797,7 @@ class LayoutVilas(ft.ResponsiveRow):
         c2 = self.columns-self.col_A.col['sm']
         c3 = self.columns-self.col_A.col['md']
         self.col_B = ft.ListView(
-            spacing=0, 
+            spacing=10, 
             # run_spacing=0, 
             col =  {'xs':c1, 'sm':c2, 'md':c3}, 
             # horizontal_alignment='end'
@@ -876,7 +876,7 @@ class LayoutVilas(ft.ResponsiveRow):
                   
                     )        
         except:
-            lista_vilas = [Vila(nome=i, nivel_cv=15, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
+            lista_vilas = [Vila(nome=i, nivel_cv=16, cv_exposto=0, func=self.Salvar) for i in range(1, int(self.num_vilas.value) + 1)]
         self.lista_vilas = lista_vilas
 
 
